@@ -1,0 +1,13 @@
+[
+  {
+    "id": "exemplo-1",
+    "nome": "Nome do Estabelecimento",
+    "categoria": "Loja",
+    "descricao": "Este é um anúncio de exemplo. Edite ou substitua pelo painel de administração em /admin.",
+    "telefone": "",
+    "municipio": "",
+    "fotos": [],
+    "video": "",
+    "ativo": true
+  }
+]

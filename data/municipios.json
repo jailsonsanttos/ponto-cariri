@@ -1,0 +1,102 @@
+[
+  {
+    "slug": "juazeiro-do-norte",
+    "nome": "Juazeiro do Norte",
+    "descricaoCurta": "Maior cidade da região, conhecida pela romaria e pelo comércio.",
+    "historia": "Juazeiro do Norte é uma das cidades mais populosas do interior cearense e um importante polo religioso, comercial e de saúde da região do Cariri. Cresceu ao redor da devoção ao Padre Cícero e hoje reúne o Horto, o Colégio Salesiano e um comércio bastante ativo. Edite este texto pelo painel de administração para contar a história completa do município.",
+    "hinoUrl": "",
+    "latitude": -7.2130,
+    "longitude": -39.3151,
+    "fotos": []
+  },
+  {
+    "slug": "crato",
+    "nome": "Crato",
+    "descricaoCurta": "Conhecida como a 'Princesa do Cariri', com forte tradição cultural.",
+    "historia": "O Crato é reconhecido pela sua vocação cultural e educacional, sediando universidades, o tradicional Colégio de padres e um centro histórico preservado. É também porta de entrada para a Chapada do Araripe. Edite este texto pelo painel de administração para contar a história completa do município.",
+    "hinoUrl": "",
+    "latitude": -7.2340,
+    "longitude": -39.4092,
+    "fotos": []
+  },
+  {
+    "slug": "barbalha",
+    "nome": "Barbalha",
+    "descricaoCurta": "Cidade das águas, famosa pelo Sítio Batateira e pela festa de Santo Antônio.",
+    "historia": "Barbalha é conhecida por suas nascentes e cachoeiras, especialmente na região do Sítio Batateira, e por celebrar uma das maiores festas de Santo Antônio do país. Edite este texto pelo painel de administração para contar a história completa do município.",
+    "hinoUrl": "",
+    "latitude": -7.3086,
+    "longitude": -39.3017,
+    "fotos": []
+  },
+  {
+    "slug": "missao-velha",
+    "nome": "Missão Velha",
+    "descricaoCurta": "Cidade histórica às margens do Rio Salgado.",
+    "historia": "Missão Velha guarda um dos patrimônios arquitetônicos mais antigos do Cariri, com igrejas e casarões que remontam ao período colonial. Edite este texto pelo painel de administração para contar a história completa do município.",
+    "hinoUrl": "",
+    "latitude": -7.2547,
+    "longitude": -39.1425,
+    "fotos": []
+  },
+  {
+    "slug": "santana-do-cariri",
+    "nome": "Santana do Cariri",
+    "descricaoCurta": "Berço da paleontologia brasileira, com fósseis de milhões de anos.",
+    "historia": "Santana do Cariri abriga o Museu de Paleontologia e é referência mundial em fósseis da Bacia Sedimentar do Araripe. Edite este texto pelo painel de administração para contar a história completa do município.",
+    "hinoUrl": "",
+    "latitude": -7.1975,
+    "longitude": -39.7069,
+    "fotos": []
+  },
+  {
+    "slug": "nova-olinda",
+    "nome": "Nova Olinda",
+    "descricaoCurta": "Conhecida pelo Grutas do Cariri e pela produção cultural da Fundação Casa Grande.",
+    "historia": "Nova Olinda se destaca pelo turismo de base comunitária, pelas formações rochosas e pelo trabalho cultural voltado à valorização da memória do Cariri. Edite este texto pelo painel de administração para contar a história completa do município.",
+    "hinoUrl": "",
+    "latitude": -7.0864,
+    "longitude": -39.6772,
+    "fotos": []
+  },
+  {
+    "slug": "brejo-santo",
+    "nome": "Brejo Santo",
+    "descricaoCurta": "Um dos municípios mais importantes do Cariri Sul.",
+    "historia": "Brejo Santo é um importante centro comercial e de serviços na porção sul da região do Cariri. Edite este texto pelo painel de administração para contar a história completa do município.",
+    "hinoUrl": "",
+    "latitude": -7.4914,
+    "longitude": -38.9836,
+    "fotos": []
+  },
+  {
+    "slug": "milagres",
+    "nome": "Milagres",
+    "descricaoCurta": "Cidade tradicional do Cariri Sul cearense.",
+    "historia": "Milagres tem sua economia ligada à agricultura, pecuária e comércio local, sendo um dos municípios históricos do Cariri. Edite este texto pelo painel de administração para contar a história completa do município.",
+    "hinoUrl": "",
+    "latitude": -7.3006,
+    "longitude": -38.9411,
+    "fotos": []
+  },
+  {
+    "slug": "jardim",
+    "nome": "Jardim",
+    "descricaoCurta": "Município conhecido pela pecuária e pela cultura do Cariri Sul.",
+    "historia": "Jardim é conhecida por suas tradições rurais e por integrar a rota turística do Cariri Sul cearense. Edite este texto pelo painel de administração para contar a história completa do município.",
+    "hinoUrl": "",
+    "latitude": -7.6019,
+    "longitude": -39.2733,
+    "fotos": []
+  },
+  {
+    "slug": "caririacu",
+    "nome": "Caririaçu",
+    "descricaoCurta": "Município conhecido pela produção de flores e artesanato.",
+    "historia": "Caririaçu é reconhecida pela floricultura e pelas tradições religiosas que atraem visitantes de toda a região. Edite este texto pelo painel de administração para contar a história completa do município.",
+    "hinoUrl": "",
+    "latitude": -7.0417,
+    "longitude": -39.2867,
+    "fotos": []
+  }
+]

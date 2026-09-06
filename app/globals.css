@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --cariri-verde: #1b7a43;
+  --cariri-verde-escuro: #124f2c;
+  --cariri-verde-claro: #e7f4ec;
+  --cariri-preto: #12130f;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  color: var(--cariri-preto);
+  background-color: #ffffff;
+}
+
+/* Foco visível para acessibilidade (navegação por teclado) */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--cariri-verde);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

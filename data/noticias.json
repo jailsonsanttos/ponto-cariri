@@ -1,0 +1,13 @@
+[
+  {
+    "slug": "bem-vindo-ao-ponto-cariri",
+    "titulo": "Bem-vindo ao Ponto Cariri",
+    "resumo": "O novo portal de notícias e informações da região do Cariri cearense está no ar.",
+    "conteudo": "Esta é uma notícia de exemplo. Acesse o painel de administração em /admin para editar, excluir ou publicar novas notícias sobre os acontecimentos da região do Cariri cearense.",
+    "imagemCapa": "",
+    "categoria": "Geral",
+    "municipio": "",
+    "dataPublicacao": "2026-09-01",
+    "publicada": true
+  }
+]
