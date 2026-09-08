@@ -1,4 +1,5 @@
 import "./globals.css";
+import Script from "next/script";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import DoacaoBotao from "@/components/DoacaoBotao";
@@ -24,6 +25,16 @@ export default async function RootLayout({ children }) {
 
   return (
     <html lang="pt-BR">
+      <head>
+        {process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID && (
+          <Script
+            async
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID}`}
+            crossOrigin="anonymous"
+            strategy="afterInteractive"
+          />
+        )}
+      </head>
       <body className="min-h-screen flex flex-col font-sans antialiased text-cariri-preto">
         <Header />
         <main className="flex-1 w-full">{children}</main>
