@@ -1,6 +1,10 @@
 import { listarMunicipios } from "@/lib/db";
 import TempoCliente from "./TempoCliente";
 
+// Garante que esta página busque dados novos a cada visita, em vez de
+// usar uma versão "congelada" gerada no momento do build.
+export const dynamic = "force-dynamic";
+
 export const metadata = { title: "Previsão do Tempo" };
 
 export default async function TempoPage() {

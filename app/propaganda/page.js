@@ -2,6 +2,10 @@ import { listarPropagandas } from "@/lib/db";
 import PropagandaCard from "@/components/PropagandaCard";
 import AdSlot from "@/components/AdSlot";
 
+// Garante que esta página busque dados novos a cada visita, em vez de
+// usar uma versão "congelada" gerada no momento do build.
+export const dynamic = "force-dynamic";
+
 export const metadata = { title: "Propaganda" };
 
 export default async function PropagandaPage() {

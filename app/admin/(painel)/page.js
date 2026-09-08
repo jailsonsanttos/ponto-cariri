@@ -1,6 +1,10 @@
 import Link from "next/link";
 import { listarMunicipios, listarNoticias, listarPropagandas } from "@/lib/db";
 
+// Garante que esta página busque dados novos a cada visita, em vez de
+// usar uma versão "congelada" gerada no momento do build.
+export const dynamic = "force-dynamic";
+
 export default async function AdminDashboardPage() {
   const municipios = await listarMunicipios();
   const noticias = await listarNoticias();

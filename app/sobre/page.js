@@ -1,5 +1,9 @@
 import { buscarConfig } from "@/lib/db";
 
+// Garante que esta página busque dados novos a cada visita, em vez de
+// usar uma versão "congelada" gerada no momento do build.
+export const dynamic = "force-dynamic";
+
 export const metadata = { title: "Sobre o Ponto Cariri" };
 
 export default async function SobrePage() {

@@ -4,6 +4,10 @@ import MunicipioCard from "@/components/MunicipioCard";
 import NoticiaCard from "@/components/NoticiaCard";
 import AdSlot from "@/components/AdSlot";
 
+// Garante que esta página busque dados novos a cada visita, em vez de
+// usar uma versão "congelada" gerada no momento do build.
+export const dynamic = "force-dynamic";
+
 export default async function HomePage() {
   const todosMunicipios = await listarMunicipios();
   const municipios = todosMunicipios.slice(0, 6);

@@ -2,6 +2,10 @@ import { notFound } from "next/navigation";
 import { buscarMunicipio } from "@/lib/db";
 import AdSlot from "@/components/AdSlot";
 
+// Garante que esta página busque dados novos a cada visita, em vez de
+// usar uma versão "congelada" gerada no momento do build.
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata({ params }) {
   const municipio = await buscarMunicipio(params.slug);
   return { title: municipio ? municipio.nome : "Município" };

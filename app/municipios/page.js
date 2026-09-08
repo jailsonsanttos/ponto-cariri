@@ -1,6 +1,10 @@
 import { listarMunicipios } from "@/lib/db";
 import MunicipioCard from "@/components/MunicipioCard";
 
+// Garante que esta página busque dados novos a cada visita, em vez de
+// usar uma versão "congelada" gerada no momento do build.
+export const dynamic = "force-dynamic";
+
 export const metadata = { title: "Municípios" };
 
 export default async function MunicipiosPage() {
