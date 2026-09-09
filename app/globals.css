@@ -36,3 +36,40 @@ select:focus-visible {
     scroll-behavior: auto !important;
   }
 }
+
+/* Estilos de leitura para o conteúdo das notícias (escrito com o editor
+   de texto rico do painel admin, salvo em formato HTML). */
+.prose-noticia h2 {
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: var(--cariri-preto);
+  margin-top: 1.75rem;
+  margin-bottom: 0.75rem;
+}
+.prose-noticia p {
+  margin-bottom: 1rem;
+}
+.prose-noticia ul,
+.prose-noticia ol {
+  margin: 1rem 0 1rem 1.5rem;
+}
+.prose-noticia ul {
+  list-style: disc;
+}
+.prose-noticia ol {
+  list-style: decimal;
+}
+.prose-noticia li {
+  margin-bottom: 0.4rem;
+}
+.prose-noticia a {
+  color: var(--cariri-verde);
+  text-decoration: underline;
+}
+.prose-noticia strong {
+  font-weight: 700;
+}
+.prose-noticia img {
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+}

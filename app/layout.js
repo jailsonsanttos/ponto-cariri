@@ -11,13 +11,34 @@ import { buscarConfig } from "@/lib/db";
 // garante que as edições feitas no painel /admin apareçam imediatamente.
 export const dynamic = "force-dynamic";
 
+const URL_SITE = process.env.NEXT_PUBLIC_SITE_URL || "https://ponto-cariri.vercel.app";
+
+export const viewport = {
+  themeColor: "#1B7A43",
+};
+
 export const metadata = {
+  metadataBase: new URL(URL_SITE),
   title: {
     default: "Ponto Cariri — Notícias e informações da região do Cariri cearense",
     template: "%s | Ponto Cariri",
   },
   description:
     "Portal de notícias, municípios, previsão do tempo e divulgação de comércios da região do Cariri cearense.",
+  openGraph: {
+    type: "website",
+    locale: "pt_BR",
+    siteName: "Ponto Cariri",
+    title: "Ponto Cariri — Notícias e informações da região do Cariri cearense",
+    description:
+      "Portal de notícias, municípios, previsão do tempo e divulgação de comércios da região do Cariri cearense.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Ponto Cariri",
+    description:
+      "Portal de notícias, municípios, previsão do tempo e divulgação de comércios da região do Cariri cearense.",
+  },
 };
 
 export default async function RootLayout({ children }) {
@@ -26,6 +47,23 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="pt-BR">
       <head>
+        {process.env.NEXT_PUBLIC_GA_ID && (
+          <>
+            <Script
+              async
+              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}');
+              `}
+            </Script>
+          </>
+        )}
         {process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID && (
           <Script
             async

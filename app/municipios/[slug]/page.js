@@ -8,7 +8,25 @@ export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }) {
   const municipio = await buscarMunicipio(params.slug);
-  return { title: municipio ? municipio.nome : "Município" };
+  if (!municipio) return { title: "Município" };
+
+  const descricao =
+    municipio.descricaoCurta ||
+    `Conheça a história, o hino e a localização de ${municipio.nome}, no Cariri cearense.`;
+
+  return {
+    title: municipio.nome,
+    description: descricao,
+    openGraph: {
+      title: `${municipio.nome} — Ponto Cariri`,
+      description: descricao,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${municipio.nome} — Ponto Cariri`,
+      description: descricao,
+    },
+  };
 }
 
 export default async function MunicipioPage({ params }) {

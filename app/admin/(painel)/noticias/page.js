@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import UploadCampo from "@/components/UploadCampo";
+import EditorTexto from "@/components/EditorTexto";
 
 const VAZIO = {
   titulo: "",
@@ -98,11 +99,11 @@ export default function AdminNoticiasPage() {
 
         <div>
           <label className="block text-sm font-medium mb-1">Conteúdo completo</label>
-          <textarea
-            rows={6}
+          <EditorTexto
+            key={editandoSlug || "novo"}
             value={form.conteudo}
-            onChange={(e) => setForm({ ...form, conteudo: e.target.value })}
-            className="w-full border border-cariri-verde-claro rounded-md px-3 py-2 text-sm"
+            onChange={(html) => setForm({ ...form, conteudo: html })}
+            placeholder="Escreva o conteúdo da notícia..."
           />
         </div>
 
