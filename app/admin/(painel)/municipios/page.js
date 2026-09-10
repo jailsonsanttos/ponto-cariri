@@ -11,6 +11,8 @@ const VAZIO = {
   latitude: "",
   longitude: "",
   fotos: [],
+  videos: [],
+  links: [],
 };
 
 export default function AdminMunicipiosPage() {
@@ -38,6 +40,8 @@ export default function AdminMunicipiosPage() {
       latitude: m.latitude ?? "",
       longitude: m.longitude ?? "",
       fotos: m.fotos || [],
+      videos: m.videos || [],
+      links: m.links || [],
     });
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -166,6 +170,108 @@ export default function AdminMunicipiosPage() {
             ))}
           </div>
         )}
+
+        <div>
+          <label className="block text-sm font-medium mb-1">Vídeos (link do YouTube ou outro)</label>
+          <div className="flex gap-2">
+            <input
+              id="campo-novo-video"
+              placeholder="https://youtube.com/watch?v=..."
+              className="flex-1 border border-cariri-verde-claro rounded-md px-3 py-2 text-sm"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  const valor = e.currentTarget.value.trim();
+                  if (valor) {
+                    setForm({ ...form, videos: [...form.videos, valor] });
+                    e.currentTarget.value = "";
+                  }
+                }
+              }}
+            />
+            <button
+              type="button"
+              onClick={() => {
+                const campo = document.getElementById("campo-novo-video");
+                const valor = campo.value.trim();
+                if (valor) {
+                  setForm({ ...form, videos: [...form.videos, valor] });
+                  campo.value = "";
+                }
+              }}
+              className="px-4 py-2 rounded-md border border-cariri-verde-claro text-sm font-medium"
+            >
+              Adicionar
+            </button>
+          </div>
+          {form.videos.length > 0 && (
+            <ul className="mt-2 space-y-1">
+              {form.videos.map((v, i) => (
+                <li key={i} className="flex items-center justify-between text-xs bg-cariri-verde-claro/50 rounded-md px-3 py-1.5">
+                  <span className="truncate">{v}</span>
+                  <button
+                    type="button"
+                    onClick={() => setForm({ ...form, videos: form.videos.filter((_, idx) => idx !== i) })}
+                    className="text-red-600 font-medium ml-2 shrink-0"
+                  >
+                    Remover
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium mb-1">Links úteis</label>
+          <div className="grid grid-cols-2 gap-2">
+            <input
+              id="campo-novo-link-titulo"
+              placeholder="Título do link"
+              className="border border-cariri-verde-claro rounded-md px-3 py-2 text-sm"
+            />
+            <input
+              id="campo-novo-link-url"
+              placeholder="https://..."
+              className="border border-cariri-verde-claro rounded-md px-3 py-2 text-sm"
+            />
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              const campoTitulo = document.getElementById("campo-novo-link-titulo");
+              const campoUrl = document.getElementById("campo-novo-link-url");
+              const url = campoUrl.value.trim();
+              if (url) {
+                setForm({
+                  ...form,
+                  links: [...form.links, { titulo: campoTitulo.value.trim(), url }],
+                });
+                campoTitulo.value = "";
+                campoUrl.value = "";
+              }
+            }}
+            className="mt-2 px-4 py-2 rounded-md border border-cariri-verde-claro text-sm font-medium"
+          >
+            Adicionar link
+          </button>
+          {form.links.length > 0 && (
+            <ul className="mt-2 space-y-1">
+              {form.links.map((l, i) => (
+                <li key={i} className="flex items-center justify-between text-xs bg-cariri-verde-claro/50 rounded-md px-3 py-1.5">
+                  <span className="truncate">{l.titulo || l.url}</span>
+                  <button
+                    type="button"
+                    onClick={() => setForm({ ...form, links: form.links.filter((_, idx) => idx !== i) })}
+                    className="text-red-600 font-medium ml-2 shrink-0"
+                  >
+                    Remover
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
 
         <div className="flex gap-3">
           <button type="submit" className="bg-cariri-verde text-white font-semibold px-5 py-2 rounded-md hover:bg-cariri-verde-escuro">

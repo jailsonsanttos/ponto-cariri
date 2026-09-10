@@ -12,14 +12,15 @@ const links = [
   { href: "/sobre", label: "Sobre" },
 ];
 
-// Marca própria: a silhueta da Chapada do Araripe, referência geográfica
-// do Cariri, em vez de um logotipo genérico.
-function Logomark() {
+// Marca própria: um "ponto" verde sólido pousado sobre a silhueta da
+// Chapada do Araripe — o "Ponto Cariri", literalmente.
+function Logomark({ tamanho = 34 }) {
   return (
-    <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
-      <circle cx="23" cy="9" r="3.2" fill="#1B7A43" fillOpacity="0.25" />
-      <path d="M1 25 L9.5 11 L14 17.5 L19 8 L31 25 Z" fill="#1B7A43" />
-      <path d="M1 25 L13 16 L18 21 L24 14 L31 25 Z" fill="#12130F" fillOpacity="0.12" />
+    <svg viewBox="0 0 32 32" width={tamanho} height={tamanho} aria-hidden="true">
+      <path d="M1 26 L9.5 12 L14 18.5 L19 9 L31 26 Z" fill="#1B7A43" />
+      <path d="M1 26 L13 17 L18 22 L24 15 L31 26 Z" fill="#12130F" fillOpacity="0.12" />
+      <circle cx="19" cy="9" r="4.4" fill="#1B7A43" />
+      <circle cx="19" cy="9" r="4.4" fill="none" stroke="#FFFFFF" strokeWidth="1.4" />
     </svg>
   );
 }
@@ -63,16 +64,16 @@ export default function Header() {
         comSombra ? "shadow-[0_8px_20px_-14px_rgba(18,19,15,0.35)]" : ""
       }`}
     >
-      <div className="max-w-content mx-auto px-5 h-16 sm:h-[72px] flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2.5 shrink-0">
-          <Logomark />
-          <span className="text-[17px] font-bold tracking-tight text-cariri-preto">
+      <div className="max-w-content mx-auto px-5 h-20 sm:h-24 flex items-center justify-between">
+        <Link href="/" className="flex items-center gap-3 shrink-0">
+          <Logomark tamanho={44} />
+          <span className="text-[21px] sm:text-[24px] font-bold tracking-tight text-cariri-preto">
             Ponto Cariri
           </span>
         </Link>
 
         {/* Navegação para telas médias/grandes: sublinhado deslizante indica a página atual */}
-        <nav aria-label="Navegação principal" className="hidden md:flex items-center gap-0.5">
+        <nav aria-label="Navegação principal" className="hidden md:flex items-center gap-1">
           {links.map((link) => {
             const ativo = linkEstaAtivo(pathname, link.href);
             return (
@@ -80,11 +81,11 @@ export default function Header() {
                 key={link.href}
                 href={link.href}
                 aria-current={ativo ? "page" : undefined}
-                className="relative px-3.5 py-2 text-[15px] font-medium text-cariri-preto/75 hover:text-cariri-preto transition-colors"
+                className="relative px-4 py-2.5 text-[16px] font-medium text-cariri-preto/75 hover:text-cariri-preto transition-colors"
               >
                 {link.label}
                 <span
-                  className={`absolute left-3.5 right-3.5 -bottom-[1px] h-[2px] rounded-full bg-cariri-verde origin-left transition-transform duration-200 ${
+                  className={`absolute left-4 right-4 -bottom-[1px] h-[2.5px] rounded-full bg-cariri-verde origin-left transition-transform duration-200 ${
                     ativo ? "scale-x-100" : "scale-x-0"
                   }`}
                 />
@@ -94,9 +95,9 @@ export default function Header() {
           <Link
             href="/busca"
             aria-label="Buscar"
-            className="ml-1 w-9 h-9 flex items-center justify-center rounded-full text-cariri-preto/75 hover:text-cariri-verde hover:bg-cariri-verde-claro transition-colors"
+            className="ml-2 w-10 h-10 flex items-center justify-center rounded-full text-cariri-preto/75 hover:text-cariri-verde hover:bg-cariri-verde-claro transition-colors"
           >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <circle cx="11" cy="11" r="7" />
               <line x1="21" y1="21" x2="16.65" y2="16.65" />
             </svg>
@@ -108,9 +109,9 @@ export default function Header() {
           <Link
             href="/busca"
             aria-label="Buscar"
-            className="w-11 h-11 flex items-center justify-center text-cariri-preto"
+            className="w-12 h-12 flex items-center justify-center text-cariri-preto"
           >
-            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <circle cx="11" cy="11" r="7" />
               <line x1="21" y1="21" x2="16.65" y2="16.65" />
             </svg>
@@ -119,11 +120,11 @@ export default function Header() {
             onClick={() => setMenuAberto(true)}
             aria-label="Abrir menu"
             aria-expanded={menuAberto}
-            className="w-11 h-11 flex flex-col items-center justify-center gap-[5px]"
+            className="w-12 h-12 flex flex-col items-center justify-center gap-[6px]"
           >
-            <span className="block w-6 h-[2px] bg-cariri-preto rounded-full" />
-            <span className="block w-6 h-[2px] bg-cariri-preto rounded-full" />
-            <span className="block w-4 h-[2px] self-end mr-[3px] bg-cariri-preto rounded-full" />
+            <span className="block w-7 h-[2.5px] bg-cariri-preto rounded-full" />
+            <span className="block w-7 h-[2.5px] bg-cariri-preto rounded-full" />
+            <span className="block w-5 h-[2.5px] self-end mr-[3px] bg-cariri-preto rounded-full" />
           </button>
         </div>
       </div>

@@ -73,3 +73,15 @@ select:focus-visible {
   border-radius: 0.5rem;
   margin: 1rem 0;
 }
+
+/* Faixa de previsão do tempo que rola automaticamente na home */
+@keyframes rolagem-tempo {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.faixa-tempo-rolando {
+  animation: rolagem-tempo 32s linear infinite;
+}
+.faixa-tempo-rolando:hover {
+  animation-play-state: paused;
+}

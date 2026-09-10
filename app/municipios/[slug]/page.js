@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { buscarMunicipio } from "@/lib/db";
 import AdSlot from "@/components/AdSlot";
+import BookMidia from "@/components/BookMidia";
 import { unstable_noStore as noStore } from "next/cache";
 
 // Garante que esta página busque dados novos a cada visita, em vez de
@@ -60,22 +61,7 @@ export default async function MunicipioPage({ params }) {
             </p>
           </section>
 
-          {municipio.fotos && municipio.fotos.length > 0 && (
-            <section>
-              <h2 className="text-lg font-bold text-cariri-preto mb-3">Fotos</h2>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                {municipio.fotos.map((foto, i) => (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    key={i}
-                    src={foto}
-                    alt={`Foto de ${municipio.nome}`}
-                    className="rounded-md w-full h-32 object-cover"
-                  />
-                ))}
-              </div>
-            </section>
-          )}
+          <BookMidia municipio={municipio} />
 
           <AdSlot label={`Anúncio - página de ${municipio.nome}`} />
         </div>
