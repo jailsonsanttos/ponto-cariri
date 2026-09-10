@@ -1,6 +1,7 @@
 import { listarPropagandas } from "@/lib/db";
 import PropagandaCard from "@/components/PropagandaCard";
 import AdSlot from "@/components/AdSlot";
+import { unstable_noStore as noStore } from "next/cache";
 
 // Garante que esta página busque dados novos a cada visita, em vez de
 // usar uma versão "congelada" gerada no momento do build.
@@ -9,6 +10,8 @@ export const dynamic = "force-dynamic";
 export const metadata = { title: "Propaganda" };
 
 export default async function PropagandaPage() {
+  noStore();
+
   const propagandas = (await listarPropagandas()).filter((p) => p.ativo);
 
   return (

@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { buscarMunicipio } from "@/lib/db";
 import AdSlot from "@/components/AdSlot";
+import { unstable_noStore as noStore } from "next/cache";
 
 // Garante que esta página busque dados novos a cada visita, em vez de
 // usar uma versão "congelada" gerada no momento do build.
@@ -30,6 +31,8 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function MunicipioPage({ params }) {
+  noStore();
+
   const municipio = await buscarMunicipio(params.slug);
 
   if (!municipio) notFound();

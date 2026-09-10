@@ -3,12 +3,15 @@ import { listarMunicipios, listarNoticias } from "@/lib/db";
 import MunicipioCard from "@/components/MunicipioCard";
 import NoticiaCard from "@/components/NoticiaCard";
 import AdSlot from "@/components/AdSlot";
+import { unstable_noStore as noStore } from "next/cache";
 
 // Garante que esta página busque dados novos a cada visita, em vez de
 // usar uma versão "congelada" gerada no momento do build.
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
+  noStore();
+
   const todosMunicipios = await listarMunicipios();
   const municipios = todosMunicipios.slice(0, 6);
   const noticias = (await listarNoticias())

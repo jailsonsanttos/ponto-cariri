@@ -1,4 +1,5 @@
 import { buscarConfig } from "@/lib/db";
+import { unstable_noStore as noStore } from "next/cache";
 
 // Garante que esta página busque dados novos a cada visita, em vez de
 // usar uma versão "congelada" gerada no momento do build.
@@ -7,6 +8,8 @@ export const dynamic = "force-dynamic";
 export const metadata = { title: "Sobre o Ponto Cariri" };
 
 export default async function SobrePage() {
+  noStore();
+
   const config = await buscarConfig();
 
   return (

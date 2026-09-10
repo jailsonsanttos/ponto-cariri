@@ -4,6 +4,7 @@ import AdSlot from "@/components/AdSlot";
 import CompartilharBotoes from "@/components/CompartilharBotoes";
 import NoticiaCard from "@/components/NoticiaCard";
 import Link from "next/link";
+import { unstable_noStore as noStore } from "next/cache";
 
 // Garante que esta página busque dados novos a cada visita, em vez de
 // usar uma versão "congelada" gerada no momento do build.
@@ -33,6 +34,8 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function NoticiaPage({ params }) {
+  noStore();
+
   const noticia = await buscarNoticia(params.slug);
 
   if (!noticia || !noticia.publicada) notFound();

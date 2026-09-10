@@ -1,11 +1,14 @@
 import Link from "next/link";
 import { listarMunicipios, listarNoticias, listarPropagandas } from "@/lib/db";
+import { unstable_noStore as noStore } from "next/cache";
 
 // Garante que esta página busque dados novos a cada visita, em vez de
 // usar uma versão "congelada" gerada no momento do build.
 export const dynamic = "force-dynamic";
 
 export default async function AdminDashboardPage() {
+  noStore();
+
   const municipios = await listarMunicipios();
   const noticias = await listarNoticias();
   const propagandas = await listarPropagandas();

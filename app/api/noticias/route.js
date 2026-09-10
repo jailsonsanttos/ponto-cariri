@@ -2,12 +2,15 @@ import { NextResponse } from "next/server";
 import { listarNoticias, criarNoticia, buscarNoticia } from "@/lib/db";
 import { gerarSlug } from "@/lib/data";
 import { exigirAdmin } from "@/lib/auth";
+import { unstable_noStore as noStore } from "next/cache";
 
 // Evita que o Next.js tente pré-gerar esta rota durante o "build";
 // ela precisa ser executada sempre na hora (usa o banco de dados).
 export const dynamic = "force-dynamic";
 
 export async function GET() {
+  noStore();
+
   const noticias = await listarNoticias();
   return NextResponse.json(noticias);
 }
