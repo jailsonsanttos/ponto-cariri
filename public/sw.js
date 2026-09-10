@@ -1,17 +1,17 @@
 // public/sw.js
-// Service Worker mínimo, necessário para o Chrome permitir que o site
-// seja "instalado" como aplicativo (PWA). Não faz cache agressivo do
-// conteúdo, para garantir que as notícias e páginas sempre apareçam
-// atualizadas.
+// Este service worker foi desativado porque estava causando exibição
+// de conteúdo desatualizado em algumas visitas. Este arquivo agora só
+// serve para remover, com segurança, a versão antiga que já estava
+// instalada no navegador de quem visitou o site antes.
 
 self.addEventListener("install", () => {
   self.skipWaiting();
 });
 
-self.addEventListener("activate", (event) => {
-  event.waitUntil(self.clients.claim());
-});
-
-self.addEventListener("fetch", (event) => {
-  event.respondWith(fetch(event.request));
+self.addEventListener("activate", () => {
+  self.registration.unregister().then(() => {
+    return self.clients.matchAll();
+  }).then((clients) => {
+    clients.forEach((client) => client.navigate(client.url));
+  });
 });
