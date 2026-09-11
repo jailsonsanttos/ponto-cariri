@@ -3,6 +3,7 @@ import Script from "next/script";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import DoacaoBotao from "@/components/DoacaoBotao";
+import AvisoCookies from "@/components/AvisoCookies";
 import { buscarConfig } from "@/lib/db";
 
 // Força todas as páginas do site a serem geradas "na hora" (a cada visita),
@@ -81,6 +82,7 @@ export default async function RootLayout({ children }) {
           chavePix={config.chavePix}
           mensagem={config.mensagemDoacao}
         />
+        <AvisoCookies />
       </body>
     </html>
   );

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { unstable_noStore as noStore } from "next/cache";
-import { listarNoticias, listarPropagandasRecentes, listarMunicipios } from "@/lib/db";
+import { listarNoticiasPaginado, listarPropagandasRecentes, listarMunicipios } from "@/lib/db";
 import NoticiaFeedItem from "@/components/NoticiaFeedItem";
 import PropagandaCard from "@/components/PropagandaCard";
 import TempoFaixa from "@/components/TempoFaixa";
@@ -13,7 +13,7 @@ export const dynamic = "force-dynamic";
 export default async function HomePage() {
   noStore();
 
-  const noticias = (await listarNoticias()).filter((n) => n.publicada);
+  const { noticias } = await listarNoticiasPaginado({ pagina: 1, porPagina: 10 });
   const propagandas = await listarPropagandasRecentes(3);
   const municipios = await listarMunicipios();
 

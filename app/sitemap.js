@@ -15,6 +15,7 @@ export default async function sitemap() {
     { url: `${URL_SITE}/tempo`, changeFrequency: "daily", priority: 0.6 },
     { url: `${URL_SITE}/propaganda`, changeFrequency: "weekly", priority: 0.6 },
     { url: `${URL_SITE}/sobre`, changeFrequency: "monthly", priority: 0.4 },
+    { url: `${URL_SITE}/privacidade`, changeFrequency: "yearly", priority: 0.2 },
   ];
 
   let paginasMunicipios = [];

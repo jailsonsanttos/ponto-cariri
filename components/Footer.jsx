@@ -73,6 +73,7 @@ export default function Footer({ config }) {
             <li><Link href="/tempo" className="hover:text-white">Tempo</Link></li>
             <li><Link href="/propaganda" className="hover:text-white">Propaganda</Link></li>
             <li><Link href="/sobre" className="hover:text-white">Sobre o Ponto Cariri</Link></li>
+            <li><Link href="/privacidade" className="hover:text-white">Política de Privacidade</Link></li>
           </ul>
         </div>
 
