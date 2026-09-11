@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const links = [
@@ -25,14 +25,25 @@ function Logomark({ tamanho = 34 }) {
   );
 }
 
+function IconeLupa(props) {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" {...props}>
+      <circle cx="11" cy="11" r="7" />
+      <line x1="21" y1="21" x2="16.65" y2="16.65" />
+    </svg>
+  );
+}
+
 function linkEstaAtivo(pathname, href) {
   return pathname === href || pathname.startsWith(href + "/");
 }
 
 export default function Header() {
   const pathname = usePathname();
+  const router = useRouter();
   const [menuAberto, setMenuAberto] = useState(false);
   const [comSombra, setComSombra] = useState(false);
+  const [termoBusca, setTermoBusca] = useState("");
 
   // Sombra sutil que aparece só depois que a pessoa rola a página —
   // dá profundidade ao cabeçalho sem precisar de decoração fixa.
@@ -58,13 +69,19 @@ export default function Header() {
     setMenuAberto(false);
   }, [pathname]);
 
+  function aoBuscar(e) {
+    e.preventDefault();
+    if (termoBusca.trim().length < 2) return;
+    router.push(`/busca?q=${encodeURIComponent(termoBusca.trim())}`);
+  }
+
   return (
     <header
-      className={`sticky top-0 z-40 w-full bg-white border-b border-cariri-verde-claro transition-shadow duration-200 ${
+      className={`sticky top-0 z-40 w-full bg-cariri-verde-claro border-b border-cariri-preto/5 transition-shadow duration-200 ${
         comSombra ? "shadow-[0_8px_20px_-14px_rgba(18,19,15,0.35)]" : ""
       }`}
     >
-      <div className="max-w-content mx-auto px-5 h-20 sm:h-24 flex items-center justify-between">
+      <div className="max-w-content mx-auto px-5 h-20 sm:h-24 flex items-center justify-between gap-4">
         <Link href="/" className="flex items-center gap-3 shrink-0">
           <Logomark tamanho={44} />
           <span className="text-[21px] sm:text-[24px] font-bold tracking-tight text-cariri-preto">
@@ -92,16 +109,23 @@ export default function Header() {
               </Link>
             );
           })}
-          <Link
-            href="/busca"
-            aria-label="Buscar"
-            className="ml-2 w-10 h-10 flex items-center justify-center rounded-full text-cariri-preto/75 hover:text-cariri-verde hover:bg-cariri-verde-claro transition-colors"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <circle cx="11" cy="11" r="7" />
-              <line x1="21" y1="21" x2="16.65" y2="16.65" />
-            </svg>
-          </Link>
+
+          <form onSubmit={aoBuscar} className="ml-2 flex items-center bg-white rounded-full pl-4 pr-1.5 py-1.5 focus-within:ring-2 focus-within:ring-cariri-verde/40">
+            <input
+              type="search"
+              value={termoBusca}
+              onChange={(e) => setTermoBusca(e.target.value)}
+              placeholder="Buscar..."
+              className="w-32 lg:w-48 text-sm text-cariri-preto placeholder:text-cariri-cinza-texto outline-none bg-transparent"
+            />
+            <button
+              type="submit"
+              aria-label="Buscar"
+              className="w-8 h-8 flex items-center justify-center rounded-full text-white bg-cariri-verde hover:bg-cariri-verde-escuro transition-colors shrink-0"
+            >
+              <IconeLupa />
+            </button>
+          </form>
         </nav>
 
         {/* Botões de ação para celular: busca + menu */}
@@ -111,10 +135,7 @@ export default function Header() {
             aria-label="Buscar"
             className="w-12 h-12 flex items-center justify-center text-cariri-preto"
           >
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <circle cx="11" cy="11" r="7" />
-              <line x1="21" y1="21" x2="16.65" y2="16.65" />
-            </svg>
+            <IconeLupa width="22" height="22" />
           </Link>
           <button
             onClick={() => setMenuAberto(true)}
@@ -161,6 +182,26 @@ export default function Header() {
               ×
             </button>
           </div>
+
+          <form
+            onSubmit={aoBuscar}
+            className="mx-3 mt-3 flex items-center bg-cariri-verde-claro rounded-full pl-4 pr-1.5 py-1.5"
+          >
+            <input
+              type="search"
+              value={termoBusca}
+              onChange={(e) => setTermoBusca(e.target.value)}
+              placeholder="Buscar..."
+              className="w-full text-sm text-cariri-preto placeholder:text-cariri-cinza-texto outline-none bg-transparent"
+            />
+            <button
+              type="submit"
+              aria-label="Buscar"
+              className="w-8 h-8 flex items-center justify-center rounded-full text-white bg-cariri-verde shrink-0"
+            >
+              <IconeLupa />
+            </button>
+          </form>
 
           <nav aria-label="Navegação principal (celular)" className="px-3 py-3 flex flex-col overflow-y-auto">
             {links.map((link) => {

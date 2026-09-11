@@ -3,14 +3,24 @@
 import { useEffect, useState } from "react";
 import UploadCampo from "@/components/UploadCampo";
 
-function CampoFoto({ label, url, onEnviar }) {
+function CampoFoto({ label, url, onEnviar, onRemover }) {
   return (
     <div>
       <label className="block text-sm font-medium mb-1">{label}</label>
       <div className="flex items-center gap-3">
         {url && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={url} alt="" className="w-14 h-18 object-cover rounded-md border border-cariri-verde-claro" />
+          <div className="relative">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={url} alt="" className="w-14 h-18 object-cover rounded-md border border-cariri-verde-claro" />
+            <button
+              type="button"
+              onClick={onRemover}
+              title="Remover foto"
+              className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full w-5 h-5 text-xs leading-none"
+            >
+              ×
+            </button>
+          </div>
         )}
         <UploadCampo label="" onEnviar={onEnviar} />
       </div>
@@ -116,6 +126,7 @@ export default function AdminConfigPage() {
           label="Foto do responsável"
           url={form.responsavelFoto}
           onEnviar={(url) => setForm({ ...form, responsavelFoto: url })}
+          onRemover={() => setForm({ ...form, responsavelFoto: "" })}
         />
 
         <div>
@@ -130,6 +141,7 @@ export default function AdminConfigPage() {
           label="Foto do administrador"
           url={form.administradorFoto}
           onEnviar={(url) => setForm({ ...form, administradorFoto: url })}
+          onRemover={() => setForm({ ...form, administradorFoto: "" })}
         />
 
         <div>
@@ -144,6 +156,7 @@ export default function AdminConfigPage() {
           label="Foto do coordenador"
           url={form.coordenadorFoto}
           onEnviar={(url) => setForm({ ...form, coordenadorFoto: url })}
+          onRemover={() => setForm({ ...form, coordenadorFoto: "" })}
         />
 
         <div>
@@ -157,6 +170,39 @@ export default function AdminConfigPage() {
             placeholder="Conte um pouco da sua trajetória..."
             className="w-full border border-cariri-verde-claro rounded-md px-3 py-2 text-sm"
           />
+        </div>
+
+        <hr className="border-cariri-verde-claro" />
+        <p className="text-sm font-bold text-cariri-preto">Redes sociais (aparecem no rodapé)</p>
+
+        <div className="grid grid-cols-3 gap-4">
+          <div>
+            <label className="block text-sm font-medium mb-1">Instagram</label>
+            <input
+              value={form.instagramUrl || ""}
+              onChange={(e) => setForm({ ...form, instagramUrl: e.target.value })}
+              placeholder="https://instagram.com/..."
+              className="w-full border border-cariri-verde-claro rounded-md px-3 py-2 text-sm"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Facebook</label>
+            <input
+              value={form.facebookUrl || ""}
+              onChange={(e) => setForm({ ...form, facebookUrl: e.target.value })}
+              placeholder="https://facebook.com/..."
+              className="w-full border border-cariri-verde-claro rounded-md px-3 py-2 text-sm"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">X / Twitter</label>
+            <input
+              value={form.twitterUrl || ""}
+              onChange={(e) => setForm({ ...form, twitterUrl: e.target.value })}
+              placeholder="https://x.com/..."
+              className="w-full border border-cariri-verde-claro rounded-md px-3 py-2 text-sm"
+            />
+          </div>
         </div>
 
         <hr className="border-cariri-verde-claro" />

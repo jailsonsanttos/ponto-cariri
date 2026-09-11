@@ -23,7 +23,7 @@ export default async function HomePage() {
       <TempoFaixa municipios={municipios} />
 
       {/* Cabeçalho curto de boas-vindas */}
-      <section className="bg-cariri-verde-claro">
+      <section className="bg-white border-b border-cariri-verde-claro">
         <div className="max-w-content mx-auto px-5 py-8 sm:py-10">
           <p className="text-sm font-semibold text-cariri-verde uppercase tracking-wide">
             Região do Cariri cearense

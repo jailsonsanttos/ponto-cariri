@@ -52,13 +52,13 @@ export default function TempoFaixa({ municipios }) {
   const listaDupla = [...itens, ...itens];
 
   return (
-    <div className="bg-cariri-preto text-white overflow-hidden">
+    <div className="bg-cariri-verde-claro border-b border-cariri-preto/5 overflow-hidden">
       <div className="flex whitespace-nowrap py-2.5 faixa-tempo-rolando w-max">
         {listaDupla.map((item, i) => (
-          <span key={i} className="inline-flex items-center gap-2 px-6 text-sm border-r border-white/10">
-            <span className="font-semibold">{item.nome}</span>
-            <span className="text-white/70">{item.temperatura}°C</span>
-            <span className="text-white/50">· {item.descricao}</span>
+          <span key={i} className="inline-flex items-center gap-2 px-6 text-sm border-r border-cariri-preto/10">
+            <span className="font-semibold text-cariri-preto">{item.nome}</span>
+            <span className="text-cariri-verde-escuro font-medium">{item.temperatura}°C</span>
+            <span className="text-cariri-cinza-texto">· {item.descricao}</span>
           </span>
         ))}
       </div>

@@ -76,7 +76,7 @@ export default async function RootLayout({ children }) {
       <body className="min-h-screen flex flex-col font-sans antialiased text-cariri-preto">
         <Header />
         <main className="flex-1 w-full">{children}</main>
-        <Footer />
+        <Footer config={config} />
         <DoacaoBotao
           chavePix={config.chavePix}
           mensagem={config.mensagemDoacao}
