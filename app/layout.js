@@ -45,9 +45,24 @@ export const metadata = {
 export default async function RootLayout({ children }) {
   const config = await buscarConfig();
 
+  const schemaOrganizacao = {
+    "@context": "https://schema.org",
+    "@type": "NewsMediaOrganization",
+    name: "Ponto Cariri",
+    url: URL_SITE,
+    logo: `${URL_SITE}/icon-512`,
+    description:
+      "Portal de notícias, municípios, previsão do tempo e divulgação de comércios da região do Cariri cearense.",
+  };
+
   return (
     <html lang="pt-BR">
       <head>
+        <link rel="alternate" type="application/rss+xml" title="Ponto Cariri" href="/feed.xml" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaOrganizacao) }}
+        />
         {process.env.NEXT_PUBLIC_GA_ID && (
           <>
             <Script

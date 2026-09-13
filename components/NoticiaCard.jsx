@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export default function NoticiaCard({ noticia }) {
   return (
@@ -7,12 +8,15 @@ export default function NoticiaCard({ noticia }) {
       className="block rounded-lg border border-cariri-verde-claro overflow-hidden hover:border-cariri-verde hover:shadow-sm transition-all bg-white"
     >
       {noticia.imagemCapa ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={noticia.imagemCapa}
-          alt=""
-          className="w-full h-44 object-cover"
-        />
+        <div className="relative w-full h-44">
+          <Image
+            src={noticia.imagemCapa}
+            alt=""
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="object-cover"
+          />
+        </div>
       ) : (
         <div className="w-full h-44 bg-cariri-verde-claro" />
       )}

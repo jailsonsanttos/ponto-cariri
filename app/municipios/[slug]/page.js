@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { buscarMunicipio } from "@/lib/db";
 import AdSlot from "@/components/AdSlot";
 import BookMidia from "@/components/BookMidia";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import { unstable_noStore as noStore } from "next/cache";
 
 // Garante que esta página busque dados novos a cada visita, em vez de
@@ -45,6 +46,13 @@ export default async function MunicipioPage({ params }) {
 
   return (
     <div className="max-w-content mx-auto px-5 py-12">
+      <Breadcrumbs
+        itens={[
+          { label: "Municípios", href: "/municipios" },
+          { label: municipio.nome },
+        ]}
+      />
+
       <p className="text-sm font-semibold text-cariri-verde uppercase tracking-wide">
         Município
       </p>

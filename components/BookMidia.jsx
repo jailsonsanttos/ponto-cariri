@@ -1,4 +1,5 @@
 import { idDoYoutube } from "@/lib/midia";
+import Image from "next/image";
 
 // Exibe o "book" de fotos, vídeos e links de um município.
 export default function BookMidia({ municipio }) {
@@ -17,13 +18,15 @@ export default function BookMidia({ municipio }) {
       {temFotos && (
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
           {municipio.fotos.map((foto, i) => (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              key={i}
-              src={foto}
-              alt={`Foto de ${municipio.nome}`}
-              className="rounded-md w-full h-32 sm:h-40 object-cover"
-            />
+            <div key={i} className="relative w-full h-32 sm:h-40 rounded-md overflow-hidden">
+              <Image
+                src={foto}
+                alt={`Foto de ${municipio.nome}`}
+                fill
+                sizes="(max-width: 640px) 50vw, 250px"
+                className="object-cover"
+              />
+            </div>
           ))}
         </div>
       )}

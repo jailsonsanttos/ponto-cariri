@@ -13,6 +13,7 @@ const VAZIO = {
   municipio: "",
   dataPublicacao: new Date().toISOString().slice(0, 10),
   publicada: true,
+  destaque: false,
 };
 
 export default function AdminNoticiasPage() {
@@ -143,6 +144,15 @@ export default function AdminNoticiasPage() {
             onChange={(e) => setForm({ ...form, publicada: e.target.checked })}
           />
           Notícia publicada (visível no site)
+        </label>
+
+        <label className="flex items-center gap-2 text-sm">
+          <input
+            type="checkbox"
+            checked={form.destaque || false}
+            onChange={(e) => setForm({ ...form, destaque: e.target.checked })}
+          />
+          Destacar esta notícia na página inicial (matéria principal)
         </label>
 
         <div className="flex gap-3">

@@ -2,12 +2,15 @@ export default function PropagandaCard({ propaganda }) {
   return (
     <div className="rounded-lg border border-cariri-verde-claro overflow-hidden bg-white flex flex-col">
       {propaganda.fotos && propaganda.fotos[0] ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={propaganda.fotos[0]}
-          alt=""
-          className="w-full h-40 object-cover"
-        />
+        <div className="relative w-full h-40">
+          <Image
+            src={propaganda.fotos[0]}
+            alt=""
+            fill
+            sizes="(max-width: 640px) 100vw, 300px"
+            className="object-cover"
+          />
+        </div>
       ) : (
         <div className="w-full h-40 bg-cariri-verde-claro" />
       )}

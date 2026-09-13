@@ -1,7 +1,15 @@
 import Link from "next/link";
 import { unstable_noStore as noStore } from "next/cache";
-import { listarNoticiasPaginado, listarPropagandasRecentes, listarMunicipios } from "@/lib/db";
+import {
+  listarNoticiasPaginado,
+  listarPropagandasRecentes,
+  listarMunicipios,
+  buscarNoticiaDestaque,
+  listarMaisLidas,
+} from "@/lib/db";
 import NoticiaFeedItem from "@/components/NoticiaFeedItem";
+import NoticiaDestaque from "@/components/NoticiaDestaque";
+import MaisLidas from "@/components/MaisLidas";
 import PropagandaCard from "@/components/PropagandaCard";
 import TempoFaixa from "@/components/TempoFaixa";
 import AdSlot from "@/components/AdSlot";
@@ -13,9 +21,19 @@ export const dynamic = "force-dynamic";
 export default async function HomePage() {
   noStore();
 
-  const { noticias } = await listarNoticiasPaginado({ pagina: 1, porPagina: 10 });
-  const propagandas = await listarPropagandasRecentes(3);
-  const municipios = await listarMunicipios();
+  const [{ noticias: todasRecentes }, destaque, propagandas, municipios, maisLidas] =
+    await Promise.all([
+      listarNoticiasPaginado({ pagina: 1, porPagina: 11 }),
+      buscarNoticiaDestaque(),
+      listarPropagandasRecentes(3),
+      listarMunicipios(),
+      listarMaisLidas(5),
+    ]);
+
+  // Remove a notícia em destaque do feed comum, para não repetir.
+  const noticias = todasRecentes
+    .filter((n) => n.slug !== destaque?.slug)
+    .slice(0, 10);
 
   return (
     <div>
@@ -33,6 +51,12 @@ export default async function HomePage() {
           </h1>
         </div>
       </section>
+
+      {destaque && (
+        <div className="max-w-content mx-auto px-5 pt-8">
+          <NoticiaDestaque noticia={destaque} />
+        </div>
+      )}
 
       <div className="max-w-content mx-auto px-5 pt-6">
         <AdSlot label="Anúncio - topo da página inicial" />
@@ -59,8 +83,10 @@ export default async function HomePage() {
           )}
         </div>
 
-        {/* Barra lateral: propaganda recente */}
+        {/* Barra lateral: mais lidas + propaganda recente */}
         <aside className="space-y-6">
+          <MaisLidas noticias={maisLidas} />
+
           <div>
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-bold text-cariri-preto">Propaganda local</h2>
