@@ -138,11 +138,13 @@ export default function Header({ config }) {
           <span className="block w-4 h-[2.5px] self-end mr-[3px] bg-cariri-preto rounded-full" />
         </button>
 
-        <Link href="/" className="flex items-center justify-center gap-2.5 sm:gap-3">
-          <Logomark tamanho={38} />
-          <span className="text-[19px] sm:text-[24px] font-bold tracking-tight text-cariri-preto whitespace-nowrap">
-            Ponto Cariri
-          </span>
+        <Link href="/" className="flex items-center justify-center">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logo.jpg"
+            alt="Ponto Cariri"
+            className="h-14 sm:h-[68px] w-auto object-contain"
+          />
         </Link>
 
         <div className="flex items-center justify-end gap-2">
@@ -216,8 +218,8 @@ export default function Header({ config }) {
         >
           <div className="flex items-center justify-between px-5 h-16 border-b border-cariri-verde-claro shrink-0">
             <span className="flex items-center gap-2 font-bold text-cariri-preto">
-              <Logomark />
-              Ponto Cariri
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/logo.jpg" alt="Ponto Cariri" className="h-8 w-auto" />
             </span>
             <button
               onClick={() => setMenuAberto(false)}
