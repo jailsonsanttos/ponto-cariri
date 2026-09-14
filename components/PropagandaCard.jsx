@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function PropagandaCard({ propaganda }) {
   return (
     <div className="rounded-lg border border-cariri-verde-claro overflow-hidden bg-white flex flex-col">
