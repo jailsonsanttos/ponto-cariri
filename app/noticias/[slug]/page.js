@@ -3,6 +3,7 @@ import Image from "next/image";
 import { buscarNoticia, listarNoticias } from "@/lib/db";
 import AdSlot from "@/components/AdSlot";
 import CompartilharBotoes from "@/components/CompartilharBotoes";
+import OuvirNoticia from "@/components/OuvirNoticia";
 import NoticiaCard from "@/components/NoticiaCard";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import ContadorVisualizacao from "@/components/ContadorVisualizacao";
@@ -91,13 +92,18 @@ export default async function NoticiaPage({ params }) {
           ]}
         />
 
-        <p className="text-sm font-semibold text-cariri-verde uppercase tracking-wide">
+        <Link
+          href={`/noticias?categoria=${encodeURIComponent(noticia.categoria || "")}`}
+          className="inline-block text-xs font-bold text-white bg-cariri-verde px-3 py-1 rounded-full uppercase tracking-wide"
+        >
           {noticia.categoria || "Geral"}
-        </p>
-        <h1 className="mt-1 text-3xl sm:text-4xl font-bold text-cariri-preto leading-tight">
+        </Link>
+        <h1 className="mt-3 text-3xl sm:text-4xl font-bold text-cariri-preto leading-tight">
           {noticia.titulo}
         </h1>
-        <p className="mt-3 text-sm text-cariri-cinza-texto">{dataFormatada}</p>
+        <p className="mt-3 text-sm text-cariri-cinza-texto">
+          Por: Redação Ponto Cariri · {dataFormatada}
+        </p>
 
         {noticia.imagemCapa && (
           <div className="relative mt-6 w-full h-64 sm:h-96 rounded-lg overflow-hidden">
@@ -117,7 +123,11 @@ export default async function NoticiaPage({ params }) {
           dangerouslySetInnerHTML={{ __html: noticia.conteudo }}
         />
 
-        <div className="mt-8 pt-6 border-t border-cariri-verde-claro">
+        <div className="mt-8 pt-6 border-t border-cariri-verde-claro flex flex-wrap items-start gap-6">
+          <OuvirNoticia
+            titulo={noticia.titulo}
+            texto={noticia.conteudo.replace(/<[^>]*>/g, " ")}
+          />
           <CompartilharBotoes titulo={noticia.titulo} slug={noticia.slug} />
         </div>
 

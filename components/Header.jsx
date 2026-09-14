@@ -34,19 +34,41 @@ function IconeLupa(props) {
   );
 }
 
+function IconeRedeSocial({ tipo }) {
+  if (tipo === "instagram") {
+    return (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <rect x="2" y="2" width="20" height="20" rx="5" />
+        <circle cx="12" cy="12" r="4" />
+        <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+      </svg>
+    );
+  }
+  if (tipo === "facebook") {
+    return (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M13.5 21v-7.5H16l.5-3H13.5V8.2c0-.87.24-1.46 1.5-1.46H16.6V4.14C16.3 4.1 15.3 4 14.1 4c-2.4 0-4 1.46-4 4.14V10.5H7.5v3H10V21h3.5Z" />
+      </svg>
+    );
+  }
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M18.9 2H22l-7.6 8.7L23 22h-6.9l-5.4-6.6L4.5 22H1.4l8.1-9.3L1 2h7l4.9 6.1L18.9 2Zm-1.2 18h1.9L7.4 4H5.4l12.3 16Z" />
+    </svg>
+  );
+}
+
 function linkEstaAtivo(pathname, href) {
   return pathname === href || pathname.startsWith(href + "/");
 }
 
-export default function Header() {
+export default function Header({ config }) {
   const pathname = usePathname();
   const router = useRouter();
   const [menuAberto, setMenuAberto] = useState(false);
   const [comSombra, setComSombra] = useState(false);
   const [termoBusca, setTermoBusca] = useState("");
 
-  // Sombra sutil que aparece só depois que a pessoa rola a página —
-  // dá profundidade ao cabeçalho sem precisar de decoração fixa.
   useEffect(() => {
     function aoRolar() {
       setComSombra(window.scrollY > 8);
@@ -56,7 +78,6 @@ export default function Header() {
     return () => window.removeEventListener("scroll", aoRolar);
   }, []);
 
-  // Trava a rolagem do fundo enquanto o menu mobile está aberto.
   useEffect(() => {
     document.body.style.overflow = menuAberto ? "hidden" : "";
     return () => {
@@ -64,7 +85,6 @@ export default function Header() {
     };
   }, [menuAberto]);
 
-  // Fecha o menu automaticamente ao navegar para outra página.
   useEffect(() => {
     setMenuAberto(false);
   }, [pathname]);
@@ -75,80 +95,105 @@ export default function Header() {
     router.push(`/busca?q=${encodeURIComponent(termoBusca.trim())}`);
   }
 
+  const redesSociais = [
+    { tipo: "instagram", url: config?.instagramUrl },
+    { tipo: "facebook", url: config?.facebookUrl },
+    { tipo: "x", url: config?.twitterUrl },
+  ].filter((r) => r.url);
+
   return (
     <header
-      className={`sticky top-0 z-40 w-full bg-cariri-verde-claro border-b border-cariri-preto/5 transition-shadow duration-200 ${
+      className={`sticky top-0 z-40 w-full bg-white transition-shadow duration-200 ${
         comSombra ? "shadow-[0_8px_20px_-14px_rgba(18,19,15,0.35)]" : ""
       }`}
     >
-      <div className="max-w-content mx-auto px-5 h-20 sm:h-24 flex items-center justify-between gap-4">
-        <Link href="/" className="flex items-center gap-3 shrink-0">
-          <Logomark tamanho={44} />
-          <span className="text-[21px] sm:text-[24px] font-bold tracking-tight text-cariri-preto">
-            Ponto Cariri
-          </span>
-        </Link>
-
-        {/* Navegação para telas médias/grandes: sublinhado deslizante indica a página atual */}
-        <nav aria-label="Navegação principal" className="hidden md:flex items-center gap-1">
-          {links.map((link) => {
-            const ativo = linkEstaAtivo(pathname, link.href);
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                aria-current={ativo ? "page" : undefined}
-                className="relative px-4 py-2.5 text-[16px] font-medium text-cariri-preto/75 hover:text-cariri-preto transition-colors"
-              >
-                {link.label}
-                <span
-                  className={`absolute left-4 right-4 -bottom-[1px] h-[2.5px] rounded-full bg-cariri-verde origin-left transition-transform duration-200 ${
-                    ativo ? "scale-x-100" : "scale-x-0"
-                  }`}
-                />
-              </Link>
-            );
-          })}
-
-          <form onSubmit={aoBuscar} className="ml-2 flex items-center bg-white rounded-full pl-4 pr-1.5 py-1.5 focus-within:ring-2 focus-within:ring-cariri-verde/40">
+      {/* Linha 1: busca — logo centralizada — redes sociais */}
+      <div className="max-w-content mx-auto px-5 h-20 sm:h-24 grid grid-cols-3 items-center">
+        <div className="hidden md:flex">
+          <form onSubmit={aoBuscar} className="flex items-center bg-cariri-verde-claro rounded-full pl-4 pr-1.5 py-1.5 w-fit focus-within:ring-2 focus-within:ring-cariri-verde/40">
             <input
               type="search"
               value={termoBusca}
               onChange={(e) => setTermoBusca(e.target.value)}
               placeholder="Buscar..."
-              className="w-32 lg:w-48 text-sm text-cariri-preto placeholder:text-cariri-cinza-texto outline-none bg-transparent"
+              className="w-32 lg:w-44 text-sm text-cariri-preto placeholder:text-cariri-cinza-texto outline-none bg-transparent"
             />
             <button
               type="submit"
               aria-label="Buscar"
               className="w-8 h-8 flex items-center justify-center rounded-full text-white bg-cariri-verde hover:bg-cariri-verde-escuro transition-colors shrink-0"
             >
-              <IconeLupa />
+              <IconeLupa width="16" height="16" />
             </button>
           </form>
-        </nav>
+        </div>
 
-        {/* Botões de ação para celular: busca + menu */}
-        <div className="md:hidden flex items-center gap-1 -mr-2">
+        <button
+          onClick={() => setMenuAberto(true)}
+          aria-label="Abrir menu"
+          className="md:hidden w-11 h-11 flex flex-col items-center justify-center gap-[6px] justify-self-start"
+        >
+          <span className="block w-6 h-[2.5px] bg-cariri-preto rounded-full" />
+          <span className="block w-6 h-[2.5px] bg-cariri-preto rounded-full" />
+          <span className="block w-4 h-[2.5px] self-end mr-[3px] bg-cariri-preto rounded-full" />
+        </button>
+
+        <Link href="/" className="flex items-center justify-center gap-2.5 sm:gap-3">
+          <Logomark tamanho={38} />
+          <span className="text-[19px] sm:text-[24px] font-bold tracking-tight text-cariri-preto whitespace-nowrap">
+            Ponto Cariri
+          </span>
+        </Link>
+
+        <div className="flex items-center justify-end gap-2">
+          {redesSociais.map((r) => (
+            <a
+              key={r.tipo}
+              href={r.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={r.tipo}
+              className="hidden sm:flex w-9 h-9 items-center justify-center rounded-full border border-cariri-verde-claro text-cariri-verde hover:bg-cariri-verde-claro transition-colors"
+            >
+              <IconeRedeSocial tipo={r.tipo} />
+            </a>
+          ))}
           <Link
             href="/busca"
             aria-label="Buscar"
-            className="w-12 h-12 flex items-center justify-center text-cariri-preto"
+            className="md:hidden w-11 h-11 flex items-center justify-center text-cariri-preto"
           >
-            <IconeLupa width="22" height="22" />
+            <IconeLupa width="21" height="21" />
           </Link>
-          <button
-            onClick={() => setMenuAberto(true)}
-            aria-label="Abrir menu"
-            aria-expanded={menuAberto}
-            className="w-12 h-12 flex flex-col items-center justify-center gap-[6px]"
-          >
-            <span className="block w-7 h-[2.5px] bg-cariri-preto rounded-full" />
-            <span className="block w-7 h-[2.5px] bg-cariri-preto rounded-full" />
-            <span className="block w-5 h-[2.5px] self-end mr-[3px] bg-cariri-preto rounded-full" />
-          </button>
         </div>
       </div>
+
+      {/* Linha 2: menu de navegação, com fundo verde-claro */}
+      <nav
+        aria-label="Navegação principal"
+        className="hidden md:flex items-center justify-center gap-1 bg-cariri-verde-claro border-y border-cariri-preto/5 py-1"
+      >
+        {links.map((link) => {
+          const ativo = linkEstaAtivo(pathname, link.href);
+          return (
+            <Link
+              key={link.href}
+              href={link.href}
+              aria-current={ativo ? "page" : undefined}
+              className={`relative px-5 py-2.5 text-[15px] font-semibold transition-colors ${
+                ativo ? "text-cariri-verde-escuro" : "text-cariri-preto/70 hover:text-cariri-preto"
+              }`}
+            >
+              {link.label}
+              <span
+                className={`absolute left-5 right-5 -bottom-[1px] h-[2.5px] rounded-full bg-cariri-verde origin-left transition-transform duration-200 ${
+                  ativo ? "scale-x-100" : "scale-x-0"
+                }`}
+              />
+            </Link>
+          );
+        })}
+      </nav>
 
       {/* Painel deslizante do menu mobile */}
       <div
@@ -222,6 +267,23 @@ export default function Header() {
               );
             })}
           </nav>
+
+          {redesSociais.length > 0 && (
+            <div className="px-5 py-3 flex gap-2 border-t border-cariri-verde-claro shrink-0">
+              {redesSociais.map((r) => (
+                <a
+                  key={r.tipo}
+                  href={r.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={r.tipo}
+                  className="w-9 h-9 flex items-center justify-center rounded-full border border-cariri-verde-claro text-cariri-verde"
+                >
+                  <IconeRedeSocial tipo={r.tipo} />
+                </a>
+              ))}
+            </div>
+          )}
 
           <p className="mt-auto px-5 py-4 text-xs text-cariri-cinza-texto border-t border-cariri-verde-claro shrink-0">
             Ponto Cariri — região do Cariri cearense

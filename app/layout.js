@@ -90,7 +90,7 @@ export default async function RootLayout({ children }) {
         )}
       </head>
       <body className="min-h-screen flex flex-col font-sans antialiased text-cariri-preto">
-        <Header />
+        <Header config={config} />
         <main className="flex-1 w-full">{children}</main>
         <Footer config={config} />
         <DoacaoBotao
