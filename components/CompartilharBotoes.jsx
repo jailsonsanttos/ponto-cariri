@@ -4,7 +4,7 @@ import { useState } from "react";
 
 // Botões circulares de compartilhamento, no estilo dos grandes portais
 // de notícias: um ícone colorido por rede, lado a lado.
-export default function CompartilharBotoes({ titulo, slug }) {
+export default function CompartilharBotoes({ titulo, slug, comRotulo = true }) {
   const [copiado, setCopiado] = useState(false);
 
   // Usa a URL atual do navegador (funciona tanto no domínio da Vercel
@@ -56,11 +56,13 @@ export default function CompartilharBotoes({ titulo, slug }) {
   ];
 
   return (
-    <div>
-      <p className="text-sm font-semibold text-cariri-preto mb-3">
-        Compartilhar
-      </p>
-      <div className="flex flex-wrap items-center gap-2.5">
+    <div className="flex items-center gap-3">
+      {comRotulo && (
+        <p className="text-[15px] font-semibold text-cariri-preto shrink-0">
+          Compartilhar
+        </p>
+      )}
+      <div className="flex flex-wrap items-center gap-2">
         {redes.map((rede) => (
           <a
             key={rede.nome}
@@ -69,7 +71,7 @@ export default function CompartilharBotoes({ titulo, slug }) {
             rel="noopener noreferrer"
             aria-label={`Compartilhar no ${rede.nome}`}
             title={rede.nome}
-            className="w-10 h-10 flex items-center justify-center rounded-full text-white hover:opacity-85 transition-opacity"
+            className="w-9 h-9 flex items-center justify-center rounded-full text-white hover:opacity-85 transition-opacity"
             style={{ backgroundColor: rede.cor }}
           >
             <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
@@ -81,7 +83,7 @@ export default function CompartilharBotoes({ titulo, slug }) {
           onClick={copiarLink}
           aria-label="Copiar link"
           title={copiado ? "Link copiado!" : "Copiar link"}
-          className="w-10 h-10 flex items-center justify-center rounded-full text-white bg-cariri-verde hover:opacity-85 transition-opacity"
+          className="w-9 h-9 flex items-center justify-center rounded-full text-white bg-cariri-verde hover:opacity-85 transition-opacity"
         >
           {copiado ? (
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">

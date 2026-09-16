@@ -108,7 +108,7 @@ export default function Header({ config }) {
       }`}
     >
       {/* Linha 1: busca — logo centralizada — redes sociais */}
-      <div className="max-w-content mx-auto px-5 h-20 sm:h-24 grid grid-cols-3 items-center">
+      <div className="max-w-content mx-auto px-5 h-24 sm:h-32 grid grid-cols-3 items-center">
         <div className="hidden md:flex">
           <form onSubmit={aoBuscar} className="flex items-center bg-cariri-verde-claro rounded-full pl-4 pr-1.5 py-1.5 w-fit focus-within:ring-2 focus-within:ring-cariri-verde/40">
             <input
@@ -139,11 +139,13 @@ export default function Header({ config }) {
         </button>
 
         <Link href="/" className="flex items-center justify-center">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/logo.jpg"
+          <Image
+            src="/logo.png"
             alt="Ponto Cariri"
-            className="h-14 sm:h-[68px] w-auto object-contain"
+            width={600}
+            height={203}
+            priority
+            className="h-20 sm:h-28 w-auto object-contain"
           />
         </Link>
 
@@ -219,7 +221,7 @@ export default function Header({ config }) {
           <div className="flex items-center justify-between px-5 h-16 border-b border-cariri-verde-claro shrink-0">
             <span className="flex items-center gap-2 font-bold text-cariri-preto">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/logo.jpg" alt="Ponto Cariri" className="h-8 w-auto" />
+              <img src="/logo.png" alt="Ponto Cariri" className="h-9 w-auto" />
             </span>
             <button
               onClick={() => setMenuAberto(false)}

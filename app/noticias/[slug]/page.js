@@ -123,11 +123,12 @@ export default async function NoticiaPage({ params }) {
           dangerouslySetInnerHTML={{ __html: noticia.conteudo }}
         />
 
-        <div className="mt-8 pt-6 border-t border-cariri-verde-claro flex flex-wrap items-start gap-6">
+        <div className="mt-8 flex flex-wrap items-center justify-between gap-4 bg-white border border-cariri-verde-claro rounded-full px-5 sm:px-6 py-3">
           <OuvirNoticia
             titulo={noticia.titulo}
             texto={noticia.conteudo.replace(/<[^>]*>/g, " ")}
           />
+          <div className="h-8 w-px bg-cariri-verde-claro hidden sm:block" />
           <CompartilharBotoes titulo={noticia.titulo} slug={noticia.slug} />
         </div>
 

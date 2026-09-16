@@ -44,24 +44,25 @@ export default function OuvirNoticia({ titulo, texto }) {
   return (
     <button
       onClick={alternar}
-      className="inline-flex items-center gap-2 text-sm font-semibold text-cariri-verde-escuro bg-cariri-verde-claro hover:bg-cariri-verde-claro/70 transition-colors px-4 py-2 rounded-full"
+      className="inline-flex items-center gap-2.5 text-[15px] font-semibold text-cariri-preto hover:text-cariri-verde transition-colors"
     >
-      {lendo ? (
-        <>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+      <span
+        className={`w-9 h-9 flex items-center justify-center rounded-full text-white transition-colors ${
+          lendo ? "bg-cariri-preto" : "bg-cariri-verde"
+        }`}
+      >
+        {lendo ? (
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
             <rect x="6" y="5" width="4" height="14" />
             <rect x="14" y="5" width="4" height="14" />
           </svg>
-          Parar
-        </>
-      ) : (
-        <>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+        ) : (
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
             <path d="M8 5v14l11-7z" />
           </svg>
-          Ouvir notícia
-        </>
-      )}
+        )}
+      </span>
+      {lendo ? "Parar" : "Ouvir notícia"}
     </button>
   );
 }
