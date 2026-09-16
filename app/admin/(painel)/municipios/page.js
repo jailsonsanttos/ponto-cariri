@@ -119,12 +119,44 @@ export default function AdminMunicipiosPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">Link do hino (YouTube, áudio, etc.)</label>
-          <input
-            value={form.hinoUrl}
-            onChange={(e) => setForm({ ...form, hinoUrl: e.target.value })}
-            className="w-full border border-cariri-verde-claro rounded-md px-3 py-2 text-sm"
+          <label className="block text-sm font-medium mb-1">Hino municipal</label>
+          <p className="text-xs text-cariri-cinza-texto mb-2">
+            Envie um arquivo de áudio (MP3) ou vídeo do hino, ou cole um
+            link (ex: YouTube) se preferir.
+          </p>
+
+          <UploadCampo
+            label="Enviar arquivo de áudio ou vídeo"
+            tipoAceito="audio/*,video/*"
+            onEnviar={(url) => setForm({ ...form, hinoUrl: url })}
           />
+
+          <div className="mt-3">
+            <label className="block text-xs font-medium text-cariri-cinza-texto mb-1">
+              Ou cole um link (ex: YouTube)
+            </label>
+            <input
+              value={form.hinoUrl}
+              onChange={(e) => setForm({ ...form, hinoUrl: e.target.value })}
+              placeholder="https://..."
+              className="w-full border border-cariri-verde-claro rounded-md px-3 py-2 text-sm"
+            />
+          </div>
+
+          {form.hinoUrl && (
+            <div className="mt-2 flex items-center gap-2">
+              <span className="text-xs text-cariri-cinza-texto truncate max-w-xs">
+                Atual: {form.hinoUrl}
+              </span>
+              <button
+                type="button"
+                onClick={() => setForm({ ...form, hinoUrl: "" })}
+                className="text-xs text-red-600 font-medium shrink-0"
+              >
+                Remover
+              </button>
+            </div>
+          )}
         </div>
 
         <div className="grid grid-cols-2 gap-4">

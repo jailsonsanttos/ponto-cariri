@@ -2,7 +2,10 @@
 
 import { useState } from "react";
 
-export default function UploadCampo({ label = "Imagem", onEnviar }) {
+// tipoAceito: string do atributo "accept" do input (ex: "image/*",
+// "audio/*,video/*"). Deixa o mesmo componente servir pra fotos, hinos
+// em áudio/vídeo, ou qualquer outro tipo de arquivo.
+export default function UploadCampo({ label = "Arquivo", tipoAceito = "image/*", onEnviar }) {
   const [enviando, setEnviando] = useState(false);
   const [erro, setErro] = useState("");
 
@@ -22,10 +25,10 @@ export default function UploadCampo({ label = "Imagem", onEnviar }) {
       if (resposta.ok) {
         onEnviar(dados.url);
       } else {
-        setErro(dados.erro || "Erro ao enviar imagem.");
+        setErro(dados.erro || "Erro ao enviar arquivo.");
       }
     } catch {
-      setErro("Erro ao enviar imagem.");
+      setErro("Erro ao enviar arquivo.");
     } finally {
       setEnviando(false);
       e.target.value = "";
@@ -34,14 +37,14 @@ export default function UploadCampo({ label = "Imagem", onEnviar }) {
 
   return (
     <div>
-      <label className="block text-sm font-medium text-cariri-preto mb-1">{label}</label>
+      {label && <label className="block text-sm font-medium text-cariri-preto mb-1">{label}</label>}
       <input
         type="file"
-        accept="image/*"
+        accept={tipoAceito}
         onChange={aoSelecionarArquivo}
         className="text-sm"
       />
-      {enviando && <p className="text-xs text-cariri-cinza-texto mt-1">Enviando…</p>}
+      {enviando && <p className="text-xs text-cariri-cinza-texto mt-1">Enviando… (arquivos grandes podem levar um pouco mais)</p>}
       {erro && <p className="text-xs text-red-600 mt-1">{erro}</p>}
     </div>
   );

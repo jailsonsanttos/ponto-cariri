@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { buscarMunicipio } from "@/lib/db";
 import AdSlot from "@/components/AdSlot";
 import BookMidia from "@/components/BookMidia";
+import { tipoDeArquivo } from "@/lib/midia";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import { unstable_noStore as noStore } from "next/cache";
 
@@ -78,14 +79,20 @@ export default async function MunicipioPage({ params }) {
           <div className="rounded-lg border border-cariri-verde-claro p-5">
             <h2 className="text-sm font-bold text-cariri-preto mb-2">Hino municipal</h2>
             {municipio.hinoUrl ? (
-              <a
-                href={municipio.hinoUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm font-medium text-cariri-verde"
-              >
-                Ouvir o hino →
-              </a>
+              tipoDeArquivo(municipio.hinoUrl) === "audio" ? (
+                <audio controls className="w-full" src={municipio.hinoUrl} />
+              ) : tipoDeArquivo(municipio.hinoUrl) === "video" ? (
+                <video controls className="w-full rounded-md" src={municipio.hinoUrl} />
+              ) : (
+                <a
+                  href={municipio.hinoUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm font-medium text-cariri-verde"
+                >
+                  Ouvir o hino →
+                </a>
+              )
             ) : (
               <p className="text-sm text-cariri-cinza-texto">
                 Hino ainda não cadastrado. Adicione pelo painel de administração.

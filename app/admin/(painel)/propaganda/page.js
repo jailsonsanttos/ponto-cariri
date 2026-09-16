@@ -124,12 +124,37 @@ export default function AdminPropagandaPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">Link de vídeo (opcional)</label>
-          <input
-            value={form.video}
-            onChange={(e) => setForm({ ...form, video: e.target.value })}
-            className="w-full border border-cariri-verde-claro rounded-md px-3 py-2 text-sm"
+          <label className="block text-sm font-medium mb-1">Vídeo (opcional)</label>
+          <UploadCampo
+            label="Enviar arquivo de vídeo"
+            tipoAceito="video/*"
+            onEnviar={(url) => setForm({ ...form, video: url })}
           />
+          <div className="mt-2">
+            <label className="block text-xs font-medium text-cariri-cinza-texto mb-1">
+              Ou cole um link (ex: YouTube)
+            </label>
+            <input
+              value={form.video}
+              onChange={(e) => setForm({ ...form, video: e.target.value })}
+              placeholder="https://..."
+              className="w-full border border-cariri-verde-claro rounded-md px-3 py-2 text-sm"
+            />
+          </div>
+          {form.video && (
+            <div className="mt-2 flex items-center gap-2">
+              <span className="text-xs text-cariri-cinza-texto truncate max-w-xs">
+                Atual: {form.video}
+              </span>
+              <button
+                type="button"
+                onClick={() => setForm({ ...form, video: "" })}
+                className="text-xs text-red-600 font-medium shrink-0"
+              >
+                Remover
+              </button>
+            </div>
+          )}
         </div>
 
         <UploadCampo

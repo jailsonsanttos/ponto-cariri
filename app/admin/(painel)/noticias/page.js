@@ -113,8 +113,17 @@ export default function AdminNoticiasPage() {
           onEnviar={(url) => setForm({ ...form, imagemCapa: url })}
         />
         {form.imagemCapa && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={form.imagemCapa} alt="" className="w-32 h-20 object-cover rounded-md" />
+          <div className="flex items-center gap-2">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={form.imagemCapa} alt="" className="w-32 h-20 object-cover rounded-md" />
+            <button
+              type="button"
+              onClick={() => setForm({ ...form, imagemCapa: "" })}
+              className="text-xs text-red-600 font-medium"
+            >
+              Remover
+            </button>
+          </div>
         )}
 
         <div className="grid grid-cols-2 gap-4">
