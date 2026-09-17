@@ -37,8 +37,8 @@ export default function Footer({ config }) {
 
   return (
     <footer className="bg-cariri-verde-escuro text-white mt-16">
-      <div className="max-w-content mx-auto px-5 py-10 flex flex-wrap items-center justify-between gap-8">
-        {/* Logo em branco (silhueta), à esquerda */}
+      <div className="max-w-content mx-auto px-5 py-10 flex flex-col items-center text-center gap-8 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:text-left">
+        {/* Logo em branco (silhueta) */}
         <Link href="/" className="shrink-0">
           <Image
             src="/logo-branco.png"
@@ -49,7 +49,7 @@ export default function Footer({ config }) {
           />
         </Link>
 
-        {/* Redes sociais, ao centro */}
+        {/* Redes sociais */}
         {redesSociais.length > 0 && (
           <div className="flex flex-col items-center gap-2">
             <div className="flex items-center gap-3">
@@ -72,19 +72,19 @@ export default function Footer({ config }) {
           </div>
         )}
 
-        {/* Contato, à direita */}
+        {/* Contato */}
         {(config?.telefoneContato || config?.emailContato) && (
-          <div className="text-sm text-white/80 text-right space-y-1.5">
+          <div className="text-sm text-white/80 flex flex-col items-center gap-1.5 sm:items-end">
             {config.telefoneContato && (
-              <p className="flex items-center justify-end gap-2">
-                <span>{config.telefoneContato}</span>
+              <p className="flex items-center gap-2">
                 <span aria-hidden="true">📞</span>
+                <span>{config.telefoneContato}</span>
               </p>
             )}
             {config.emailContato && (
-              <p className="flex items-center justify-end gap-2">
-                <span>{config.emailContato}</span>
+              <p className="flex items-center gap-2">
                 <span aria-hidden="true">✉️</span>
+                <span>{config.emailContato}</span>
               </p>
             )}
             <p className="pt-1 text-xs">
@@ -97,7 +97,7 @@ export default function Footer({ config }) {
       </div>
 
       <div className="border-t border-white/10 py-4">
-        <div className="max-w-content mx-auto px-5 flex flex-wrap items-center justify-between gap-2">
+        <div className="max-w-content mx-auto px-5 flex flex-col items-center gap-1 text-center sm:flex-row sm:items-center sm:justify-between sm:text-left">
           <p className="text-xs text-white/50">
             © {ano} Ponto Cariri. Todos os direitos reservados.
           </p>

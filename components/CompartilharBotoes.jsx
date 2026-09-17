@@ -56,13 +56,13 @@ export default function CompartilharBotoes({ titulo, slug, comRotulo = true }) {
   ];
 
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex flex-col items-center gap-2.5 sm:flex-row sm:items-center sm:gap-3">
       {comRotulo && (
         <p className="text-[15px] font-semibold text-cariri-preto shrink-0">
           Compartilhar
         </p>
       )}
-      <div className="flex flex-wrap items-center gap-2">
+      <div className="flex flex-wrap items-center justify-center gap-2">
         {redes.map((rede) => (
           <a
             key={rede.nome}
