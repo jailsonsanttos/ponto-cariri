@@ -1,32 +1,41 @@
 import Link from "next/link";
 import { listarMunicipios, listarNoticias, listarPropagandas } from "@/lib/db";
+import { listarPaginas, listarMidia, listarEventos, listarPrecos } from "@/lib/cms";
 import { unstable_noStore as noStore } from "next/cache";
 
-// Garante que esta página busque dados novos a cada visita, em vez de
-// usar uma versão "congelada" gerada no momento do build.
 export const dynamic = "force-dynamic";
 
 export default async function AdminDashboardPage() {
   noStore();
 
-  const municipios = await listarMunicipios();
-  const noticias = await listarNoticias();
-  const propagandas = await listarPropagandas();
+  const [municipios, noticias, propagandas, paginas, midia, eventos, precos] = await Promise.all([
+    listarMunicipios(),
+    listarNoticias(),
+    listarPropagandas(),
+    listarPaginas().catch(() => []),
+    listarMidia().catch(() => []),
+    listarEventos().catch(() => []),
+    listarPrecos().catch(() => []),
+  ]);
 
   const cartoes = [
-    { label: "Municípios cadastrados", total: municipios.length, href: "/admin/municipios" },
-    { label: "Notícias cadastradas", total: noticias.length, href: "/admin/noticias" },
-    { label: "Anúncios cadastrados", total: propagandas.length, href: "/admin/propaganda" },
+    { label: "Publicações", total: noticias.length, href: "/admin/noticias" },
+    { label: "Municípios", total: municipios.length, href: "/admin/municipios" },
+    { label: "Páginas", total: paginas.length, href: "/admin/paginas" },
+    { label: "Arquivos na biblioteca", total: midia.length, href: "/admin/midia" },
+    { label: "Anúncios", total: propagandas.length, href: "/admin/propaganda" },
+    { label: "Eventos", total: eventos.length, href: "/admin/eventos" },
+    { label: "Preços cadastrados", total: precos.length, href: "/admin/precos" },
   ];
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-cariri-preto">Painel de administração</h1>
+      <h1 className="text-2xl font-bold text-cariri-preto">Painel</h1>
       <p className="mt-1 text-cariri-cinza-texto">
-        Gerencie o conteúdo do site Ponto Cariri por aqui.
+        Conteúdo, menu, home, aparência e mídia — sem precisar alterar código.
       </p>
 
-      <div className="mt-8 grid gap-4 sm:grid-cols-3">
+      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {cartoes.map((c) => (
           <Link
             key={c.href}
@@ -37,15 +46,6 @@ export default async function AdminDashboardPage() {
             <p className="mt-1 text-sm text-cariri-cinza-texto">{c.label}</p>
           </Link>
         ))}
-      </div>
-
-      <div className="mt-10 rounded-lg bg-cariri-verde-claro p-6 text-sm text-cariri-preto/90 leading-relaxed">
-        <p className="font-semibold mb-1">Dica</p>
-        <p>
-          Use o menu ao lado para adicionar, editar ou remover municípios,
-          notícias e anúncios. As alterações aparecem no site imediatamente
-          após salvar.
-        </p>
       </div>
     </div>
   );

@@ -17,8 +17,7 @@ export default async function MunicipiosPage() {
     <div className="max-w-content mx-auto px-5 py-12">
       <h1 className="text-3xl font-bold text-cariri-preto">Municípios do Cariri</h1>
       <p className="mt-2 text-cariri-cinza-texto max-w-2xl">
-        Conheça a história, o hino e a localização de cada município da
-        região do Cariri cearense.
+        Conheça história, cultura, turismo, agro e o cotidiano de cada cidade da região.
       </p>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

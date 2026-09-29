@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
-import { buscarMunicipio } from "@/lib/db";
+import { buscarMunicipio, listarNoticias } from "@/lib/db";
 import AdSlot from "@/components/AdSlot";
-import BookMidia from "@/components/BookMidia";
+import MunicipioAbas from "@/components/MunicipioAbas";
 import { tipoDeArquivo } from "@/lib/midia";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import { unstable_noStore as noStore } from "next/cache";
@@ -19,16 +19,19 @@ export async function generateMetadata({ params }) {
     `Conheça a história, o hino e a localização de ${municipio.nome}, no Cariri cearense.`;
 
   return {
-    title: municipio.nome,
+    title: `${municipio.nome} — Ponto Cariri`,
     description: descricao,
     openGraph: {
-      title: `${municipio.nome} — Ponto Cariri`,
+      title: `Ponto Cariri — ${municipio.nome}`,
       description: descricao,
     },
     twitter: {
       card: "summary_large_image",
-      title: `${municipio.nome} — Ponto Cariri`,
+      title: `Ponto Cariri — ${municipio.nome}`,
       description: descricao,
+    },
+    alternates: {
+      canonical: `${process.env.NEXT_PUBLIC_SITE_URL || "https://www.pontocariri.com.br"}/municipios/${municipio.slug}`,
     },
   };
 }
@@ -39,6 +42,10 @@ export default async function MunicipioPage({ params }) {
   const municipio = await buscarMunicipio(params.slug);
 
   if (!municipio) notFound();
+
+  const relacionadas = (await listarNoticias())
+    .filter((n) => n.publicada && n.municipio && n.municipio.toLowerCase() === municipio.nome.toLowerCase())
+    .slice(0, 8);
 
   const temCoordenadas = municipio.latitude && municipio.longitude;
   const urlMapa = temCoordenadas
@@ -63,15 +70,10 @@ export default async function MunicipioPage({ params }) {
 
       <div className="mt-8 grid gap-8 lg:grid-cols-3">
         <div className="lg:col-span-2 space-y-8">
-          <section>
-            <h2 className="text-lg font-bold text-cariri-preto mb-2">História</h2>
-            <p className="text-cariri-cinza-texto leading-relaxed whitespace-pre-line">
-              {municipio.historia}
-            </p>
-          </section>
-
-          <BookMidia municipio={municipio} />
-
+          {municipio.descricaoCurta && (
+            <p className="text-cariri-cinza-texto leading-relaxed">{municipio.descricaoCurta}</p>
+          )}
+          <MunicipioAbas municipio={municipio} relacionadas={relacionadas} />
           <AdSlot label={`Anúncio - página de ${municipio.nome}`} />
         </div>
 

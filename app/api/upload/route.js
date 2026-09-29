@@ -1,30 +1,46 @@
-// app/api/upload/route.js
-// Recebe uma imagem enviada pelo painel de administração e salva no
-// Vercel Blob (armazenamento de arquivos na nuvem), devolvendo a URL
-// pública para ser usada no site. Diferente de salvar em pasta local,
-// os arquivos aqui ficam permanentes, mesmo depois de um novo deploy.
-
 import { NextResponse } from "next/server";
 import { exigirAdmin } from "@/lib/auth";
 import { put } from "@vercel/blob";
+import { validarArquivo, nomeSeguro } from "@/lib/upload";
+import { criarMidia } from "@/lib/cms";
+import { garantirSchema } from "@/lib/db";
+
+export const dynamic = "force-dynamic";
 
 export async function POST(request) {
   if (!(await exigirAdmin(request))) {
     return NextResponse.json({ erro: "Não autorizado." }, { status: 401 });
   }
 
+  await garantirSchema();
+
   const formData = await request.formData();
   const arquivo = formData.get("arquivo");
 
-  if (!arquivo) {
+  if (!arquivo || typeof arquivo === "string") {
     return NextResponse.json({ erro: "Nenhum arquivo enviado." }, { status: 400 });
   }
 
-  const nomeArquivo = `${Date.now()}-${arquivo.name}`;
+  const validacao = validarArquivo(arquivo);
+  if (!validacao.ok) {
+    return NextResponse.json({ erro: validacao.erro }, { status: 400 });
+  }
 
-  const resultado = await put(nomeArquivo, arquivo, {
-    access: "public",
-  });
+  const nomeArquivo = nomeSeguro(arquivo.name);
+  const resultado = await put(nomeArquivo, arquivo, { access: "public" });
 
-  return NextResponse.json({ url: resultado.url });
+  let item = null;
+  try {
+    item = await criarMidia({
+      tipo: validacao.tipo,
+      url: resultado.url,
+      nome: arquivo.name,
+      municipioSlug: formData.get("municipio") || "",
+      alt: formData.get("alt") || "",
+    });
+  } catch {
+    item = null;
+  }
+
+  return NextResponse.json({ url: resultado.url, tipo: validacao.tipo, midia: item });
 }

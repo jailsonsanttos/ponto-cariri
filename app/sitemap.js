@@ -11,9 +11,9 @@ export default async function sitemap() {
   const paginasFixas = [
     { url: `${URL_SITE}/`, changeFrequency: "daily", priority: 1 },
     { url: `${URL_SITE}/municipios`, changeFrequency: "weekly", priority: 0.8 },
-    { url: `${URL_SITE}/noticias`, changeFrequency: "daily", priority: 0.9 },
+    { url: `${URL_SITE}/informacoes`, changeFrequency: "daily", priority: 0.9 },
     { url: `${URL_SITE}/tempo`, changeFrequency: "daily", priority: 0.6 },
-    { url: `${URL_SITE}/propaganda`, changeFrequency: "weekly", priority: 0.6 },
+    { url: `${URL_SITE}/publicidade`, changeFrequency: "weekly", priority: 0.6 },
     { url: `${URL_SITE}/sobre`, changeFrequency: "monthly", priority: 0.4 },
     { url: `${URL_SITE}/privacidade`, changeFrequency: "yearly", priority: 0.2 },
     { url: `${URL_SITE}/termos`, changeFrequency: "yearly", priority: 0.2 },
@@ -34,7 +34,7 @@ export default async function sitemap() {
     paginasNoticias = noticias
       .filter((n) => n.publicada)
       .map((n) => ({
-        url: `${URL_SITE}/noticias/${n.slug}`,
+        url: `${URL_SITE}/informacoes/${n.slug}`,
         lastModified: n.dataPublicacao,
         changeFrequency: "weekly",
         priority: 0.7,

@@ -5,14 +5,11 @@ import Footer from "@/components/Footer";
 import DoacaoBotao from "@/components/DoacaoBotao";
 import AvisoCookies from "@/components/AvisoCookies";
 import { buscarConfig } from "@/lib/db";
+import { listarMenuPublico, buscarAparencia, APARENCIA_PADRAO } from "@/lib/cms";
 
-// Força todas as páginas do site a serem geradas "na hora" (a cada visita),
-// em vez de tentar pré-gerar durante o "build". Isso evita erros de build
-// quando o banco de dados ainda não existe/não está conectado, e também
-// garante que as edições feitas no painel /admin apareçam imediatamente.
 export const dynamic = "force-dynamic";
 
-const URL_SITE = process.env.NEXT_PUBLIC_SITE_URL || "https://ponto-cariri.vercel.app";
+const URL_SITE = process.env.NEXT_PUBLIC_SITE_URL || "https://www.pontocariri.com.br";
 
 export const viewport = {
   themeColor: "#1B7A43",
@@ -21,29 +18,53 @@ export const viewport = {
 export const metadata = {
   metadataBase: new URL(URL_SITE),
   title: {
-    default: "Ponto Cariri — Notícias e informações da região do Cariri cearense",
+    default: "Ponto Cariri — informação, cultura e riquezas do Cariri",
     template: "%s | Ponto Cariri",
   },
   description:
-    "Portal de notícias, municípios, previsão do tempo e divulgação de comércios da região do Cariri cearense.",
+    "Portal regional do Cariri cearense: cultura, turismo, agro, municípios, preços, eventos e informações úteis.",
   openGraph: {
     type: "website",
     locale: "pt_BR",
     siteName: "Ponto Cariri",
-    title: "Ponto Cariri — Notícias e informações da região do Cariri cearense",
+    title: "Ponto Cariri — informação, cultura e riquezas do Cariri",
     description:
-      "Portal de notícias, municípios, previsão do tempo e divulgação de comércios da região do Cariri cearense.",
+      "Portal regional do Cariri cearense: cultura, turismo, agro, municípios, preços, eventos e informações úteis.",
   },
   twitter: {
     card: "summary_large_image",
     title: "Ponto Cariri",
-    description:
-      "Portal de notícias, municípios, previsão do tempo e divulgação de comércios da região do Cariri cearense.",
+    description: "Informação, cultura e riquezas do Cariri cearense.",
   },
+  alternates: { canonical: URL_SITE },
 };
 
+function TemaCss({ aparencia }) {
+  const a = { ...APARENCIA_PADRAO, ...aparencia };
+  const css = `
+    :root {
+      --cariri-verde: ${a.corPrincipal};
+      --cariri-verde-escuro: ${a.corSecundaria};
+      --cariri-verde-claro: ${a.corFundoSuave};
+      --cariri-preto: ${a.corTexto};
+      --cariri-texto-secundario: ${a.corTextoSecundario || "#4A4E48"};
+      --cariri-link: ${a.corLink || a.corPrincipal};
+      --cariri-raio: ${a.raioBorda || 12}px;
+    }
+    body { background-color: ${a.corFundo || "#fff"}; color: ${a.corTexto}; }
+  `;
+  return <style dangerouslySetInnerHTML={{ __html: css }} />;
+}
+
 export default async function RootLayout({ children }) {
-  const config = await buscarConfig();
+  const config = (await buscarConfig()) || {};
+  let menu = [];
+  let aparencia = APARENCIA_PADRAO;
+  try {
+    [menu, aparencia] = await Promise.all([listarMenuPublico(), buscarAparencia()]);
+  } catch {
+    menu = [];
+  }
 
   const schemaOrganizacao = {
     "@context": "https://schema.org",
@@ -52,17 +73,20 @@ export default async function RootLayout({ children }) {
     url: URL_SITE,
     logo: `${URL_SITE}/icon-512`,
     description:
-      "Portal de notícias, municípios, previsão do tempo e divulgação de comércios da região do Cariri cearense.",
+      aparencia.slogan ||
+      "Portal regional do Cariri cearense: informação, cultura, turismo e riquezas da região.",
   };
 
   return (
     <html lang="pt-BR">
       <head>
+        {aparencia.faviconUrl && <link rel="icon" href={aparencia.faviconUrl} />}
         <link rel="alternate" type="application/rss+xml" title="Ponto Cariri" href="/feed.xml" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaOrganizacao) }}
         />
+        <TemaCss aparencia={aparencia} />
         {process.env.NEXT_PUBLIC_GA_ID && (
           <>
             <Script
@@ -90,13 +114,10 @@ export default async function RootLayout({ children }) {
         )}
       </head>
       <body className="min-h-screen flex flex-col font-sans antialiased text-cariri-preto">
-        <Header config={config} />
+        <Header config={config} menu={menu} aparencia={aparencia} />
         <main className="flex-1 w-full">{children}</main>
         <Footer config={config} />
-        <DoacaoBotao
-          chavePix={config.chavePix}
-          mensagem={config.mensagemDoacao}
-        />
+        <DoacaoBotao chavePix={config?.chavePix} mensagem={config?.mensagemDoacao} />
         <AvisoCookies />
       </body>
     </html>

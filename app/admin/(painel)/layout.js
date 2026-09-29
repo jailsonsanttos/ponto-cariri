@@ -3,9 +3,17 @@ import LogoutBotao from "./LogoutBotao";
 
 const itensMenu = [
   { href: "/admin", label: "Painel" },
+  { href: "/admin/noticias", label: "Publicações" },
+  { href: "/admin/midia", label: "Biblioteca" },
   { href: "/admin/municipios", label: "Municípios" },
-  { href: "/admin/noticias", label: "Notícias" },
-  { href: "/admin/propaganda", label: "Propaganda" },
+  { href: "/admin/paginas", label: "Páginas" },
+  { href: "/admin/menu", label: "Menu" },
+  { href: "/admin/inicio", label: "Página inicial" },
+  { href: "/admin/aparencia", label: "Aparência" },
+  { href: "/admin/categorias", label: "Categorias" },
+  { href: "/admin/precos", label: "Preços" },
+  { href: "/admin/eventos", label: "Eventos" },
+  { href: "/admin/propaganda", label: "Publicidade" },
   { href: "/admin/config", label: "Configurações" },
 ];
 

@@ -5,26 +5,14 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const links = [
-  { href: "/municipios", label: "Municípios" },
-  { href: "/tempo", label: "Tempo" },
-  { href: "/noticias", label: "Notícias" },
-  { href: "/propaganda", label: "Propaganda" },
-  { href: "/sobre", label: "Sobre" },
+const MENU_PADRAO = [
+  { href: "/", label: "Início", filhos: [] },
+  { href: "/informacoes", label: "Informações", filhos: [] },
+  { href: "/municipios", label: "Municípios", filhos: [] },
+  { href: "/publicidade", label: "Publicidade", filhos: [] },
+  { href: "/tempo", label: "Tempo", filhos: [] },
+  { href: "/sobre", label: "Sobre", filhos: [] },
 ];
-
-// Marca própria: um "ponto" verde sólido pousado sobre a silhueta da
-// Chapada do Araripe — o "Ponto Cariri", literalmente.
-function Logomark({ tamanho = 34 }) {
-  return (
-    <svg viewBox="0 0 32 32" width={tamanho} height={tamanho} aria-hidden="true">
-      <path d="M1 26 L9.5 12 L14 18.5 L19 9 L31 26 Z" fill="#1B7A43" />
-      <path d="M1 26 L13 17 L18 22 L24 15 L31 26 Z" fill="#12130F" fillOpacity="0.12" />
-      <circle cx="19" cy="9" r="4.4" fill="#1B7A43" />
-      <circle cx="19" cy="9" r="4.4" fill="none" stroke="#FFFFFF" strokeWidth="1.4" />
-    </svg>
-  );
-}
 
 function IconeLupa(props) {
   return (
@@ -60,15 +48,109 @@ function IconeRedeSocial({ tipo }) {
 }
 
 function linkEstaAtivo(pathname, href) {
-  return pathname === href || pathname.startsWith(href + "/");
+  if (!href) return false;
+  if (href === "/") return pathname === "/";
+  return pathname === href || pathname.startsWith(href.split("?")[0] + "/");
 }
 
-export default function Header({ config }) {
+function ItemMenu({ item, pathname, noMobile, onClick }) {
+  const temFilhos = item.filhos && item.filhos.length > 0;
+  const ativo =
+    linkEstaAtivo(pathname, item.href) ||
+    (temFilhos && item.filhos.some((f) => linkEstaAtivo(pathname, f.href)));
+
+  if (!temFilhos) {
+    return (
+      <Link
+        href={item.href || "/"}
+        onClick={onClick}
+        aria-current={ativo ? "page" : undefined}
+        className={
+          noMobile
+            ? `px-4 py-3.5 rounded-lg text-[15px] font-medium ${
+                ativo ? "bg-cariri-verde-claro text-cariri-verde-escuro" : "text-cariri-preto/85"
+              }`
+            : `relative px-5 py-2.5 text-[15px] font-semibold ${
+                ativo ? "text-cariri-verde-escuro" : "text-cariri-preto/70 hover:text-cariri-preto"
+              }`
+        }
+      >
+        {item.label}
+        {!noMobile && (
+          <span
+            className={`absolute left-5 right-5 -bottom-[1px] h-[2.5px] rounded-full bg-cariri-verde ${
+              ativo ? "scale-x-100" : "scale-x-0"
+            }`}
+          />
+        )}
+      </Link>
+    );
+  }
+
+  if (noMobile) {
+    return (
+      <div className="flex flex-col">
+        <Link
+          href={item.href || "/"}
+          onClick={onClick}
+          className={`px-4 py-3.5 rounded-lg text-[15px] font-medium ${
+            ativo ? "bg-cariri-verde-claro text-cariri-verde-escuro" : "text-cariri-preto/85"
+          }`}
+        >
+          {item.label}
+        </Link>
+        <div className="pl-4 pb-2 flex flex-col">
+          {item.filhos.map((filho) => (
+            <Link
+              key={filho.id || filho.href}
+              href={filho.href}
+              onClick={onClick}
+              className="px-3 py-2 text-sm text-cariri-cinza-texto hover:text-cariri-verde"
+            >
+              {filho.label}
+            </Link>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative group">
+      <Link
+        href={item.href || "/"}
+        aria-current={ativo ? "page" : undefined}
+        className={`relative px-5 py-2.5 text-[15px] font-semibold inline-flex items-center gap-1 ${
+          ativo ? "text-cariri-verde-escuro" : "text-cariri-preto/70 hover:text-cariri-preto"
+        }`}
+      >
+        {item.label}
+        <span className="text-[10px] opacity-60">▾</span>
+      </Link>
+      <div className="absolute left-0 top-full hidden group-hover:block min-w-[220px] bg-white border border-cariri-verde-claro rounded-lg shadow-lg py-2 z-50">
+        {item.filhos.map((filho) => (
+          <Link
+            key={filho.id || filho.href}
+            href={filho.href}
+            className="block px-4 py-2 text-sm text-cariri-preto/80 hover:bg-cariri-verde-claro hover:text-cariri-verde-escuro"
+          >
+            {filho.label}
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default function Header({ config, menu, aparencia }) {
   const pathname = usePathname();
   const router = useRouter();
   const [menuAberto, setMenuAberto] = useState(false);
   const [comSombra, setComSombra] = useState(false);
   const [termoBusca, setTermoBusca] = useState("");
+
+  const itens = menu?.length ? menu : MENU_PADRAO;
+  const logo = aparencia?.logoUrl || "/logo.png";
 
   useEffect(() => {
     function aoRolar() {
@@ -102,16 +184,20 @@ export default function Header({ config }) {
     { tipo: "x", url: config?.twitterUrl },
   ].filter((r) => r.url);
 
+  if (pathname?.startsWith("/admin")) return null;
+
   return (
     <header
       className={`sticky top-0 z-40 w-full bg-white transition-shadow duration-200 ${
         comSombra ? "shadow-[0_8px_20px_-14px_rgba(18,19,15,0.35)]" : ""
       }`}
     >
-      {/* Linha 1: busca — logo centralizada — redes sociais */}
-      <div className="max-w-content mx-auto px-5 h-24 sm:h-32 grid grid-cols-3 items-center">
+      <div className="max-w-content mx-auto px-5 h-[4.5rem] sm:h-24 grid grid-cols-3 items-center">
         <div className="hidden md:flex">
-          <form onSubmit={aoBuscar} className="flex items-center bg-cariri-verde-claro rounded-full pl-4 pr-1.5 py-1.5 w-fit focus-within:ring-2 focus-within:ring-cariri-verde/40">
+          <form
+            onSubmit={aoBuscar}
+            className="flex items-center bg-cariri-verde-claro rounded-full pl-4 pr-1.5 py-1.5 w-fit focus-within:ring-2 focus-within:ring-cariri-verde/40"
+          >
             <input
               type="search"
               value={termoBusca}
@@ -139,18 +225,23 @@ export default function Header({ config }) {
           <span className="block w-4 h-[2.5px] self-end mr-[3px] bg-cariri-preto rounded-full" />
         </button>
 
-        <Link href="/" className="flex items-center justify-center">
-          <Image
-            src="/logo.png"
-            alt="Ponto Cariri"
-            width={600}
-            height={203}
-            priority
-            className="h-20 sm:h-28 w-auto object-contain"
-          />
+        <Link href="/" className="flex items-center justify-center col-start-2">
+          {logo.startsWith("http") ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={logo} alt="Ponto Cariri" className="h-14 sm:h-20 w-auto object-contain" />
+          ) : (
+            <Image
+              src={logo}
+              alt="Ponto Cariri"
+              width={600}
+              height={203}
+              priority
+              className="h-14 sm:h-20 w-auto object-contain"
+            />
+          )}
         </Link>
 
-        <div className="flex items-center justify-end gap-2">
+        <div className="flex items-center justify-end gap-2 col-start-3">
           {redesSociais.map((r) => (
             <a
               key={r.tipo}
@@ -173,44 +264,22 @@ export default function Header({ config }) {
         </div>
       </div>
 
-      {/* Linha 2: menu de navegação, com fundo verde-claro */}
       <nav
         aria-label="Navegação principal"
         className="hidden md:flex items-center justify-center gap-1 bg-cariri-verde-claro border-y border-cariri-preto/5 py-1"
       >
-        {links.map((link) => {
-          const ativo = linkEstaAtivo(pathname, link.href);
-          return (
-            <Link
-              key={link.href}
-              href={link.href}
-              aria-current={ativo ? "page" : undefined}
-              className={`relative px-5 py-2.5 text-[15px] font-semibold transition-colors ${
-                ativo ? "text-cariri-verde-escuro" : "text-cariri-preto/70 hover:text-cariri-preto"
-              }`}
-            >
-              {link.label}
-              <span
-                className={`absolute left-5 right-5 -bottom-[1px] h-[2.5px] rounded-full bg-cariri-verde origin-left transition-transform duration-200 ${
-                  ativo ? "scale-x-100" : "scale-x-0"
-                }`}
-              />
-            </Link>
-          );
-        })}
+        {itens.map((item) => (
+          <ItemMenu key={item.id || item.href} item={item} pathname={pathname} />
+        ))}
       </nav>
 
-      {/* Painel deslizante do menu mobile */}
       <div
         className={`md:hidden fixed inset-0 z-50 transition-opacity duration-300 ${
           menuAberto ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
         aria-hidden={!menuAberto}
       >
-        <div
-          className="absolute inset-0 bg-cariri-preto/40"
-          onClick={() => setMenuAberto(false)}
-        />
+        <div className="absolute inset-0 bg-cariri-preto/40" onClick={() => setMenuAberto(false)} />
         <div
           className={`absolute top-0 right-0 h-full w-[80%] max-w-xs bg-white shadow-2xl transition-transform duration-300 ease-out flex flex-col ${
             menuAberto ? "translate-x-0" : "translate-x-full"
@@ -222,7 +291,7 @@ export default function Header({ config }) {
           <div className="flex items-center justify-between px-5 h-16 border-b border-cariri-verde-claro shrink-0">
             <span className="flex items-center gap-2 font-bold text-cariri-preto">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/logo.png" alt="Ponto Cariri" className="h-9 w-auto" />
+              <img src={logo} alt="Ponto Cariri" className="h-9 w-auto" />
             </span>
             <button
               onClick={() => setMenuAberto(false)}
@@ -254,45 +323,16 @@ export default function Header({ config }) {
           </form>
 
           <nav aria-label="Navegação principal (celular)" className="px-3 py-3 flex flex-col overflow-y-auto">
-            {links.map((link) => {
-              const ativo = linkEstaAtivo(pathname, link.href);
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  aria-current={ativo ? "page" : undefined}
-                  className={`px-4 py-3.5 rounded-lg text-[15px] font-medium transition-colors ${
-                    ativo
-                      ? "bg-cariri-verde-claro text-cariri-verde-escuro"
-                      : "text-cariri-preto/85 hover:bg-cariri-verde-claro/60"
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              );
-            })}
+            {itens.map((item) => (
+              <ItemMenu
+                key={item.id || item.href}
+                item={item}
+                pathname={pathname}
+                noMobile
+                onClick={() => setMenuAberto(false)}
+              />
+            ))}
           </nav>
-
-          {redesSociais.length > 0 && (
-            <div className="px-5 py-3 flex gap-2 border-t border-cariri-verde-claro shrink-0">
-              {redesSociais.map((r) => (
-                <a
-                  key={r.tipo}
-                  href={r.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={r.tipo}
-                  className="w-9 h-9 flex items-center justify-center rounded-full border border-cariri-verde-claro text-cariri-verde"
-                >
-                  <IconeRedeSocial tipo={r.tipo} />
-                </a>
-              ))}
-            </div>
-          )}
-
-          <p className="mt-auto px-5 py-4 text-xs text-cariri-cinza-texto border-t border-cariri-verde-claro shrink-0">
-            Ponto Cariri — região do Cariri cearense
-          </p>
         </div>
       </div>
     </header>

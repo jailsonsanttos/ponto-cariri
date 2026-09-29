@@ -14,7 +14,7 @@ export default function NoticiaDestaque({ noticia }) {
 
   return (
     <Link
-      href={`/noticias/${noticia.slug}`}
+      href={`/informacoes/${noticia.slug}`}
       className="block relative rounded-xl overflow-hidden group"
     >
       <div className="relative w-full h-72 sm:h-[420px] bg-cariri-verde-claro">
@@ -26,6 +26,7 @@ export default function NoticiaDestaque({ noticia }) {
             priority
             sizes="(max-width: 1024px) 100vw, 900px"
             className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+            style={{ objectPosition: noticia.imagemPosicao || "center center" }}
           />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />

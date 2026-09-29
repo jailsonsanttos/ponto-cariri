@@ -15,7 +15,7 @@ export default function NoticiaFeedItem({ noticia, destaque = false }) {
 
   return (
     <Link
-      href={`/noticias/${noticia.slug}`}
+      href={`/informacoes/${noticia.slug}`}
       className="block bg-white border border-cariri-verde-claro rounded-xl overflow-hidden hover:border-cariri-verde hover:shadow-md transition-all"
     >
       {noticia.imagemCapa ? (
@@ -27,6 +27,7 @@ export default function NoticiaFeedItem({ noticia, destaque = false }) {
             priority={destaque}
             sizes="(max-width: 768px) 100vw, 700px"
             className="object-cover"
+            style={{ objectPosition: noticia.imagemPosicao || "center center" }}
           />
         </div>
       ) : (
@@ -52,7 +53,7 @@ export default function NoticiaFeedItem({ noticia, destaque = false }) {
           {noticia.resumo}
         </p>
         <span className="mt-3 inline-block text-sm font-semibold text-cariri-verde">
-          Ler notícia completa →
+          Ler matéria completa →
         </span>
       </div>
     </Link>
