@@ -12,6 +12,12 @@ const VAZIO = {
   fotos: [],
   video: "",
   ativo: true,
+  posicao: "lista",
+  link: "",
+  imagem: "",
+  dataInicio: "",
+  dataFim: "",
+  ordem: 0,
 };
 
 const CATEGORIAS = ["Loja", "Supermercado", "Farmácia", "Restaurante", "Outros"];
@@ -178,6 +184,42 @@ export default function AdminPropagandaPage() {
             ))}
           </div>
         )}
+
+        <div>
+          <label className="block text-sm font-medium mb-1">Link do anúncio</label>
+          <input
+            value={form.link || ""}
+            onChange={(e) => setForm({ ...form, link: e.target.value })}
+            className="w-full border border-cariri-verde-claro rounded-md px-3 py-2 text-sm"
+          />
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium mb-1">Início</label>
+            <input
+              type="date"
+              value={form.dataInicio || ""}
+              onChange={(e) => setForm({ ...form, dataInicio: e.target.value })}
+              className="w-full border rounded-md px-3 py-2 text-sm"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Encerramento</label>
+            <input
+              type="date"
+              value={form.dataFim || ""}
+              onChange={(e) => setForm({ ...form, dataFim: e.target.value })}
+              className="w-full border rounded-md px-3 py-2 text-sm"
+            />
+          </div>
+        </div>
+        <input
+          type="number"
+          placeholder="Ordem / prioridade"
+          value={form.ordem || 0}
+          onChange={(e) => setForm({ ...form, ordem: Number(e.target.value) })}
+          className="w-full border rounded-md px-3 py-2 text-sm"
+        />
 
         <label className="flex items-center gap-2 text-sm">
           <input

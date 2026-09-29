@@ -2,7 +2,7 @@ import Link from "next/link";
 
 // Controles simples de "Anterior / Próxima", preservando o filtro de
 // categoria que estiver ativo.
-export default function Paginacao({ paginaAtual, totalPaginas, categoria = "" }) {
+export default function Paginacao({ paginaAtual, totalPaginas, categoria = "", basePath = "/informacoes" }) {
   if (totalPaginas <= 1) return null;
 
   function montarUrl(pagina) {
@@ -10,7 +10,7 @@ export default function Paginacao({ paginaAtual, totalPaginas, categoria = "" })
     if (categoria) params.set("categoria", categoria);
     if (pagina > 1) params.set("pagina", pagina);
     const query = params.toString();
-    return `/noticias${query ? `?${query}` : ""}`;
+    return `${basePath}${query ? `?${query}` : ""}`;
   }
 
   return (

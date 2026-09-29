@@ -13,7 +13,7 @@ export default function MaisLidas({ noticias }) {
               {String(i + 1).padStart(2, "0")}
             </span>
             <Link
-              href={`/noticias/${n.slug}`}
+              href={`/informacoes/${n.slug}`}
               className="text-sm font-medium text-cariri-preto hover:text-cariri-verde leading-snug"
             >
               {n.titulo}

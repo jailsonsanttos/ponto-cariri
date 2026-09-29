@@ -13,6 +13,8 @@ const VAZIO = {
   fotos: [],
   videos: [],
   links: [],
+  populacao: "",
+  secoes: { cultura: "", turismo: "", agro: "", economia: "", educacao: "", saude: "", eventos: "", dados: "" },
 };
 
 export default function AdminMunicipiosPage() {
@@ -42,6 +44,18 @@ export default function AdminMunicipiosPage() {
       fotos: m.fotos || [],
       videos: m.videos || [],
       links: m.links || [],
+      populacao: m.populacao || "",
+      secoes: {
+        cultura: "",
+        turismo: "",
+        agro: "",
+        economia: "",
+        educacao: "",
+        saude: "",
+        eventos: "",
+        dados: "",
+        ...(m.secoes || {}),
+      },
     });
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -117,6 +131,27 @@ export default function AdminMunicipiosPage() {
             className="w-full border border-cariri-verde-claro rounded-md px-3 py-2 text-sm"
           />
         </div>
+
+        <div>
+          <label className="block text-sm font-medium mb-1">População (texto livre)</label>
+          <input
+            value={form.populacao || ""}
+            onChange={(e) => setForm({ ...form, populacao: e.target.value })}
+            className="w-full border border-cariri-verde-claro rounded-md px-3 py-2 text-sm"
+          />
+        </div>
+
+        {["cultura", "turismo", "agro", "economia", "educacao", "saude", "eventos", "dados"].map((chave) => (
+          <div key={chave}>
+            <label className="block text-sm font-medium mb-1 capitalize">{chave}</label>
+            <textarea
+              rows={3}
+              value={form.secoes?.[chave] || ""}
+              onChange={(e) => setForm({ ...form, secoes: { ...form.secoes, [chave]: e.target.value } })}
+              className="w-full border border-cariri-verde-claro rounded-md px-3 py-2 text-sm"
+            />
+          </div>
+        ))}
 
         <div>
           <label className="block text-sm font-medium mb-1">Hino municipal</label>

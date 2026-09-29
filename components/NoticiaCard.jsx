@@ -4,7 +4,7 @@ import Image from "next/image";
 export default function NoticiaCard({ noticia }) {
   return (
     <Link
-      href={`/noticias/${noticia.slug}`}
+      href={`/informacoes/${noticia.slug}`}
       className="block rounded-lg border border-cariri-verde-claro overflow-hidden hover:border-cariri-verde hover:shadow-sm transition-all bg-white"
     >
       {noticia.imagemCapa ? (
@@ -15,6 +15,7 @@ export default function NoticiaCard({ noticia }) {
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             className="object-cover"
+            style={{ objectPosition: noticia.imagemPosicao || "center center" }}
           />
         </div>
       ) : (

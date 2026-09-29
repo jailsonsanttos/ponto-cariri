@@ -12,7 +12,7 @@ export default function CompartilharBotoes({ titulo, slug, comRotulo = true }) {
   const urlAtual =
     typeof window !== "undefined"
       ? window.location.href
-      : `/noticias/${slug}`;
+      : `/informacoes/${slug}`;
 
   const textoCompartilhado = `${titulo} - Ponto Cariri`;
 

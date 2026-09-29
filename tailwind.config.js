@@ -9,12 +9,12 @@ module.exports = {
       colors: {
         // Paleta oficial do Ponto Cariri: branco, verde e preto
         cariri: {
-          verde: "#1B7A43",       // verde principal (serra/mata)
-          "verde-escuro": "#124F2C",
-          "verde-claro": "#E7F4EC",
-          preto: "#12130F",
+          verde: "var(--cariri-verde, #1B7A43)",
+          "verde-escuro": "var(--cariri-verde-escuro, #124F2C)",
+          "verde-claro": "var(--cariri-verde-claro, #E7F4EC)",
+          preto: "var(--cariri-preto, #12130F)",
           branco: "#FFFFFF",
-          "cinza-texto": "#4A4E48",
+          "cinza-texto": "var(--cariri-texto-secundario, #4A4E48)",
         },
       },
       fontFamily: {

@@ -25,7 +25,7 @@ export async function GET() {
 
   const itens = noticias
     .map((n) => {
-      const link = `${URL_SITE}/noticias/${n.slug}`;
+      const link = `${URL_SITE}/informacoes/${n.slug}`;
       const data = new Date(n.dataPublicacao + "T12:00:00").toUTCString();
       return `
     <item>

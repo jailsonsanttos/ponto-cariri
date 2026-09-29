@@ -31,10 +31,10 @@ export default function NaoEncontrado() {
           Voltar para a página inicial
         </Link>
         <Link
-          href="/noticias"
+          href="/informacoes"
           className="bg-cariri-verde-claro text-cariri-verde-escuro font-semibold px-5 py-2.5 rounded-md hover:bg-cariri-verde-claro/70 transition-colors"
         >
-          Ver notícias
+          Ver informações
         </Link>
       </div>
     </div>
