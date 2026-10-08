@@ -10,6 +10,7 @@ import ContadorVisualizacao from "@/components/ContadorVisualizacao";
 import Link from "next/link";
 import { unstable_noStore as noStore } from "next/cache";
 import { idDoYoutube } from "@/lib/midia";
+import { alturaGaleria, classeLayoutGaleria, normalizarGaleria } from "@/lib/galeria";
 
 const URL_SITE = process.env.NEXT_PUBLIC_SITE_URL || "https://www.pontocariri.com.br";
 
@@ -76,7 +77,7 @@ export default async function InformacaoPage({ params }) {
     mainEntityOfPage: `${URL_SITE}/informacoes/${noticia.slug}`,
   };
 
-  const galeria = Array.isArray(noticia.galeria) ? noticia.galeria : [];
+  const galeria = normalizarGaleria(noticia.galeria);
   const arquivos = Array.isArray(noticia.arquivos) ? noticia.arquivos : [];
   const yt = idDoYoutube(noticia.videoUrl);
 
@@ -132,11 +133,23 @@ export default async function InformacaoPage({ params }) {
         />
 
         {galeria.length > 0 && (
-          <div className="mt-8 grid grid-cols-2 gap-3">
-            {galeria.map((url, i) => (
-              <div key={i} className="relative h-40 rounded-lg overflow-hidden">
-                <Image src={url} alt="" fill className="object-cover object-center" sizes="50vw" />
-              </div>
+          <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {galeria.map((imagem, i) => (
+              <figure key={`${imagem.url}-${i}`} className={classeLayoutGaleria(imagem.layout)}>
+                <div className={`relative w-full overflow-hidden rounded-lg ${alturaGaleria(imagem.layout)}`}>
+                  <Image
+                    src={imagem.url}
+                    alt={imagem.alt || `Imagem ${i + 1} da publicação`}
+                    fill
+                    className="object-cover"
+                    style={{ objectPosition: imagem.posicao }}
+                    sizes={imagem.layout === "grade" ? "(max-width: 640px) 100vw, 50vw" : "100vw"}
+                  />
+                </div>
+                {imagem.legenda && (
+                  <figcaption className="mt-2 text-sm text-cariri-cinza-texto">{imagem.legenda}</figcaption>
+                )}
+              </figure>
             ))}
           </div>
         )}

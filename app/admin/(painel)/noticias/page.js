@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import UploadCampo from "@/components/UploadCampo";
 import EditorTexto from "@/components/EditorTexto";
 import { POSICOES_IMAGEM } from "@/components/ImagemCapa";
+import { LAYOUTS_GALERIA, normalizarGaleria } from "@/lib/galeria";
 
 const VAZIO = {
   titulo: "",
@@ -45,7 +46,7 @@ export default function AdminNoticiasPage() {
 
   function comecarEdicao(n) {
     setEditandoSlug(n.slug);
-    setForm({ ...VAZIO, ...n });
+    setForm({ ...VAZIO, ...n, galeria: normalizarGaleria(n.galeria) });
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -80,6 +81,22 @@ export default function AdminNoticiasPage() {
     if (!confirm("Tem certeza que deseja excluir esta notícia?")) return;
     await fetch(`/api/noticias/${slug}`, { method: "DELETE" });
     carregar();
+  }
+
+  function atualizarImagemGaleria(indice, alteracoes) {
+    setForm({
+      ...form,
+      galeria: (form.galeria || []).map((imagem, i) =>
+        i === indice ? { ...imagem, ...alteracoes } : imagem,
+      ),
+    });
+  }
+
+  function removerImagemGaleria(indice) {
+    setForm({
+      ...form,
+      galeria: (form.galeria || []).filter((_, i) => i !== indice),
+    });
   }
 
   return (
@@ -214,9 +231,90 @@ export default function AdminNoticiasPage() {
           className="w-full border border-cariri-verde-claro rounded-md px-3 py-2 text-sm"
         />
         <UploadCampo
-          label="Galeria (várias imagens)"
-          onEnviar={(url) => setForm({ ...form, galeria: [...(form.galeria || []), url] })}
+          label="Adicionar imagem à galeria"
+          onEnviar={(url) =>
+            setForm({
+              ...form,
+              galeria: [
+                ...(form.galeria || []),
+                { url, posicao: "center center", layout: "grade", alt: "", legenda: "" },
+              ],
+            })
+          }
         />
+        {(form.galeria || []).length > 0 && (
+          <div className="space-y-4 rounded-md border border-cariri-verde-claro p-4">
+            <div>
+              <p className="text-sm font-semibold text-cariri-preto">Imagens da galeria</p>
+              <p className="mt-1 text-xs text-cariri-cinza-texto">
+                Cada imagem pode ter seu próprio enquadramento e posição na publicação.
+              </p>
+            </div>
+            {normalizarGaleria(form.galeria).map((imagem, i) => (
+              <div key={`${imagem.url}-${i}`} className="grid gap-3 border-t border-cariri-verde-claro pt-4 sm:grid-cols-[8rem_1fr]">
+                <div className="relative h-24 w-32 overflow-hidden rounded-md bg-cariri-verde-claro">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={imagem.url}
+                    alt={imagem.alt || "Prévia da galeria"}
+                    className="h-full w-full object-cover"
+                    style={{ objectPosition: imagem.posicao }}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="text-xs text-cariri-cinza-texto">Imagem {i + 1}</span>
+                    <button
+                      type="button"
+                      onClick={() => removerImagemGaleria(i)}
+                      className="text-xs font-medium text-red-600"
+                    >
+                      Remover
+                    </button>
+                  </div>
+                  <div className="grid gap-2 sm:grid-cols-2">
+                    <label className="text-xs font-medium text-cariri-preto">
+                      Enquadramento
+                      <select
+                        value={imagem.posicao}
+                        onChange={(e) => atualizarImagemGaleria(i, { posicao: e.target.value })}
+                        className="mt-1 w-full border border-cariri-verde-claro rounded-md px-2 py-1.5 text-sm font-normal"
+                      >
+                        {POSICOES_IMAGEM.map((p) => (
+                          <option key={p.valor} value={p.valor}>{p.label}</option>
+                        ))}
+                      </select>
+                    </label>
+                    <label className="text-xs font-medium text-cariri-preto">
+                      Posição na publicação
+                      <select
+                        value={imagem.layout}
+                        onChange={(e) => atualizarImagemGaleria(i, { layout: e.target.value })}
+                        className="mt-1 w-full border border-cariri-verde-claro rounded-md px-2 py-1.5 text-sm font-normal"
+                      >
+                        {LAYOUTS_GALERIA.map((layout) => (
+                          <option key={layout.valor} value={layout.valor}>{layout.label}</option>
+                        ))}
+                      </select>
+                    </label>
+                  </div>
+                  <input
+                    value={imagem.alt}
+                    onChange={(e) => atualizarImagemGaleria(i, { alt: e.target.value })}
+                    placeholder="Texto alternativo da imagem (SEO e acessibilidade)"
+                    className="w-full border border-cariri-verde-claro rounded-md px-2 py-1.5 text-xs"
+                  />
+                  <input
+                    value={imagem.legenda}
+                    onChange={(e) => atualizarImagemGaleria(i, { legenda: e.target.value })}
+                    placeholder="Legenda opcional"
+                    className="w-full border border-cariri-verde-claro rounded-md px-2 py-1.5 text-xs"
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
         <input
           placeholder="URL de vídeo (YouTube ou arquivo)"
           value={form.videoUrl || ""}
