@@ -1,5 +1,6 @@
 import { listarMunicipios } from "@/lib/db";
 import MunicipioCard from "@/components/MunicipioCard";
+import AdSlot from "@/components/AdSlot";
 import { unstable_noStore as noStore } from "next/cache";
 
 // Garante que esta página busque dados novos a cada visita, em vez de
@@ -19,6 +20,10 @@ export default async function MunicipiosPage() {
       <p className="mt-2 text-cariri-cinza-texto max-w-2xl">
         Conheça história, cultura, turismo, agro e o cotidiano de cada cidade da região.
       </p>
+
+      <div className="mt-6">
+        <AdSlot label="Anúncio - topo da página de municípios" />
+      </div>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {municipios.map((m) => (

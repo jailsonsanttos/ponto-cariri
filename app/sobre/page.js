@@ -1,6 +1,7 @@
 import { buscarConfig } from "@/lib/db";
 import { buscarPaginaCompleta } from "@/lib/cms";
 import PaginaBlocos from "@/components/PaginaBlocos";
+import AdSlot from "@/components/AdSlot";
 import { unstable_noStore as noStore } from "next/cache";
 
 export const dynamic = "force-dynamic";
@@ -45,6 +46,10 @@ export default async function SobrePage() {
         <h1 className="text-3xl font-bold text-cariri-preto">
           {pagina?.titulo || "Sobre o Ponto Cariri"}
         </h1>
+
+        <div className="mt-6">
+          <AdSlot label="Anúncio - página Sobre" />
+        </div>
 
         <div className="mt-8">
           {pagina?.blocos?.length ? (

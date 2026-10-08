@@ -1,5 +1,6 @@
 import { listarMunicipios } from "@/lib/db";
 import TempoCliente from "./TempoCliente";
+import AdSlot from "@/components/AdSlot";
 import { unstable_noStore as noStore } from "next/cache";
 
 // Garante que esta página busque dados novos a cada visita, em vez de
@@ -25,6 +26,10 @@ export default async function TempoPage() {
         Escolha um município da região do Cariri para ver a previsão do
         tempo atualizada.
       </p>
+
+      <div className="mt-6">
+        <AdSlot label="Anúncio - topo da previsão do tempo" />
+      </div>
 
       <TempoCliente municipios={municipios} />
     </div>

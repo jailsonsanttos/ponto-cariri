@@ -1,5 +1,7 @@
 export const metadata = { title: "Política de Privacidade" };
 
+import AdSlot from "@/components/AdSlot";
+
 export default function PrivacidadePage() {
   return (
     <div className="max-w-content mx-auto px-5 py-12">
@@ -7,6 +9,8 @@ export default function PrivacidadePage() {
         <h1 className="text-3xl font-bold text-cariri-preto mb-6">
           Política de Privacidade
         </h1>
+
+        <AdSlot label="Anúncio - política de privacidade" />
 
         <p>
           Esta Política de Privacidade explica como o Ponto Cariri coleta,

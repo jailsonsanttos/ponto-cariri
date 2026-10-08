@@ -1,10 +1,14 @@
 export const metadata = { title: "Termos de Uso" };
 
+import AdSlot from "@/components/AdSlot";
+
 export default function TermosPage() {
   return (
     <div className="max-w-content mx-auto px-5 py-12">
       <div className="max-w-2xl prose-noticia">
         <h1 className="text-3xl font-bold text-cariri-preto mb-6">Termos de Uso</h1>
+
+        <AdSlot label="Anúncio - termos de uso" />
 
         <p>
           Ao acessar e usar o site Ponto Cariri, você concorda com os

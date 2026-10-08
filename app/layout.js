@@ -10,6 +10,7 @@ import { listarMenuPublico, buscarAparencia, APARENCIA_PADRAO } from "@/lib/cms"
 export const dynamic = "force-dynamic";
 
 const URL_SITE = process.env.NEXT_PUBLIC_SITE_URL || "https://www.pontocariri.com.br";
+const ADSENSE_CLIENT_ID = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || "ca-pub-5549752585345376";
 
 export const viewport = {
   themeColor: "#1B7A43",
@@ -104,14 +105,12 @@ export default async function RootLayout({ children }) {
             </Script>
           </>
         )}
-        {process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID && (
-          <Script
-            async
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID}`}
-            crossOrigin="anonymous"
-            strategy="beforeInteractive"
-          />
-        )}
+        <Script
+          async
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT_ID}`}
+          crossOrigin="anonymous"
+          strategy="beforeInteractive"
+        />
       </head>
       <body className="min-h-screen flex flex-col font-sans antialiased text-cariri-preto">
         <Header config={config} menu={menu} aparencia={aparencia} />

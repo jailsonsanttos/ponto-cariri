@@ -2,15 +2,14 @@
 
 // components/AdSlot.jsx
 // Espaço reutilizável para anúncios do Google AdSense.
-// Basta configurar o NEXT_PUBLIC_ADSENSE_CLIENT_ID no arquivo .env.local
-// (e na Vercel) — o script oficial já é carregado automaticamente pelo
-// app/layout.js. Enquanto o AdSense não estiver configurado, mostra um
-// espaço reservado no lugar do anúncio.
+// O cliente e o bloco podem ser substituídos por variáveis de ambiente,
+// mas já têm os valores aprovados para este site como fallback.
 
 import { useEffect } from "react";
 
 export default function AdSlot({ label = "Espaço publicitário" }) {
-  const clientId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID;
+  const clientId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || "ca-pub-5549752585345376";
+  const slotId = process.env.NEXT_PUBLIC_ADSENSE_SLOT_ID || "5890880600";
 
   useEffect(() => {
     if (!clientId) return;
@@ -21,19 +20,12 @@ export default function AdSlot({ label = "Espaço publicitário" }) {
     }
   }, [clientId]);
 
-  if (!clientId) {
-    return (
-      <div className="w-full border border-dashed border-cariri-verde-claro rounded-md py-8 text-center text-xs text-cariri-cinza-texto">
-        {label} — configure o Google AdSense em .env.local
-      </div>
-    );
-  }
-
   return (
     <ins
       className="adsbygoogle block"
       style={{ display: "block" }}
       data-ad-client={clientId}
+      data-ad-slot={slotId}
       data-ad-format="auto"
       data-full-width-responsive="true"
     />
