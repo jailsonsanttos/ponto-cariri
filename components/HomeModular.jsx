@@ -5,11 +5,7 @@ import MaisLidas from "@/components/MaisLidas";
 import PropagandaCard from "@/components/PropagandaCard";
 import TempoFaixa from "@/components/TempoFaixa";
 import AdSlot from "@/components/AdSlot";
-
-function formatarPreco(valor) {
-  if (valor == null) return "—";
-  return Number(valor).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-}
+import TabelaPrecosCariri from "@/components/TabelaPrecosCariri";
 
 export default function HomeModular({
   secoes,
@@ -92,35 +88,7 @@ export default function HomeModular({
               <p className="text-sm text-cariri-cinza-texto mb-4">
                 Valores informados por município, data e fonte — não são preços universais da região.
               </p>
-              <div className="overflow-x-auto border border-cariri-verde-claro rounded-xl">
-                <table className="w-full text-sm">
-                  <thead className="bg-cariri-verde-claro text-left">
-                    <tr>
-                      <th className="px-3 py-2">Município</th>
-                      <th className="px-3 py-2">Produto</th>
-                      <th className="px-3 py-2">Preço</th>
-                      <th className="px-3 py-2">Data</th>
-                      <th className="px-3 py-2">Fonte</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {precos.slice(0, secao.dados?.limite || 8).map((p) => (
-                      <tr key={p.id} className="border-t border-cariri-verde-claro">
-                        <td className="px-3 py-2">{p.municipio || "—"}</td>
-                        <td className="px-3 py-2">
-                          {p.produto}
-                          {p.unidade ? ` (${p.unidade})` : ""}
-                        </td>
-                        <td className="px-3 py-2 font-semibold">{formatarPreco(p.preco)}</td>
-                        <td className="px-3 py-2">
-                          {p.data ? new Date(p.data + "T12:00:00").toLocaleDateString("pt-BR") : "—"}
-                        </td>
-                        <td className="px-3 py-2">{p.fonte || "—"}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+              <TabelaPrecosCariri precos={precos} limite={secao.dados?.limite || 8} />
             </section>
           );
         }

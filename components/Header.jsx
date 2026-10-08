@@ -11,6 +11,7 @@ const MENU_PADRAO = [
   { href: "/municipios", label: "Municípios", filhos: [] },
   { href: "/publicidade", label: "Publicidade", filhos: [] },
   { href: "/tempo", label: "Tempo", filhos: [] },
+  { href: "/precos", label: "Preços", filhos: [] },
   { href: "/sobre", label: "Sobre", filhos: [] },
 ];
 
