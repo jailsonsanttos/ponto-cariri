@@ -133,25 +133,30 @@ export default async function InformacaoPage({ params }) {
         />
 
         {galeria.length > 0 && (
-          <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {galeria.map((imagem, i) => (
-              <figure key={`${imagem.url}-${i}`} className={classeLayoutGaleria(imagem.layout)}>
-                <div className={`relative w-full overflow-hidden rounded-lg ${alturaGaleria(imagem.layout)}`}>
-                  <Image
-                    src={imagem.url}
-                    alt={imagem.alt || `Imagem ${i + 1} da publicação`}
-                    fill
-                    className="object-cover"
-                    style={{ objectPosition: imagem.posicao }}
-                    sizes={imagem.layout === "grade" ? "(max-width: 640px) 100vw, 50vw" : "100vw"}
-                  />
-                </div>
-                {imagem.legenda && (
-                  <figcaption className="mt-2 text-sm text-cariri-cinza-texto">{imagem.legenda}</figcaption>
-                )}
-              </figure>
-            ))}
-          </div>
+          <section className="mt-10" aria-labelledby="titulo-galeria">
+            <h2 id="titulo-galeria" className="mb-4 text-xl font-bold text-cariri-preto">
+              Galeria de imagens
+            </h2>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {galeria.map((imagem, i) => (
+                <figure key={`${imagem.url}-${i}`} className={classeLayoutGaleria(imagem.layout)}>
+                  <div className={`relative w-full overflow-hidden rounded-lg ${alturaGaleria(imagem.layout)}`}>
+                    <Image
+                      src={imagem.url}
+                      alt={imagem.alt || `Imagem ${i + 1} da publicação`}
+                      fill
+                      className="object-cover"
+                      style={{ objectPosition: imagem.posicao }}
+                      sizes={imagem.layout === "grade" ? "(max-width: 640px) 100vw, 50vw" : "100vw"}
+                    />
+                  </div>
+                  {imagem.legenda && (
+                    <figcaption className="mt-2 text-sm text-cariri-cinza-texto">{imagem.legenda}</figcaption>
+                  )}
+                </figure>
+              ))}
+            </div>
+          </section>
         )}
 
         {yt && (

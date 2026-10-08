@@ -70,8 +70,14 @@ select:focus-visible {
   font-weight: 700;
 }
 .prose-noticia img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
   border-radius: 0.5rem;
   margin: 1rem 0;
+}
+.prose-noticia .imagem-no-texto {
+  margin: 1.5rem 0;
 }
 
 /* Faixa de previsão do tempo que rola automaticamente na home */
