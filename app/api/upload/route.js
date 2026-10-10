@@ -1,11 +1,21 @@
 import { NextResponse } from "next/server";
+import { handleUpload } from "@vercel/blob/client";
 import { exigirAdmin } from "@/lib/auth";
-import { put } from "@vercel/blob";
-import { validarArquivo, nomeSeguro } from "@/lib/upload";
 import { criarMidia } from "@/lib/cms";
 import { garantirSchema } from "@/lib/db";
+import { extensaoDe, tipoDeUpload } from "@/lib/upload";
 
 export const dynamic = "force-dynamic";
+
+const TIPOS_PERMITIDOS = [
+  "image/jpeg", "image/png", "image/webp",
+  "video/mp4", "video/webm", "video/quicktime", "video/x-m4v",
+  "audio/mpeg", "audio/wav", "audio/x-wav", "audio/wave", "audio/ogg", "application/ogg", "audio/mp4", "audio/x-m4a", "audio/aac",
+  "application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "application/vnd.ms-powerpoint", "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+  "text/plain", "text/csv",
+];
 
 export async function POST(request) {
   if (!(await exigirAdmin(request))) {
@@ -14,37 +24,40 @@ export async function POST(request) {
 
   await garantirSchema();
 
-  const formData = await request.formData();
-  const arquivo = formData.get("arquivo");
-
-  if (!arquivo || typeof arquivo === "string") {
-    return NextResponse.json({ erro: "Nenhum arquivo enviado." }, { status: 400 });
-  }
-
-  const validacao = validarArquivo(arquivo);
-  if (!validacao.ok) {
-    return NextResponse.json({ erro: validacao.erro }, { status: 400 });
-  }
-
-  const nomeArquivo = nomeSeguro(arquivo.name);
-  const resultado = await put(nomeArquivo, arquivo, {
-    access: "public",
-    contentType: arquivo.type || undefined,
-    addRandomSuffix: false,
-  });
-
-  let item = null;
   try {
-    item = await criarMidia({
-      tipo: validacao.tipo,
-      url: resultado.url,
-      nome: arquivo.name,
-      municipioSlug: formData.get("municipio") || "",
-      alt: formData.get("alt") || "",
+    const body = await request.json();
+    const resposta = await handleUpload({
+      token: process.env.BLOB_READ_WRITE_TOKEN,
+      request,
+      body,
+      onBeforeGenerateToken: async (pathname, clientPayload, multipart) => {
+        const ext = extensaoDe(pathname);
+        const tiposAudio = ["mp3", "wav", "ogg", "oga", "m4a", "aac"];
+        if (!ext || !tipoDeUpload({ name: pathname })) {
+          throw new Error("Formato de arquivo não permitido.");
+        }
+        return {
+          allowedContentTypes: TIPOS_PERMITIDOS,
+          maximumSizeInBytes: 32 * 1024 * 1024,
+          addRandomSuffix: false,
+          tokenPayload: JSON.stringify({ nome: pathname, audio: tiposAudio.includes(ext), multipart: Boolean(multipart), clientPayload }),
+        };
+      },
+      onUploadCompleted: async ({ blob, tokenPayload }) => {
+        const tipo = tipoDeUpload({ name: blob.pathname, type: blob.contentType, size: blob.size });
+        if (!tipo) return;
+        await criarMidia({
+          tipo,
+          url: blob.url,
+          nome: tokenPayload ? JSON.parse(tokenPayload).nome : blob.pathname,
+          municipioSlug: "",
+          alt: "",
+        }).catch(() => null);
+      },
     });
-  } catch {
-    item = null;
+    return NextResponse.json(resposta);
+  } catch (erro) {
+    console.error("Falha no upload:", erro);
+    return NextResponse.json({ erro: erro?.message || "Não foi possível processar o upload." }, { status: 500 });
   }
-
-  return NextResponse.json({ url: resultado.url, tipo: validacao.tipo, midia: item });
 }
