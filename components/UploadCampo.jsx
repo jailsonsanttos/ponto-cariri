@@ -5,7 +5,7 @@ import { useState } from "react";
 // tipoAceito: string do atributo "accept" do input (ex: "image/*",
 // "audio/*,video/*"). Deixa o mesmo componente servir pra fotos, hinos
 // em áudio/vídeo, ou qualquer outro tipo de arquivo.
-export default function UploadCampo({ label = "Arquivo", tipoAceito = "image/*", onEnviar }) {
+export default function UploadCampo({ label = "Arquivo", tipoAceito = "image/*", onEnviar, ajuda = "Formatos permitidos conforme o campo." }) {
   const [enviando, setEnviando] = useState(false);
   const [erro, setErro] = useState("");
 
@@ -22,13 +22,13 @@ export default function UploadCampo({ label = "Arquivo", tipoAceito = "image/*",
     try {
       const resposta = await fetch("/api/upload", { method: "POST", body: formData });
       const dados = await resposta.json();
-      if (resposta.ok) {
+      if (resposta.ok && dados.url) {
         onEnviar(dados.url);
       } else {
-        setErro(dados.erro || "Erro ao enviar arquivo.");
+        setErro(dados.erro || "O servidor não retornou o arquivo enviado.");
       }
-    } catch {
-      setErro("Erro ao enviar arquivo.");
+    } catch (erro) {
+      setErro(erro?.message || "Não foi possível enviar o arquivo. Tente novamente.");
     } finally {
       setEnviando(false);
       e.target.value = "";
@@ -44,7 +44,8 @@ export default function UploadCampo({ label = "Arquivo", tipoAceito = "image/*",
         onChange={aoSelecionarArquivo}
         className="text-sm"
       />
-      {enviando && <p className="text-xs text-cariri-cinza-texto mt-1">Enviando… (arquivos grandes podem levar um pouco mais)</p>}
+      {ajuda && !enviando && <p className="mt-1 text-xs text-cariri-cinza-texto">{ajuda}</p>}
+      {enviando && <p className="mt-1 text-xs font-medium text-cariri-verde">Enviando… aguarde a confirmação.</p>}
       {erro && <p className="text-xs text-red-600 mt-1">{erro}</p>}
     </div>
   );

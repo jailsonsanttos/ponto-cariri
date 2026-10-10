@@ -56,6 +56,19 @@ export default function AdminAparenciaPage() {
           placeholder="Slogan"
           className="w-full border rounded-md px-3 py-2 text-sm"
         />
+        <label className="block text-sm font-medium">
+          Fonte dos textos
+          <select value={form.fonte || "sistema"} onChange={(e) => setForm({ ...form, fonte: e.target.value })} className="mt-1 w-full border rounded-md px-3 py-2 text-sm">
+            <option value="sistema">Sistema (rápida e acessível)</option>
+            <option value="inter">Inter (moderna)</option>
+            <option value="serif">Serifada (editorial)</option>
+            <option value="mono">Monoespaçada (técnica)</option>
+          </select>
+        </label>
+        <div className="rounded-md border bg-slate-50 p-3 text-sm" style={{ fontFamily: form.fonte === "serif" ? "Georgia, serif" : form.fonte === "mono" ? "ui-monospace, monospace" : form.fonte === "inter" ? "Arial, sans-serif" : "system-ui, sans-serif" }}>
+          <strong>Prévia da aparência</strong>
+          <p className="mt-1 text-cariri-cinza-texto">Veja aqui como a tipografia ficará no portal.</p>
+        </div>
         <div>
           <p className="text-sm font-medium mb-1">Logo</p>
           <UploadCampo onEnviar={(url) => setForm({ ...form, logoUrl: url })} />

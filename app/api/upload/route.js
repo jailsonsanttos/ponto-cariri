@@ -27,7 +27,11 @@ export async function POST(request) {
   }
 
   const nomeArquivo = nomeSeguro(arquivo.name);
-  const resultado = await put(nomeArquivo, arquivo, { access: "public" });
+  const resultado = await put(nomeArquivo, arquivo, {
+    access: "public",
+    contentType: arquivo.type || undefined,
+    addRandomSuffix: false,
+  });
 
   let item = null;
   try {

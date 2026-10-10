@@ -52,7 +52,7 @@ function TemaCss({ aparencia }) {
       --cariri-link: ${a.corLink || a.corPrincipal};
       --cariri-raio: ${a.raioBorda || 12}px;
     }
-    body { background-color: ${a.corFundo || "#fff"}; color: ${a.corTexto}; }
+    body { background-color: ${a.corFundo || "#fff"}; color: ${a.corTexto}; font-family: ${a.fonte === "serif" ? "Georgia, 'Times New Roman', serif" : a.fonte === "mono" ? "ui-monospace, SFMono-Regular, Menlo, monospace" : "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}; }
   `;
   return <style dangerouslySetInnerHTML={{ __html: css }} />;
 }

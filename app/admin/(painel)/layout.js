@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import LogoutBotao from "./LogoutBotao";
+import { usePathname } from "next/navigation";
 
 const itensMenu = [
   { href: "/admin", label: "Painel" },
@@ -18,30 +21,31 @@ const itensMenu = [
 ];
 
 export default function AdminLayout({ children }) {
+  const pathname = usePathname();
   return (
-    <div className="min-h-screen flex flex-col sm:flex-row">
-      <aside className="sm:w-56 bg-cariri-preto text-white shrink-0">
-        <div className="p-5">
-          <p className="font-bold">Ponto Cariri</p>
-          <p className="text-xs text-white/60">Painel de administração</p>
+    <div className="min-h-screen bg-slate-50 sm:flex">
+      <aside className="shrink-0 bg-cariri-preto text-white sm:min-h-screen sm:w-64">
+        <div className="border-b border-white/10 p-5">
+          <p className="text-lg font-black">Ponto Cariri</p>
+          <p className="mt-1 text-xs text-white/60">Painel de administração</p>
         </div>
-        <nav className="px-3 pb-5 flex sm:flex-col gap-1 flex-wrap">
+        <nav className="flex flex-wrap gap-1 px-3 py-4 sm:flex-col">
           {itensMenu.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="px-3 py-2 rounded-md text-sm text-white/80 hover:bg-white/10 hover:text-white transition-colors"
+              className={`rounded-lg px-3 py-2.5 text-sm transition-colors ${pathname === item.href || (item.href !== "/admin" && pathname.startsWith(`${item.href}/`)) ? "bg-cariri-verde text-white font-bold" : "text-white/75 hover:bg-white/10 hover:text-white"}`}
             >
               {item.label}
             </Link>
           ))}
         </nav>
-        <div className="px-5 mt-4 sm:mt-auto sm:mb-5">
+        <div className="mt-2 px-5 pb-5 sm:mt-auto sm:pb-6">
           <LogoutBotao />
         </div>
       </aside>
 
-      <main className="flex-1 bg-white p-6">{children}</main>
+      <main className="min-w-0 flex-1 p-4 sm:p-8"><div className="mx-auto max-w-7xl">{children}</div></main>
     </div>
   );
 }

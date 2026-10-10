@@ -10,6 +10,7 @@ const VAZIO = {
   hinoUrl: "",
   latitude: "",
   longitude: "",
+  mapaUrl: "",
   fotos: [],
   videos: [],
   links: [],
@@ -41,6 +42,7 @@ export default function AdminMunicipiosPage() {
       hinoUrl: m.hinoUrl,
       latitude: m.latitude ?? "",
       longitude: m.longitude ?? "",
+      mapaUrl: "",
       fotos: m.fotos || [],
       videos: m.videos || [],
       links: m.links || [],
@@ -92,6 +94,24 @@ export default function AdminMunicipiosPage() {
     if (!confirm("Tem certeza que deseja excluir este município?")) return;
     await fetch(`/api/municipios/${slug}`, { method: "DELETE" });
     carregar();
+  }
+
+  function aplicarLinkMapa() {
+    const valor = (form.mapaUrl || "").trim();
+    const coordenadas = valor.match(/@(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/) || valor.match(/[?&](?:q|ll)=(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/);
+    if (!coordenadas) {
+      setMensagem("Cole um link do Google Maps contendo as coordenadas, por exemplo: https://maps.google.com/?q=-7.23,-39.31");
+      return;
+    }
+    setForm({ ...form, latitude: coordenadas[1], longitude: coordenadas[2] });
+    setMensagem("Coordenadas preenchidas a partir do mapa. Salve o município para confirmar.");
+  }
+
+  function tipoHino(url) {
+    const limpo = (url || "").split("?")[0].toLowerCase();
+    if (/\.(mp3|wav|ogg|oga|m4a|aac)$/.test(limpo)) return "audio";
+    if (/\.(mp4|webm|mov|m4v)$/.test(limpo)) return "video";
+    return "link";
   }
 
   return (
@@ -163,6 +183,7 @@ export default function AdminMunicipiosPage() {
           <UploadCampo
             label="Enviar arquivo de áudio ou vídeo"
             tipoAceito="audio/*,video/*"
+            ajuda="MP3, WAV, OGG, M4A, AAC, MP4, WEBM ou MOV. O arquivo será publicado com o tipo correto."
             onEnviar={(url) => setForm({ ...form, hinoUrl: url })}
           />
 
@@ -179,7 +200,11 @@ export default function AdminMunicipiosPage() {
           </div>
 
           {form.hinoUrl && (
-            <div className="mt-2 flex items-center gap-2">
+            <div className="mt-3 space-y-2 rounded-md bg-cariri-verde-claro/40 p-3">
+              {tipoHino(form.hinoUrl) === "audio" && <audio controls preload="metadata" className="w-full" src={form.hinoUrl} />}
+              {tipoHino(form.hinoUrl) === "video" && <video controls preload="metadata" className="max-h-48 w-full rounded" src={form.hinoUrl} />}
+              {tipoHino(form.hinoUrl) === "link" && <a href={form.hinoUrl} target="_blank" rel="noreferrer" className="text-xs font-medium text-cariri-verde">Abrir link do hino em nova aba →</a>}
+              <div className="flex items-center gap-2">
               <span className="text-xs text-cariri-cinza-texto truncate max-w-xs">
                 Atual: {form.hinoUrl}
               </span>
@@ -190,6 +215,7 @@ export default function AdminMunicipiosPage() {
               >
                 Remover
               </button>
+              </div>
             </div>
           )}
         </div>
@@ -212,6 +238,15 @@ export default function AdminMunicipiosPage() {
               className="w-full border border-cariri-verde-claro rounded-md px-3 py-2 text-sm"
               placeholder="-39.3151"
             />
+          </div>
+        </div>
+
+        <div className="rounded-md border border-cariri-verde-claro bg-cariri-verde-claro/20 p-3">
+          <label className="block text-sm font-medium mb-1">Localização pelo Google Maps</label>
+          <p className="mb-2 text-xs text-cariri-cinza-texto">Cole o link do ponto no Google Maps e clique em preencher. Também é possível editar latitude e longitude manualmente acima.</p>
+          <div className="flex gap-2">
+            <input value={form.mapaUrl || ""} onChange={(e) => setForm({ ...form, mapaUrl: e.target.value })} placeholder="https://www.google.com/maps/@-7.23,-39.31,14z" className="min-w-0 flex-1 border border-cariri-verde-claro rounded-md px-3 py-2 text-sm" />
+            <button type="button" onClick={aplicarLinkMapa} className="shrink-0 rounded-md border border-cariri-verde px-3 py-2 text-sm font-semibold text-cariri-verde">Preencher</button>
           </div>
         </div>
 
