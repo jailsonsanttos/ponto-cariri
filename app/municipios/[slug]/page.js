@@ -12,18 +12,26 @@ export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }) {
   const municipio = await buscarMunicipio(params.slug);
-  if (!municipio) return { title: "Município" };
+  if (!municipio) return { title: "Município não encontrado", robots: { index: false, follow: false } };
 
   const descricao =
     municipio.descricaoCurta ||
     `Conheça a história, o hino e a localização de ${municipio.nome}, no Cariri cearense.`;
 
+  const url = `${process.env.NEXT_PUBLIC_SITE_URL || "https://www.pontocariri.com.br"}/municipios/${municipio.slug}`;
+  const imagem = Array.isArray(municipio.fotos) && municipio.fotos[0] ? municipio.fotos[0] : undefined;
   return {
     title: `${municipio.nome} — Ponto Cariri`,
     description: descricao,
+    keywords: [municipio.nome, "Cariri", "município", "história", "turismo"],
+    robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large" } },
     openGraph: {
+      type: "website",
+      url,
+      siteName: "Ponto Cariri",
       title: `Ponto Cariri — ${municipio.nome}`,
       description: descricao,
+      images: imagem ? [{ url: imagem, alt: municipio.nome }] : undefined,
     },
     twitter: {
       card: "summary_large_image",
@@ -31,7 +39,7 @@ export async function generateMetadata({ params }) {
       description: descricao,
     },
     alternates: {
-      canonical: `${process.env.NEXT_PUBLIC_SITE_URL || "https://www.pontocariri.com.br"}/municipios/${municipio.slug}`,
+      canonical: url,
     },
   };
 }
@@ -51,9 +59,19 @@ export default async function MunicipioPage({ params }) {
   const urlMapa = temCoordenadas
     ? `https://www.google.com/maps?q=${municipio.latitude},${municipio.longitude}&z=12&output=embed`
     : null;
+  const urlPublica = `${process.env.NEXT_PUBLIC_SITE_URL || "https://www.pontocariri.com.br"}/municipios/${municipio.slug}`;
+  const schemaMunicipio = {
+    "@context": "https://schema.org",
+    "@type": "Place",
+    name: municipio.nome,
+    description: municipio.descricaoCurta || `Informações sobre ${municipio.nome}, no Cariri cearense.`,
+    url: urlPublica,
+    ...(temCoordenadas ? { geo: { "@type": "GeoCoordinates", latitude: municipio.latitude, longitude: municipio.longitude } } : {}),
+  };
 
   return (
     <div className="max-w-content mx-auto px-5 py-12">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaMunicipio) }} />
       <Breadcrumbs
         itens={[
           { label: "Municípios", href: "/municipios" },

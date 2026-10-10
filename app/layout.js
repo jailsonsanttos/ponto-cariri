@@ -77,6 +77,18 @@ export default async function RootLayout({ children }) {
       aparencia.slogan ||
       "Portal regional do Cariri cearense: informação, cultura, turismo e riquezas da região.",
   };
+  const schemaSite = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Ponto Cariri",
+    url: URL_SITE,
+    inLanguage: "pt-BR",
+    potentialAction: {
+      "@type": "SearchAction",
+      target: `${URL_SITE}/busca?q={search_term_string}`,
+      "query-input": "required name=search_term_string",
+    },
+  };
 
   return (
     <html lang="pt-BR">
@@ -86,6 +98,10 @@ export default async function RootLayout({ children }) {
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaOrganizacao) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaSite) }}
         />
         <TemaCss aparencia={aparencia} />
         {process.env.NEXT_PUBLIC_GA_ID && (

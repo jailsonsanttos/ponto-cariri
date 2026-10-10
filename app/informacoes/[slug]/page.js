@@ -12,32 +12,42 @@ import { unstable_noStore as noStore } from "next/cache";
 import { idDoYoutube } from "@/lib/midia";
 import { alturaGaleria, classeLayoutGaleria, normalizarGaleria } from "@/lib/galeria";
 
-const URL_SITE = process.env.NEXT_PUBLIC_SITE_URL || "https://www.pontocariri.com.br";
+const URL_SITE = (process.env.NEXT_PUBLIC_SITE_URL || "https://www.pontocariri.com.br").replace(/\/$/, "");
 
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }) {
   const noticia = await buscarNoticia(params.slug);
-  if (!noticia) return { title: "Informação" };
+  if (!noticia || !noticia.publicada) {
+    return { title: "Informação não encontrada", robots: { index: false, follow: false } };
+  }
 
-  const descricao = (noticia.seoDescricao || noticia.resumo || "").slice(0, 160);
+  const textoConteudo = (noticia.conteudo || "").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+  const descricao = (noticia.seoDescricao || noticia.resumo || textoConteudo || `Leia ${noticia.titulo} no Ponto Cariri.`).slice(0, 160);
   const titulo = noticia.seoTitulo || noticia.titulo;
+  const url = `${URL_SITE}/informacoes/${noticia.slug}`;
+  const imagem = noticia.imagemCapa || `${URL_SITE}/opengraph-image`;
 
   return {
     title: titulo,
     description: descricao,
-    alternates: { canonical: `${URL_SITE}/informacoes/${noticia.slug}` },
+    keywords: [noticia.titulo, noticia.categoria, noticia.municipio, "Cariri"].filter(Boolean),
+    robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large" } },
+    alternates: { canonical: url },
     openGraph: {
       type: "article",
+      url,
+      siteName: "Ponto Cariri",
       title: titulo,
       description: descricao,
       publishedTime: noticia.dataPublicacao,
-      images: noticia.imagemCapa ? [noticia.imagemCapa] : undefined,
+      images: [{ url: imagem, alt: noticia.titulo }],
     },
     twitter: {
       card: "summary_large_image",
       title: titulo,
       description: descricao,
+      images: [imagem],
     },
   };
 }
@@ -65,7 +75,7 @@ export default async function InformacaoPage({ params }) {
     "@context": "https://schema.org",
     "@type": tipoSchema,
     headline: noticia.titulo,
-    description: noticia.resumo,
+    description: noticia.resumo || noticia.titulo,
     image: noticia.imagemCapa ? [noticia.imagemCapa] : undefined,
     datePublished: noticia.dataPublicacao,
     author: { "@type": "Person", name: noticia.autor || "Redação Ponto Cariri" },
@@ -74,7 +84,7 @@ export default async function InformacaoPage({ params }) {
       name: "Ponto Cariri",
       logo: { "@type": "ImageObject", url: `${URL_SITE}/icon` },
     },
-    mainEntityOfPage: `${URL_SITE}/informacoes/${noticia.slug}`,
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${URL_SITE}/informacoes/${noticia.slug}` },
   };
 
   const galeria = normalizarGaleria(noticia.galeria);
