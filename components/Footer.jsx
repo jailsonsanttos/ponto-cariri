@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 
-const URL_SITE = process.env.NEXT_PUBLIC_SITE_URL || "https://ponto-cariri.vercel.app";
+const URL_SITE = (process.env.NEXT_PUBLIC_SITE_URL || "https://www.pontocariri.com.br").replace(/\/$/, "");
 
 function IconeRedeSocial({ tipo }) {
   if (tipo === "instagram") {

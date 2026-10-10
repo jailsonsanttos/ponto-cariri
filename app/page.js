@@ -38,9 +38,23 @@ export default async function HomePage() {
 
   const noticias = todasRecentes.filter((n) => n.slug !== destaque?.slug).slice(0, 10);
   const secoesVisiveis = secoes.filter((s) => s.ativo !== false);
+  const urlSite = (process.env.NEXT_PUBLIC_SITE_URL || "https://www.pontocariri.com.br").replace(/\/$/, "");
+  const noticiasParaSchema = [destaque, ...noticias].filter((n) => n?.publicada && n?.slug).map((n, indice) => ({
+    "@type": "ListItem",
+    position: indice + 1,
+    url: `${urlSite}/informacoes/${n.slug}`,
+    name: n.titulo,
+  }));
+  const schemaPublicacoes = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Publicações recentes do Ponto Cariri",
+    itemListElement: noticiasParaSchema,
+  };
 
   return (
     <div className="overflow-hidden bg-white">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaPublicacoes) }} />
       <section className="relative isolate bg-cariri-verde-escuro text-white">
         <div className="absolute inset-0 -z-10 opacity-20" style={{ backgroundImage: "radial-gradient(circle at 15% 20%, white 1px, transparent 1px), radial-gradient(circle at 80% 70%, white 1px, transparent 1px)", backgroundSize: "34px 34px, 46px 46px" }} />
         <div className="mx-auto grid max-w-content items-center gap-10 px-5 py-16 sm:py-20 lg:grid-cols-[1.15fr_0.85fr] lg:py-24">

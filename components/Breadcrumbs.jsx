@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-const URL_SITE = process.env.NEXT_PUBLIC_SITE_URL || "https://ponto-cariri.vercel.app";
+const URL_SITE = (process.env.NEXT_PUBLIC_SITE_URL || "https://www.pontocariri.com.br").replace(/\/$/, "");
 
 // Trilha de navegação visual + dados estruturados (Schema.org
 // BreadcrumbList), que ajudam o Google a entender a estrutura do site
