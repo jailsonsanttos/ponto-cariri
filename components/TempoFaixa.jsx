@@ -46,26 +46,26 @@ export default function TempoFaixa({ municipios }) {
     };
   }, [municipios]);
 
-  if (itens.length === 0) return null;
+  if (itens.length === 0) return <div className="h-11" aria-hidden="true" />;
 
   // Duplica a lista para a rolagem ficar contínua (efeito "infinito").
   const listaDupla = [...itens, ...itens];
 
   return (
     <div
-      className="sticky z-30 border-b border-cariri-verde/20 bg-cariri-verde-claro/95 shadow-sm backdrop-blur"
+      className="fixed inset-x-0 z-30 border-y border-white/20 bg-black shadow-lg"
       style={{ top: "var(--header-height, 0px)" }}
       role="status"
       aria-label="Previsão do tempo nos municípios do Cariri"
     >
       <div className="mx-auto flex max-w-content items-center overflow-hidden">
-        <span className="hidden shrink-0 border-r border-cariri-verde/15 px-4 py-2.5 text-[11px] font-black uppercase tracking-[0.14em] text-cariri-verde-escuro sm:block">Tempo agora</span>
+        <span className="hidden shrink-0 border-r border-white/20 px-4 py-2.5 text-[11px] font-black uppercase tracking-[0.14em] text-white sm:block">Tempo agora</span>
         <div className="flex whitespace-nowrap py-2.5 faixa-tempo-rolando w-max">
         {listaDupla.map((item, i) => (
-          <span key={i} className="inline-flex items-center gap-2 px-5 text-sm border-r border-cariri-preto/10">
-            <span className="font-semibold text-cariri-preto">{item.nome}</span>
-            <span className="text-cariri-verde-escuro font-medium">{item.temperatura}°C</span>
-            <span className="text-cariri-cinza-texto">· {item.descricao}</span>
+          <span key={i} className="inline-flex items-center gap-2 px-5 text-sm border-r border-white/20">
+            <span className="font-semibold text-white">{item.nome}</span>
+            <span className="font-bold text-white">{item.temperatura}°C</span>
+            <span className="text-white/70">· {item.descricao}</span>
           </span>
         ))}
         </div>
