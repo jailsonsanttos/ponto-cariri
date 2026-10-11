@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 :root {
+  --header-height: 0px;
   --cariri-verde: #1b7a43;
   --cariri-verde-escuro: #124f2c;
   --cariri-verde-claro: #e7f4ec;
@@ -90,4 +91,11 @@ select:focus-visible {
 }
 .faixa-tempo-rolando:hover {
   animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faixa-tempo-rolando {
+    animation: none;
+    overflow-x: auto;
+  }
 }

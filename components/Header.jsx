@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 const MENU_PADRAO = [
   { href: "/", label: "Início", filhos: [] },
@@ -72,8 +72,8 @@ function ItemMenu({ item, pathname, noMobile, onClick }) {
             ? `px-4 py-3.5 rounded-lg text-[15px] font-medium ${
                 ativo ? "bg-cariri-verde-claro text-cariri-verde-escuro" : "text-cariri-preto/85"
               }`
-            : `relative px-5 py-2.5 text-[15px] font-semibold ${
-                ativo ? "text-cariri-verde-escuro" : "text-cariri-preto/70 hover:text-cariri-preto"
+            : `relative px-4 py-2.5 text-sm font-semibold ${
+                ativo ? "text-white" : "text-white/75 hover:text-white"
               }`
         }
       >
@@ -123,7 +123,7 @@ function ItemMenu({ item, pathname, noMobile, onClick }) {
         href={item.href || "/"}
         aria-current={ativo ? "page" : undefined}
         className={`relative px-5 py-2.5 text-[15px] font-semibold inline-flex items-center gap-1 ${
-          ativo ? "text-cariri-verde-escuro" : "text-cariri-preto/70 hover:text-cariri-preto"
+            ativo ? "text-white" : "text-white/75 hover:text-white"
         }`}
       >
         {item.label}
@@ -145,6 +145,7 @@ function ItemMenu({ item, pathname, noMobile, onClick }) {
 }
 
 export default function Header({ config, menu, aparencia }) {
+  const headerRef = useRef(null);
   const pathname = usePathname();
   const router = useRouter();
   const [menuAberto, setMenuAberto] = useState(false);
@@ -153,6 +154,19 @@ export default function Header({ config, menu, aparencia }) {
 
   const itens = menu?.length ? menu : MENU_PADRAO;
   const logo = aparencia?.logoUrl || "/logo.png";
+
+  useLayoutEffect(() => {
+    const elemento = headerRef.current;
+    if (!elemento) return undefined;
+    const atualizarAltura = () => document.documentElement.style.setProperty("--header-height", `${elemento.offsetHeight}px`);
+    atualizarAltura();
+    const observador = new ResizeObserver(atualizarAltura);
+    observador.observe(elemento);
+    return () => {
+      observador.disconnect();
+      document.documentElement.style.removeProperty("--header-height");
+    };
+  }, []);
 
   useEffect(() => {
     function aoRolar() {
@@ -190,27 +204,29 @@ export default function Header({ config, menu, aparencia }) {
 
   return (
     <header
+      ref={headerRef}
       className={`sticky top-0 z-40 w-full bg-white transition-shadow duration-200 ${
         comSombra ? "shadow-[0_8px_20px_-14px_rgba(18,19,15,0.35)]" : ""
       }`}
     >
-      <div className="max-w-content mx-auto px-5 h-[4.5rem] sm:h-24 grid grid-cols-3 items-center">
+      <div className="border-t-4 border-cariri-verde bg-white">
+      <div className="max-w-content mx-auto px-4 sm:px-5 h-[4.25rem] sm:h-[5.75rem] grid grid-cols-[auto_1fr_auto] items-center gap-3 sm:gap-6">
         <div className="hidden md:flex">
           <form
             onSubmit={aoBuscar}
-            className="flex items-center bg-cariri-verde-claro rounded-full pl-4 pr-1.5 py-1.5 w-fit focus-within:ring-2 focus-within:ring-cariri-verde/40"
+            className="flex items-center bg-slate-50 border border-cariri-verde-claro rounded-2xl pl-3 pr-1.5 py-1.5 w-fit focus-within:border-cariri-verde focus-within:ring-4 focus-within:ring-cariri-verde/10 transition"
           >
             <input
               type="search"
               value={termoBusca}
               onChange={(e) => setTermoBusca(e.target.value)}
               placeholder="Buscar..."
-              className="w-32 lg:w-44 text-sm text-cariri-preto placeholder:text-cariri-cinza-texto outline-none bg-transparent"
+              className="w-32 lg:w-48 text-sm text-cariri-preto placeholder:text-cariri-cinza-texto outline-none bg-transparent"
             />
             <button
               type="submit"
               aria-label="Buscar"
-              className="w-8 h-8 flex items-center justify-center rounded-full text-white bg-cariri-verde hover:bg-cariri-verde-escuro transition-colors shrink-0"
+              className="w-8 h-8 flex items-center justify-center rounded-xl text-white bg-cariri-verde hover:bg-cariri-verde-escuro transition-colors shrink-0"
             >
               <IconeLupa width="16" height="16" />
             </button>
@@ -220,17 +236,17 @@ export default function Header({ config, menu, aparencia }) {
         <button
           onClick={() => setMenuAberto(true)}
           aria-label="Abrir menu"
-          className="md:hidden w-11 h-11 flex flex-col items-center justify-center gap-[6px] justify-self-start"
+          className="md:hidden w-10 h-10 flex flex-col items-center justify-center gap-[5px] justify-self-start rounded-xl border border-cariri-verde-claro bg-cariri-verde-claro/40"
         >
           <span className="block w-6 h-[2.5px] bg-cariri-preto rounded-full" />
           <span className="block w-6 h-[2.5px] bg-cariri-preto rounded-full" />
           <span className="block w-4 h-[2.5px] self-end mr-[3px] bg-cariri-preto rounded-full" />
         </button>
 
-        <Link href="/" className="flex items-center justify-center col-start-2">
+        <Link href="/" className="flex items-center justify-center min-w-0">
           {logo.startsWith("http") ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={logo} alt="Ponto Cariri" className="h-14 sm:h-20 w-auto object-contain" />
+            <img src={logo} alt="Ponto Cariri" className="h-12 sm:h-16 w-auto max-w-[13rem] object-contain" />
           ) : (
             <Image
               src={logo}
@@ -238,7 +254,7 @@ export default function Header({ config, menu, aparencia }) {
               width={600}
               height={203}
               priority
-              className="h-14 sm:h-20 w-auto object-contain"
+              className="h-12 sm:h-16 w-auto max-w-[13rem] object-contain"
             />
           )}
         </Link>
@@ -251,7 +267,7 @@ export default function Header({ config, menu, aparencia }) {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={r.tipo}
-              className="hidden sm:flex w-9 h-9 items-center justify-center rounded-full border border-cariri-verde-claro text-cariri-verde hover:bg-cariri-verde-claro transition-colors"
+              className="hidden sm:flex w-9 h-9 items-center justify-center rounded-xl border border-cariri-verde-claro text-cariri-verde hover:bg-cariri-verde-claro transition-colors"
             >
               <IconeRedeSocial tipo={r.tipo} />
             </a>
@@ -265,10 +281,11 @@ export default function Header({ config, menu, aparencia }) {
           </Link>
         </div>
       </div>
+      </div>
 
       <nav
         aria-label="Navegação principal"
-        className="hidden md:flex items-center justify-center gap-1 bg-cariri-verde-claro border-y border-cariri-preto/5 py-1"
+        className="hidden md:flex items-center justify-center gap-1 bg-cariri-verde-escuro border-y border-white/10 px-3 py-1.5"
       >
         {itens.map((item) => (
           <ItemMenu key={item.id || item.href} item={item} pathname={pathname} />
@@ -290,7 +307,7 @@ export default function Header({ config, menu, aparencia }) {
           aria-modal="true"
           aria-label="Menu de navegação"
         >
-          <div className="flex items-center justify-between px-5 h-16 border-b border-cariri-verde-claro shrink-0">
+          <div className="flex items-center justify-between px-5 h-16 border-b border-cariri-verde-claro bg-cariri-verde-claro/40 shrink-0">
             <span className="flex items-center gap-2 font-bold text-cariri-preto">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={logo} alt="Ponto Cariri" className="h-9 w-auto" />
@@ -306,7 +323,7 @@ export default function Header({ config, menu, aparencia }) {
 
           <form
             onSubmit={aoBuscar}
-            className="mx-3 mt-3 flex items-center bg-cariri-verde-claro rounded-full pl-4 pr-1.5 py-1.5"
+            className="mx-4 mt-4 flex items-center bg-slate-50 border border-cariri-verde-claro rounded-2xl pl-4 pr-1.5 py-1.5"
           >
             <input
               type="search"

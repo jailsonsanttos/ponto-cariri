@@ -52,15 +52,23 @@ export default function TempoFaixa({ municipios }) {
   const listaDupla = [...itens, ...itens];
 
   return (
-    <div className="bg-cariri-verde-claro border-b border-cariri-preto/5 overflow-hidden">
-      <div className="flex whitespace-nowrap py-2.5 faixa-tempo-rolando w-max">
+    <div
+      className="sticky z-30 border-b border-cariri-verde/20 bg-cariri-verde-claro/95 shadow-sm backdrop-blur"
+      style={{ top: "var(--header-height, 0px)" }}
+      role="status"
+      aria-label="Previsão do tempo nos municípios do Cariri"
+    >
+      <div className="mx-auto flex max-w-content items-center overflow-hidden">
+        <span className="hidden shrink-0 border-r border-cariri-verde/15 px-4 py-2.5 text-[11px] font-black uppercase tracking-[0.14em] text-cariri-verde-escuro sm:block">Tempo agora</span>
+        <div className="flex whitespace-nowrap py-2.5 faixa-tempo-rolando w-max">
         {listaDupla.map((item, i) => (
-          <span key={i} className="inline-flex items-center gap-2 px-6 text-sm border-r border-cariri-preto/10">
+          <span key={i} className="inline-flex items-center gap-2 px-5 text-sm border-r border-cariri-preto/10">
             <span className="font-semibold text-cariri-preto">{item.nome}</span>
             <span className="text-cariri-verde-escuro font-medium">{item.temperatura}°C</span>
             <span className="text-cariri-cinza-texto">· {item.descricao}</span>
           </span>
         ))}
+        </div>
       </div>
     </div>
   );
