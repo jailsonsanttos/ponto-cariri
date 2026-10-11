@@ -9,9 +9,6 @@ function formatarNumero(valor) {
 export default function DadosPublicosCliente({ municipios }) {
   const [municipio, setMunicipio] = useState(municipios[0]?.slug || "");
   const [ibge, setIbge] = useState(null);
-  const [tce, setTce] = useState(null);
-  const [tceBusca, setTceBusca] = useState("");
-  const [tceCarregando, setTceCarregando] = useState(false);
   const [inmet, setInmet] = useState(null);
   const [inmetCarregando, setInmetCarregando] = useState(false);
   const [busca, setBusca] = useState("");
@@ -36,21 +33,6 @@ export default function DadosPublicosCliente({ municipios }) {
     return () => { ativo = false; };
   }, [municipio]);
 
-  async function carregarTce() {
-    setErro("");
-    setTceCarregando(true);
-    try {
-      const res = await fetch("/api/dados-publicos?fonte=tce");
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.erro || "Não foi possível consultar o TCE Ceará.");
-      setTce(json);
-    } catch (e) {
-      setErro(e.message);
-    } finally {
-      setTceCarregando(false);
-    }
-  }
-
   useEffect(() => {
     let ativo = true;
     setInmetCarregando(true);
@@ -64,10 +46,6 @@ export default function DadosPublicosCliente({ municipios }) {
       .finally(() => ativo && setInmetCarregando(false));
     return () => { ativo = false; };
   }, []);
-
-  const municipiosTce = (tce?.municipios || []).filter((item) =>
-    `${item.nome_municipio} ${item.codigo_municipio_ibge}`.toLowerCase().includes(tceBusca.toLowerCase().trim())
-  );
 
   function urlMapa(item) {
     const lat = Number(item?.lat || -7.25);
@@ -121,22 +99,22 @@ export default function DadosPublicosCliente({ municipios }) {
 
       <section className="rounded-3xl bg-cariri-verde-escuro p-6 text-white shadow-sm sm:p-7">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <div><p className="text-xs font-bold uppercase tracking-[0.16em] text-cariri-verde-claro">INMET</p><h2 className="mt-2 text-2xl font-black">Alertas meteorológicos do Cariri</h2><p className="mt-3 max-w-3xl text-sm leading-6 text-white/75">Avisos oficiais exibidos dentro do Ponto Cariri, filtrados para as áreas do Ceará e do Cariri. A previsão detalhada continua disponível na página Tempo.</p></div>
+          <div><p className="text-xs font-bold uppercase tracking-[0.16em] text-cariri-verde-claro">INMET</p><h2 className="mt-2 text-2xl font-black">Alertas meteorológicos do Cariri</h2><p className="mt-3 max-w-3xl text-sm leading-6 text-white/75">Avisos oficiais exibidos dentro do Ponto Cariri, filtrados apenas para as áreas do Cariri cearense. São mostrados os níveis oficiais de Perigo Potencial, Perigo e Grande Perigo.</p></div>
           <a className="shrink-0 rounded-full bg-white px-4 py-2.5 text-center text-sm font-bold text-cariri-verde-escuro" href="/tempo">Ver previsão</a>
         </div>
         {inmetCarregando && <p className="mt-6 text-sm text-white/70">Atualizando alertas do INMET...</p>}
         {!inmetCarregando && inmet?.avisos?.length === 0 && <p className="mt-6 rounded-2xl border border-white/15 bg-white/10 p-4 text-sm text-white/80">Nenhum alerta ativo do INMET foi encontrado para o Ceará neste momento.</p>}
         {inmet?.avisos?.length > 0 && <div className="mt-6 grid gap-4 lg:grid-cols-2">{inmet.avisos.map((aviso, index) => <article key={`${aviso.link}-${index}`} className="rounded-2xl border border-white/15 bg-white/10 p-4"><div className="flex flex-wrap items-center gap-2"><span className="rounded-full bg-amber-300 px-2.5 py-1 text-[11px] font-black uppercase text-amber-950">{aviso.severidade || "Aviso"}</span><span className="text-xs text-white/65">{aviso.evento}</span></div><h3 className="mt-3 font-bold text-white">{aviso.titulo}</h3><p className="mt-2 text-sm leading-6 text-white/75">{aviso.descricao}</p><p className="mt-3 text-xs text-white/55">Vigência: {aviso.inicio || "—"} até {aviso.fim || "—"}</p></article>)}</div>}
+        <div className="mt-5 flex flex-wrap gap-2">{municipios.map((item) => <span key={item.slug} className="rounded-full border border-white/15 bg-white/10 px-2.5 py-1 text-xs text-white/75">{item.nome}</span>)}</div>
         <p className="mt-5 text-xs text-white/60">Fonte oficial: feed RSS do INMET. Atualização automática a cada 15 minutos.</p>
       </section>
 
       <section className="rounded-3xl border border-cariri-verde-claro bg-white p-6 shadow-sm sm:p-7">
-        <p className="text-xs font-bold uppercase tracking-[0.16em] text-cariri-verde">TCE Ceará — SIM</p>
-        <h2 className="mt-2 text-2xl font-black text-cariri-preto">Municípios disponíveis no SIM</h2>
-        <p className="mt-3 text-sm leading-6 text-cariri-cinza-texto">Consulte diretamente nesta página o catálogo oficial de municípios e seus códigos no Sistema de Informações Municipais.</p>
-        <div className="mt-5 flex flex-col gap-3 sm:flex-row"><button onClick={carregarTce} disabled={tceCarregando} className="rounded-xl bg-cariri-verde px-4 py-3 text-sm font-bold text-white disabled:cursor-wait disabled:opacity-60">{tceCarregando ? "Carregando municípios..." : tce ? "Atualizar municípios" : "Consultar municípios do SIM"}</button>{tce && <input value={tceBusca} onChange={(e) => setTceBusca(e.target.value)} placeholder="Filtrar por nome ou código" className="min-w-0 flex-1 rounded-xl border border-cariri-verde/30 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-cariri-verde/30" />}</div>
-        {tce && <><p className="mt-4 text-sm font-semibold text-cariri-verde">Exibindo {formatarNumero(municipiosTce.length)} de {formatarNumero(tce.total)} municípios.</p><div className="mt-4 max-h-[28rem] overflow-auto rounded-2xl border border-slate-200"><table className="w-full min-w-[34rem] text-left text-sm"><thead className="sticky top-0 bg-cariri-verde-escuro text-white"><tr><th className="px-4 py-3 font-bold">Município</th><th className="px-4 py-3 font-bold">Código SIM</th><th className="px-4 py-3 font-bold">Código IBGE</th><th className="px-4 py-3 font-bold">GeoNames</th></tr></thead><tbody>{municipiosTce.map((item) => <tr key={`${item.codigo_municipio}-${item.codigo_municipio_ibge}`} className="border-t border-slate-100 even:bg-slate-50"><td className="px-4 py-3 font-semibold text-cariri-preto">{item.nome_municipio}</td><td className="px-4 py-3 text-cariri-cinza-texto">{item.codigo_municipio || "—"}</td><td className="px-4 py-3 text-cariri-cinza-texto">{item.codigo_municipio_ibge || "—"}</td><td className="px-4 py-3 text-cariri-cinza-texto">{item.codigo_municipio_geonames || "—"}</td></tr>)}</tbody></table></div></>}
-        <p className="mt-5 text-xs text-cariri-cinza-texto">Fonte: API Dados Abertos do SIM do TCE Ceará.</p>
+        <p className="text-xs font-bold uppercase tracking-[0.16em] text-cariri-verde">TCE Ceará</p>
+        <h2 className="mt-2 text-2xl font-black text-cariri-preto">Portal da Transparência dos Municípios</h2>
+        <p className="mt-3 text-sm leading-6 text-cariri-cinza-texto">Consulte contratos, licitações, despesas, obras, receitas e demais informações oficiais dos municípios diretamente no portal do Tribunal de Contas do Estado do Ceará, sem sair desta página.</p>
+        <div className="mt-5 overflow-hidden rounded-2xl border border-slate-200 bg-slate-100"><iframe title="Portal da Transparência dos Municípios do TCE Ceará" src="https://municipios-transparencia.tce.ce.gov.br/" className="h-[42rem] w-full border-0" loading="lazy" /></div>
+        <p className="mt-4 text-xs text-cariri-cinza-texto">Fonte oficial: Portal da Transparência dos Municípios — TCE Ceará.</p>
       </section>
 
       <section className="rounded-3xl border border-cariri-verde-claro bg-white p-5 shadow-sm sm:p-7">

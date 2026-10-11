@@ -7,6 +7,7 @@ const IBGE_BASE = "https://servicodados.ibge.gov.br/api/v1";
 const TCE_BASE = "https://api-dados-abertos.tce.ce.gov.br/sim";
 const NOMINATIM_BASE = "https://nominatim.openstreetmap.org";
 const INMET_RSS = "https://apiprevmet3.inmet.gov.br/avisos/rss";
+const AREAS_CARIRI = ["Sul Cearense", "Centro-Sul Cearense", "Sertões Cearenses", "Cariri"];
 const headersNominatim = {
   Accept: "application/json",
   "User-Agent": "PontoCariri/1.0 (https://www.pontocariri.com.br)",
@@ -106,7 +107,7 @@ async function dadosInmet() {
         link: campoXml(bloco, "link"),
       };
     })
-    .filter((aviso) => /Cearense|Cariri|Ceará/i.test(`${aviso.area} ${aviso.descricao}`))
+    .filter((aviso) => AREAS_CARIRI.some((area) => aviso.area.includes(area)))
     .filter((aviso) => {
       const dataFim = Date.parse(aviso.fim.replace(" ", "T"));
       return Number.isNaN(dataFim) || dataFim >= agora;
