@@ -81,7 +81,41 @@ function campoTabela(valor, nome) {
   return resultado ? textoXml(resultado[1]) : "";
 }
 
-async function dadosInmet() {
+function normalizarNomeMunicipio(valor = "") {
+  return valor.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().trim();
+}
+
+function textoCap(xml, nome) {
+  const resultado = xml.match(new RegExp(`<${nome}[^>]*>([\\s\\S]*?)</${nome}>`, "i"));
+  return resultado ? textoXml(resultado[1]) : "";
+}
+
+async function detalhesInmet(url, municipiosAtivos) {
+  const resposta = await fetch(url, {
+    headers: { Accept: "application/xml, text/xml", "User-Agent": "PontoCariri/1.0 (https://www.pontocariri.com.br)" },
+    next: { revalidate: 900 },
+  });
+  if (!resposta.ok) return null;
+  const xml = await resposta.text();
+  const info = xml.match(/<info>([\s\S]*?)<\/info>/i)?.[1] || xml;
+  const parametro = [...xml.matchAll(/<parameter>([\s\S]*?)<\/parameter>/gi)]
+    .map(([, bloco]) => ({ nome: textoCap(bloco, "valueName"), valor: textoCap(bloco, "value") }))
+    .find((item) => item.nome === "Municipios");
+  const municipios = municipiosAtivos.filter((nome) => normalizarNomeMunicipio(parametro?.valor || "").includes(normalizarNomeMunicipio(`${nome} - CE`)));
+  if (municipios.length === 0) return null;
+  const severidade = { Minor: "Baixo", Moderate: "Perigo Potencial", Severe: "Perigo", Extreme: "Grande Perigo" };
+  const nivel = textoCap(info, "severity");
+  return {
+    evento: textoCap(info, "event") || "Aviso meteorológico",
+    severidade: severidade[nivel] || nivel || "Aviso",
+    inicio: textoCap(info, "onset"),
+    fim: textoCap(info, "expires"),
+    descricao: textoCap(info, "description"),
+    municipios,
+  };
+}
+
+async function dadosInmet(municipiosAtivos = []) {
   const resposta = await fetch(INMET_RSS, {
     headers: { Accept: "application/rss+xml, application/xml, text/xml" },
     next: { revalidate: 900 },
@@ -89,7 +123,7 @@ async function dadosInmet() {
   if (!resposta.ok) throw new Error(`INMET respondeu ${resposta.status}`);
   const xml = await resposta.text();
   const agora = Date.now();
-  const avisos = [...xml.matchAll(/<item>([\s\S]*?)<\/item>/gi)]
+  const avisosBase = [...xml.matchAll(/<item>([\s\S]*?)<\/item>/gi)]
     .map(([, bloco]) => {
       const descricaoBruta = bloco.match(/<description[^>]*>([\s\S]*?)<\/description>/i)?.[1] || "";
       const descricao = textoXml(descricaoBruta);
@@ -112,7 +146,11 @@ async function dadosInmet() {
       const dataFim = Date.parse(aviso.fim.replace(" ", "T"));
       return Number.isNaN(dataFim) || dataFim >= agora;
     })
-    .slice(0, 30);
+    .slice(0, 20);
+  const avisos = (await Promise.all(avisosBase.map(async (aviso) => {
+    const detalhes = await detalhesInmet(aviso.link, municipiosAtivos);
+    return detalhes ? { ...aviso, ...detalhes } : null;
+  }))).filter(Boolean).slice(0, 2);
   return { fonte: "INMET", atualizadoEm: new Date().toISOString(), avisos };
 }
 
@@ -134,7 +172,10 @@ export async function GET(request) {
   try {
     if (fonte === "ibge") return NextResponse.json(await dadosIbge(searchParams.get("municipio")));
     if (fonte === "tce") return NextResponse.json(await dadosTceMunicipios());
-    if (fonte === "inmet") return NextResponse.json(await dadosInmet());
+    if (fonte === "inmet") {
+      const municipios = (searchParams.get("municipios") || "").split("|").map((item) => item.trim()).filter(Boolean);
+      return NextResponse.json(await dadosInmet(municipios));
+    }
     if (fonte === "mapa") return NextResponse.json(await geocodificar(searchParams.get("q")));
     return NextResponse.json({ erro: "Fonte de dados não suportada." }, { status: 400 });
   } catch (erro) {

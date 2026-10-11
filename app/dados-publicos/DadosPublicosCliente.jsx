@@ -36,7 +36,8 @@ export default function DadosPublicosCliente({ municipios }) {
   useEffect(() => {
     let ativo = true;
     setInmetCarregando(true);
-    fetch("/api/dados-publicos?fonte=inmet")
+    const municipiosAtivos = municipios.map((item) => item.nome).join("|");
+    fetch(`/api/dados-publicos?fonte=inmet&municipios=${encodeURIComponent(municipiosAtivos)}`)
       .then((res) => res.json().then((json) => ({ ok: res.ok, json })))
       .then(({ ok, json }) => {
         if (!ok) throw new Error(json.erro || "Não foi possível consultar os alertas do INMET.");
@@ -104,8 +105,8 @@ export default function DadosPublicosCliente({ municipios }) {
         </div>
         {inmetCarregando && <p className="mt-6 text-sm text-white/70">Atualizando alertas do INMET...</p>}
         {!inmetCarregando && inmet?.avisos?.length === 0 && <p className="mt-6 rounded-2xl border border-white/15 bg-white/10 p-4 text-sm text-white/80">Nenhum alerta ativo do INMET foi encontrado para o Ceará neste momento.</p>}
-        {inmet?.avisos?.length > 0 && <div className="mt-6 grid gap-4 lg:grid-cols-2">{inmet.avisos.map((aviso, index) => <article key={`${aviso.link}-${index}`} className="rounded-2xl border border-white/15 bg-white/10 p-4"><div className="flex flex-wrap items-center gap-2"><span className="rounded-full bg-amber-300 px-2.5 py-1 text-[11px] font-black uppercase text-amber-950">{aviso.severidade || "Aviso"}</span><span className="text-xs text-white/65">{aviso.evento}</span></div><h3 className="mt-3 font-bold text-white">{aviso.titulo}</h3><p className="mt-2 text-sm leading-6 text-white/75">{aviso.descricao}</p><p className="mt-3 text-xs text-white/55">Vigência: {aviso.inicio || "—"} até {aviso.fim || "—"}</p></article>)}</div>}
-        <div className="mt-5 flex flex-wrap gap-2">{municipios.map((item) => <span key={item.slug} className="rounded-full border border-white/15 bg-white/10 px-2.5 py-1 text-xs text-white/75">{item.nome}</span>)}</div>
+        {inmet?.avisos?.length > 0 && <div className="mt-6 grid gap-3 lg:grid-cols-2">{inmet.avisos.slice(0, 2).map((aviso, index) => <article key={`${aviso.link}-${index}`} className="rounded-2xl border border-white/15 bg-white/10 p-4"><div className="flex flex-wrap items-center gap-2"><span className="rounded-full bg-amber-300 px-2.5 py-1 text-[11px] font-black uppercase text-amber-950">{aviso.severidade || "Aviso"}</span><span className="text-xs text-white/65">{aviso.evento}</span></div><h3 className="mt-2 font-bold text-white">{aviso.titulo}</h3><p className="mt-2 text-sm leading-6 text-white/75">{aviso.descricao}</p><p className="mt-3 text-xs text-white/60">Municípios: {aviso.municipios?.join(", ") || "—"}</p><p className="mt-1 text-xs text-white/50">Vigência: {aviso.inicio || "—"} até {aviso.fim || "—"}</p></article>)}</div>}
+        <p className="mt-4 text-xs text-white/60">Municípios ativos monitorados: {municipios.length}.</p>
         <p className="mt-5 text-xs text-white/60">Fonte oficial: feed RSS do INMET. Atualização automática a cada 15 minutos.</p>
       </section>
 
