@@ -3,7 +3,6 @@ import NoticiaFeedItem from "@/components/NoticiaFeedItem";
 import NoticiaDestaque from "@/components/NoticiaDestaque";
 import MaisLidas from "@/components/MaisLidas";
 import PropagandaCard from "@/components/PropagandaCard";
-import TempoFaixa from "@/components/TempoFaixa";
 import AdSlot from "@/components/AdSlot";
 import TabelaPrecosCariri from "@/components/TabelaPrecosCariri";
 
@@ -20,9 +19,7 @@ export default function HomeModular({
   return (
     <div>
       {secoes.map((secao) => {
-        if (secao.tipo === "tempo") {
-          return <TempoFaixa key={secao.id} municipios={municipios} />;
-        }
+        if (secao.tipo === "tempo") return null;
         if (secao.tipo === "destaque" && destaque) {
           return (
             <div key={secao.id} className="max-w-content mx-auto px-5 pt-8">
