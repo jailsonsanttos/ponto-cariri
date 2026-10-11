@@ -5,6 +5,7 @@
 // links e inserção de imagens no ponto escolhido do texto.
 
 import { useRef, useState } from "react";
+import { upload } from "@vercel/blob/client";
 
 const BOTOES = [
   { comando: "bold", label: "N", titulo: "Negrito", estilo: "font-bold" },
@@ -70,13 +71,14 @@ export default function EditorTexto({ value, onChange, placeholder }) {
 
     setEnviandoImagem(true);
     setErroImagem("");
-    const formData = new FormData();
-    formData.append("arquivo", arquivo);
-
     try {
-      const resposta = await fetch("/api/upload", { method: "POST", body: formData });
-      const dados = await resposta.json();
-      if (!resposta.ok || !dados.url) throw new Error(dados.erro || "Não foi possível enviar a imagem.");
+      const dados = await upload(`${Date.now()}-${arquivo.name}`, arquivo, {
+        access: "public",
+        contentType: arquivo.type || undefined,
+        handleUploadUrl: "/api/upload",
+        multipart: arquivo.size > 4 * 1024 * 1024,
+      });
+      if (!dados?.url) throw new Error("Não foi possível obter a URL da imagem.");
 
       restaurarSelecao();
       const url = escaparAtributo(dados.url);

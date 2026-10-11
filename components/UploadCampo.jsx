@@ -32,8 +32,8 @@ export default function UploadCampo({ label = "Arquivo", tipoAceito = "image/*",
       setProgresso(100);
     } catch (erroUpload) {
       let mensagem = erroUpload?.message || "Não foi possível enviar o arquivo.";
-      if (/entity too large|request entity|413/i.test(mensagem)) {
-        mensagem = "Este arquivo ultrapassou o limite da plataforma. Tente um arquivo menor ou comprima o áudio antes de enviar.";
+      if (/entity too large|request entity|413|maximum|size/i.test(mensagem)) {
+        mensagem = "O armazenamento recusou este arquivo por exceder o limite máximo do provedor. Para arquivos muito grandes, comprima o arquivo ou divida-o em partes.";
       }
       setErro(mensagem);
     } finally {

@@ -322,13 +322,21 @@ export default function AdminNoticiasPage() {
           className="w-full border border-cariri-verde-claro rounded-md px-3 py-2 text-sm"
         />
         <UploadCampo
+          label="Enviar vídeo da publicação"
+          tipoAceito="video/*"
+          ajuda="MP4, WebM, MOV ou M4V. O envio é direto para o armazenamento e aceita arquivos grandes conforme o limite do provedor."
+          onEnviar={(url) => setForm({ ...form, videoUrl: url })}
+        />
+        <UploadCampo
           label="Áudio"
           tipoAceito="audio/*"
+          ajuda="MP3, WAV, OGG, M4A ou AAC. O arquivo é enviado diretamente para o armazenamento."
           onEnviar={(url) => setForm({ ...form, audioUrl: url })}
         />
         <UploadCampo
-          label="PDF ou documento"
-          tipoAceito=".pdf,.doc,.docx,.xls,.xlsx"
+          label="Anexar arquivo à publicação"
+          tipoAceito=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,image/*,video/*,audio/*"
+          ajuda="PDF, documentos, planilhas, apresentações, imagens, vídeos ou áudios."
           onEnviar={(url) => setForm({ ...form, arquivos: [...(form.arquivos || []), { url, nome: "Arquivo" }] })}
         />
 

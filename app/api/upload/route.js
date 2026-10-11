@@ -16,6 +16,7 @@ const TIPOS_PERMITIDOS = [
   "application/vnd.ms-powerpoint", "application/vnd.openxmlformats-officedocument.presentationml.presentation",
   "text/plain", "text/csv",
 ];
+const TAMANHO_MAXIMO_UPLOAD = 5 * 1024 * 1024 * 1024;
 
 export async function POST(request) {
   if (!(await exigirAdmin(request))) {
@@ -38,7 +39,7 @@ export async function POST(request) {
         }
         return {
           allowedContentTypes: TIPOS_PERMITIDOS,
-          maximumSizeInBytes: 32 * 1024 * 1024,
+          maximumSizeInBytes: TAMANHO_MAXIMO_UPLOAD,
           addRandomSuffix: false,
           tokenPayload: JSON.stringify({ nome: pathname, audio: tiposAudio.includes(ext), multipart: Boolean(multipart), clientPayload }),
         };
