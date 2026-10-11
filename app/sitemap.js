@@ -12,6 +12,7 @@ const paginasFixas = [
   { path: "/municipios", changeFrequency: "weekly", priority: 0.8 },
   { path: "/tempo", changeFrequency: "daily", priority: 0.6 },
   { path: "/precos", changeFrequency: "daily", priority: 0.7 },
+  { path: "/dados-publicos", changeFrequency: "daily", priority: 0.7 },
   { path: "/publicidade", changeFrequency: "monthly", priority: 0.5 },
   { path: "/sobre", changeFrequency: "monthly", priority: 0.5 },
   { path: "/privacidade", changeFrequency: "yearly", priority: 0.2 },
