@@ -10,7 +10,7 @@ import ContadorVisualizacao from "@/components/ContadorVisualizacao";
 import Link from "next/link";
 import { unstable_noStore as noStore } from "next/cache";
 import { idDoYoutube } from "@/lib/midia";
-import { alturaGaleria, classeLayoutGaleria, normalizarGaleria } from "@/lib/galeria";
+import { alturaGaleria, classeLayoutGaleria, classeTamanhoGaleria, normalizarGaleria } from "@/lib/galeria";
 
 const URL_SITE = (process.env.NEXT_PUBLIC_SITE_URL || "https://www.pontocariri.com.br").replace(/\/$/, "");
 
@@ -150,14 +150,14 @@ export default async function InformacaoPage({ params }) {
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {galeria.map((imagem, i) => (
                 <figure key={`${imagem.url}-${i}`} className={classeLayoutGaleria(imagem.layout)}>
-                  <div className={`relative w-full overflow-hidden rounded-lg ${alturaGaleria(imagem.layout)}`}>
-                    <Image
+                  <div className={`relative w-full overflow-hidden rounded-lg ${alturaGaleria(imagem.layout)} ${classeTamanhoGaleria(imagem.tamanho)}`}>
+                    {/* Imagem direta: evita falhas do otimizador para arquivos grandes do Blob. */}
+                    <img
                       src={imagem.url}
                       alt={imagem.alt || `Imagem ${i + 1} da publicação`}
-                      fill
-                      className="object-cover"
+                      loading="lazy"
+                      className="h-full w-full object-cover"
                       style={{ objectPosition: imagem.posicao }}
-                      sizes={imagem.layout === "grade" ? "(max-width: 640px) 100vw, 50vw" : "100vw"}
                     />
                   </div>
                   {imagem.legenda && (

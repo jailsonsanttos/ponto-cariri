@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import UploadCampo from "@/components/UploadCampo";
 import EditorTexto from "@/components/EditorTexto";
 import { POSICOES_IMAGEM } from "@/components/ImagemCapa";
-import { LAYOUTS_GALERIA, normalizarGaleria } from "@/lib/galeria";
+import { LAYOUTS_GALERIA, TAMANHOS_GALERIA, normalizarGaleria } from "@/lib/galeria";
 
 const VAZIO = {
   titulo: "",
@@ -237,7 +237,7 @@ export default function AdminNoticiasPage() {
               ...form,
               galeria: [
                 ...(form.galeria || []),
-                { url, posicao: "center center", layout: "grade", alt: "", legenda: "" },
+                { url, posicao: "center center", layout: "grade", tamanho: "media", alt: "", legenda: "" },
               ],
             })
           }
@@ -294,6 +294,18 @@ export default function AdminNoticiasPage() {
                       >
                         {LAYOUTS_GALERIA.map((layout) => (
                           <option key={layout.valor} value={layout.valor}>{layout.label}</option>
+                        ))}
+                      </select>
+                    </label>
+                    <label className="text-xs font-medium text-cariri-preto">
+                      Tamanho da imagem
+                      <select
+                        value={imagem.tamanho || "media"}
+                        onChange={(e) => atualizarImagemGaleria(i, { tamanho: e.target.value })}
+                        className="mt-1 w-full border border-cariri-verde-claro rounded-md px-2 py-1.5 text-sm font-normal"
+                      >
+                        {TAMANHOS_GALERIA.map((tamanho) => (
+                          <option key={tamanho.valor} value={tamanho.valor}>{tamanho.label}</option>
                         ))}
                       </select>
                     </label>
