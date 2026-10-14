@@ -16,9 +16,9 @@ const nextConfig = {
   },
   async redirects() {
     return [
-      { source: "/noticias", destination: "/informacoes", permanent: false },
-      { source: "/noticias/:slug", destination: "/informacoes/:slug", permanent: false },
-      { source: "/propaganda", destination: "/publicidade", permanent: false },
+      { source: "/noticias", destination: "/informacoes", permanent: true },
+      { source: "/noticias/:slug", destination: "/informacoes/:slug", permanent: true },
+      { source: "/propaganda", destination: "/publicidade", permanent: true },
     ];
   },
 };

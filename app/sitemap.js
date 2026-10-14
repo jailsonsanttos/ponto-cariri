@@ -23,10 +23,16 @@ function url(path) {
   return `${SITE_URL}${path}`;
 }
 
+function dataDaPagina(item) {
+  const valor = item?.atualizadoEm || item?.updatedAt || item?.dataAtualizacao || item?.dataPublicacao;
+  if (!valor) return undefined;
+  const data = new Date(String(valor).includes("T") ? valor : `${valor}T12:00:00Z`);
+  return Number.isNaN(data.getTime()) ? undefined : data;
+}
+
 export default async function sitemap() {
   const entries = paginasFixas.map((pagina) => ({
     url: url(pagina.path),
-    lastModified: new Date(),
     changeFrequency: pagina.changeFrequency,
     priority: pagina.priority,
   }));
@@ -41,7 +47,6 @@ export default async function sitemap() {
     if (municipio?.slug) {
       entries.push({
         url: url(`/municipios/${encodeURIComponent(municipio.slug)}`),
-        lastModified: new Date(),
         changeFrequency: "monthly",
         priority: 0.7,
       });
@@ -52,7 +57,7 @@ export default async function sitemap() {
     if (noticia?.publicada && noticia.slug) {
       entries.push({
         url: url(`/informacoes/${encodeURIComponent(noticia.slug)}`),
-        lastModified: noticia.dataPublicacao ? new Date(`${noticia.dataPublicacao}T12:00:00Z`) : undefined,
+        lastModified: dataDaPagina(noticia),
         changeFrequency: "weekly",
         priority: 0.8,
       });
@@ -63,7 +68,6 @@ export default async function sitemap() {
     if (pagina?.publicada && pagina.slug && pagina.slug !== "sobre") {
       entries.push({
         url: url(`/p/${encodeURIComponent(pagina.slug)}`),
-        lastModified: new Date(),
         changeFrequency: "monthly",
         priority: 0.6,
       });
