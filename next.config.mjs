@@ -4,9 +4,10 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
-    // Permite que o Next.js otimize (comprima e redimensione) automaticamente
-    // as fotos enviadas pelo painel de administração, que ficam guardadas
-    // no Vercel Blob.
+    // As imagens são servidas diretamente das URLs originais para não consumir
+    // transformações mensais da Vercel. Os componentes next/image continuam
+    // funcionando, mas sem passar pelo endpoint de otimização.
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: "https",
