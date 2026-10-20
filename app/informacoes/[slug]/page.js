@@ -43,7 +43,9 @@ export async function generateMetadata({ params }) {
       title: titulo,
       description: descricao,
       publishedTime: noticia.dataPublicacao,
-      images: [{ url: imagem, width: 1200, height: 630, type: "image/png", alt: noticia.titulo }],
+      // Array simples evita incompatibilidades do metadata do Next.js 14 com
+      // objetos avançados de imagem em páginas dinâmicas.
+      images: [imagem],
     },
     twitter: {
       card: "summary_large_image",
