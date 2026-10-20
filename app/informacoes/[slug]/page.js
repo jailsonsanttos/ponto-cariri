@@ -26,9 +26,10 @@ export async function generateMetadata({ params }) {
   const descricao = (noticia.seoDescricao || noticia.resumo || textoConteudo || `Leia ${noticia.titulo} no Ponto Cariri.`).slice(0, 160);
   const titulo = noticia.seoTitulo || noticia.titulo;
   const url = `${URL_SITE}/informacoes/${noticia.slug}`;
-  // Usa uma imagem social própria, sempre PNG 1200x630, para que o WhatsApp
-  // não dependa do formato, tamanho ou headers da capa original do Blob.
-  const imagem = `${URL_SITE}/api/og?slug=${encodeURIComponent(noticia.slug)}`;
+  // A capa original é pública no Vercel Blob e mantém a renderização da
+  // página estável no Next.js 14. O endpoint social fica separado para uso
+  // futuro sem participar do SSR desta página dinâmica.
+  const imagem = noticia.imagemCapa || `${URL_SITE}/opengraph-image`;
 
   return {
     title: titulo,
@@ -43,8 +44,6 @@ export async function generateMetadata({ params }) {
       title: titulo,
       description: descricao,
       publishedTime: noticia.dataPublicacao,
-      // Array simples evita incompatibilidades do metadata do Next.js 14 com
-      // objetos avançados de imagem em páginas dinâmicas.
       images: [imagem],
     },
     twitter: {
@@ -80,7 +79,7 @@ export default async function InformacaoPage({ params }) {
     "@type": tipoSchema,
     headline: noticia.titulo,
     description: noticia.resumo || noticia.titulo,
-    image: [imagem],
+    image: noticia.imagemCapa ? [noticia.imagemCapa] : undefined,
     datePublished: noticia.dataPublicacao,
     author: { "@type": "Person", name: noticia.autor || "Redação Ponto Cariri" },
     publisher: {
