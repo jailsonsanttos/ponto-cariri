@@ -26,9 +26,9 @@ export async function generateMetadata({ params }) {
   const descricao = (noticia.seoDescricao || noticia.resumo || textoConteudo || `Leia ${noticia.titulo} no Ponto Cariri.`).slice(0, 160);
   const titulo = noticia.seoTitulo || noticia.titulo;
   const url = `${URL_SITE}/informacoes/${noticia.slug}`;
-  // Use uma imagem social própria, sempre em PNG 1200x630. Isso evita que o
-  // WhatsApp dependa do formato, tamanho ou headers da imagem original do Blob.
-  const imagem = `${url}/opengraph-image`;
+  // Mantém a capa original como preview principal. O fallback gerado pelo site
+  // é usado apenas quando a publicação não tem imagem cadastrada.
+  const imagem = noticia.imagemCapa || `${URL_SITE}/opengraph-image`;
 
   return {
     title: titulo,
@@ -43,7 +43,7 @@ export async function generateMetadata({ params }) {
       title: titulo,
       description: descricao,
       publishedTime: noticia.dataPublicacao,
-      images: [{ url: imagem, width: 1200, height: 630, type: "image/png", alt: noticia.titulo }],
+      images: [{ url: imagem, alt: noticia.titulo }],
     },
     twitter: {
       card: "summary_large_image",
@@ -78,7 +78,7 @@ export default async function InformacaoPage({ params }) {
     "@type": tipoSchema,
     headline: noticia.titulo,
     description: noticia.resumo || noticia.titulo,
-    image: [imagem],
+    image: noticia.imagemCapa ? [noticia.imagemCapa] : undefined,
     datePublished: noticia.dataPublicacao,
     author: { "@type": "Person", name: noticia.autor || "Redação Ponto Cariri" },
     publisher: {
