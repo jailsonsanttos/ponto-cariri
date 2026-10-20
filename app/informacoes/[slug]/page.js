@@ -28,7 +28,7 @@ export async function generateMetadata({ params }) {
   const url = `${URL_SITE}/informacoes/${noticia.slug}`;
   // Usa uma imagem social própria, sempre PNG 1200x630, para que o WhatsApp
   // não dependa do formato, tamanho ou headers da capa original do Blob.
-  const imagem = `${url}/opengraph-image`;
+  const imagem = `${URL_SITE}/api/og?slug=${encodeURIComponent(noticia.slug)}`;
 
   return {
     title: titulo,
