@@ -1,5 +1,6 @@
-import { listarMunicipios, listarNoticias } from "@/lib/db";
+import { garantirSchema, listarMunicipios, listarNoticias } from "@/lib/db";
 import { listarPaginas } from "@/lib/cms";
+import { listarVagas } from "@/lib/vagas";
 
 const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://www.pontocariri.com.br").replace(/\/$/, "");
 
@@ -10,6 +11,7 @@ const paginasFixas = [
   { path: "", changeFrequency: "daily", priority: 1 },
   { path: "/informacoes", changeFrequency: "daily", priority: 0.9 },
   { path: "/municipios", changeFrequency: "weekly", priority: 0.8 },
+  { path: "/vagas", changeFrequency: "hourly", priority: 0.8 },
   { path: "/tempo", changeFrequency: "daily", priority: 0.6 },
   { path: "/precos", changeFrequency: "daily", priority: 0.7 },
   { path: "/dados-publicos", changeFrequency: "daily", priority: 0.7 },
@@ -31,16 +33,18 @@ function dataDaPagina(item) {
 }
 
 export default async function sitemap() {
+  await garantirSchema().catch(() => null);
   const entries = paginasFixas.map((pagina) => ({
     url: url(pagina.path),
     changeFrequency: pagina.changeFrequency,
     priority: pagina.priority,
   }));
 
-  const [municipios, noticias, paginasCms] = await Promise.all([
+  const [municipios, noticias, paginasCms, vagas] = await Promise.all([
     listarMunicipios().catch(() => []),
     listarNoticias().catch(() => []),
     listarPaginas().catch(() => []),
+    listarVagas({ publicadas: true }).catch(() => []),
   ]);
 
   for (const municipio of municipios) {
@@ -60,6 +64,17 @@ export default async function sitemap() {
         lastModified: dataDaPagina(noticia),
         changeFrequency: "weekly",
         priority: 0.8,
+      });
+    }
+  }
+
+  for (const vaga of vagas) {
+    if (vaga?.publicado && vaga.slug) {
+      entries.push({
+        url: url(`/vagas/${encodeURIComponent(vaga.slug)}`),
+        lastModified: dataDaPagina(vaga),
+        changeFrequency: "hourly",
+        priority: 0.7,
       });
     }
   }

@@ -28,6 +28,7 @@ import {
   salvarEvento,
   excluirEvento,
 } from "@/lib/cms";
+import { listarVagas, salvarVaga, excluirVaga } from "@/lib/vagas";
 
 export const dynamic = "force-dynamic";
 
@@ -56,6 +57,7 @@ export async function GET(request) {
   if (recurso === "categorias") return NextResponse.json(await listarCategoriasCms());
   if (recurso === "precos") return NextResponse.json(await listarPrecos());
   if (recurso === "eventos") return NextResponse.json(await listarEventos());
+  if (recurso === "vagas") return NextResponse.json(await listarVagas());
 
   return NextResponse.json({ erro: "Recurso inválido." }, { status: 400 });
 }
@@ -123,6 +125,13 @@ export async function POST(request) {
       return NextResponse.json({ ok: true });
     }
     return NextResponse.json({ id: await salvarEvento(dados) });
+  }
+  if (recurso === "vagas") {
+    if (acao === "excluir") {
+      await excluirVaga(id);
+      return NextResponse.json({ ok: true });
+    }
+    return NextResponse.json(await salvarVaga(dados));
   }
 
   return NextResponse.json({ erro: "Recurso inválido." }, { status: 400 });
