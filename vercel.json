@@ -1,8 +1,0 @@
-{
-  "crons": [
-    {
-      "path": "/api/vagas/sincronizar",
-      "schedule": "0 * * * *"
-    }
-  ]
-}
