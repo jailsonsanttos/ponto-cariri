@@ -45,6 +45,8 @@ export default async function VagasPage({ searchParams }) {
 
       <div className="mx-auto max-w-content px-5 pt-7"><AdSlot label="Anúncio - topo da página de vagas" /></div>
 
+      <div className="mx-auto max-w-content px-5 pt-5"><div className="flex flex-wrap items-center justify-between gap-4 rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-200"><div><p className="font-black text-cariri-preto">Você tem uma oportunidade?</p><p className="mt-1 text-sm text-slate-500">Empresas e recrutadores podem enviar vagas para análise.</p></div><Link href="/vagas/enviar" className="rounded-full bg-cariri-preto px-5 py-2.5 text-sm font-bold text-white hover:bg-cariri-verde">Enviar uma vaga</Link></div></div>
+
       <main className="mx-auto max-w-content px-5 pb-16 pt-10">
         <div className="grid gap-4 sm:grid-cols-3">
           <div className="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-200"><p className="text-xs font-black uppercase tracking-[.16em] text-cariri-verde">Oportunidades</p><p className="mt-2 text-3xl font-black text-cariri-preto">{vagas.length}</p><p className="mt-1 text-sm text-slate-500">vagas encontradas</p></div>
