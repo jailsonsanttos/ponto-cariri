@@ -68,10 +68,27 @@ async function municipioSelecionado(slug) {
 
 async function dadosIbge(slug) {
   const municipio = await municipioSelecionado(slug);
-  const locais = await buscarJson(`${IBGE_BASE}/localidades/estados/23/municipios`);
+  let locais = [];
+  try {
+    locais = await buscarJson(`${IBGE_BASE}/localidades/estados/23/municipios`);
+  } catch {
+    const urlIbge = `https://www.ibge.gov.br/cidades-e-estados/ce/${slugIbge(municipio.nome)}.html`;
+    return {
+      fonte: "IBGE",
+      municipio: municipio.nome,
+      ibge: { nome: municipio.nome, id: "" },
+      resumo: { url: urlIbge, indisponivel: true },
+      atualizadoEm: new Date().toISOString(),
+    };
+  }
   const local = locais.find((item) => nomeNormalizado(item.nome) === nomeNormalizado(municipio.nome));
   if (!local) throw new Error("Município não localizado na base do IBGE");
-  const detalhes = await buscarJson(`${IBGE_BASE}/localidades/municipios/${local.id}`);
+  let detalhes = local;
+  try {
+    detalhes = await buscarJson(`${IBGE_BASE}/localidades/municipios/${local.id}`);
+  } catch {
+    // Mantém a hierarquia recebida na listagem quando o endpoint detalhado oscilar.
+  }
   const urlIbge = `https://www.ibge.gov.br/cidades-e-estados/ce/${slugIbge(municipio.nome)}.html`;
   let resumo = { url: urlIbge };
   try {

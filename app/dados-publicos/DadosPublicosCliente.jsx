@@ -103,6 +103,7 @@ export default function DadosPublicosCliente({ municipios }) {
             </div>
             {(resumo.prefeito || resumo.gentilico) && <div className="mt-4 grid gap-3 sm:grid-cols-2"><div className="rounded-2xl bg-white p-4"><p className="text-xs text-cariri-cinza-texto">Prefeito</p><p className="mt-1 font-bold text-cariri-preto">{resumo.prefeito || "Não informado"}</p></div><div className="rounded-2xl bg-white p-4"><p className="text-xs text-cariri-cinza-texto">Gentílico</p><p className="mt-1 font-bold text-cariri-preto">{resumo.gentilico || "Não informado"}</p></div></div>}
             <p className="mt-4 text-xs text-cariri-cinza-texto">O resumo é obtido da página oficial Cidades e Estados do IBGE e pode ter anos de referência diferentes conforme o indicador.</p>
+            {resumo.indisponivel && <p className="mt-3 rounded-xl bg-amber-50 p-3 text-xs text-amber-800">O serviço do IBGE não respondeu nesta consulta. A página oficial será consultada novamente automaticamente.</p>}
           </div>
           </>
         )}
