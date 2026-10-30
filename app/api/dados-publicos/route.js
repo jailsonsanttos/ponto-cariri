@@ -40,7 +40,7 @@ async function buscarTexto(url) {
 }
 
 function removerHtml(valor = "") {
-  return valor.replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/<style[\s\S]*?<\/style>/gi, " ").replace(/<[^>]+>/g, " ").replace(/&nbsp;/gi, " ").replace(/&amp;/gi, "&").replace(/&quot;/gi, '"').replace(/&#39;|&apos;/gi, "'").replace(/\s+/g, " ").trim();
+  return valor.replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/<style[\s\S]*?<\/style>/gi, " ").replace(/<[^>]+>/g, " ").replace(/!\[[^\]]*\]\([^)]*\)/g, " ").replace(/\[[^\]]*\]\([^)]*\)/g, " ").replace(/&nbsp;/gi, " ").replace(/&amp;/gi, "&").replace(/&quot;/gi, '"').replace(/&#39;|&apos;/gi, "'").replace(/[|*]/g, " ").replace(/\s+/g, " ").trim();
 }
 
 function slugIbge(nome = "") {
@@ -59,7 +59,7 @@ function extrairIndicador(texto, rotulo) {
 function extrairTextoIndicador(texto, rotulo) {
   const partes = texto.split(new RegExp(rotulo, "ig"));
   const trecho = partes[1]?.slice(0, 160) || "";
-  return trecho.split(/(?:Área Territorial|População no último censo|Densidade demográfica|População estimada|Escolarização|IDHM|Mortalidade infantil|Total de receitas|Total de despesas|PIB per capita)/i)[0].replace(/\s+/g, " ").trim();
+  return trecho.split(/(?:Área Territorial|População no último censo|Densidade demográfica|População estimada|Escolarização|IDHM|Mortalidade infantil|Total de receitas|Total de despesas|PIB per capita|Saiba mais)/i)[0].replace(/\[\d{4}\]/g, "").replace(/\s+/g, " ").trim();
 }
 
 function nomeNormalizado(valor = "") {
