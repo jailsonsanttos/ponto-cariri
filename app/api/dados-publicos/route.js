@@ -24,12 +24,19 @@ async function buscarJson(url, opcoes = {}) {
 }
 
 async function buscarTexto(url) {
-  const resposta = await fetch(url, {
-    headers: { Accept: "text/html", "User-Agent": "PontoCariri/1.0 (https://www.pontocariri.com.br)" },
-    next: { revalidate: 86400 },
-  });
-  if (!resposta.ok) throw new Error(`Página do IBGE respondeu ${resposta.status}`);
-  return resposta.text();
+  const urls = [url, `https://r.jina.ai/${url}`];
+  for (const endereco of urls) {
+    try {
+      const resposta = await fetch(endereco, {
+        headers: { Accept: "text/html, text/plain", "User-Agent": "PontoCariri/1.0 (https://www.pontocariri.com.br)" },
+        next: { revalidate: 86400 },
+      });
+      if (resposta.ok) return resposta.text();
+    } catch {
+      // Tenta a próxima fonte pública.
+    }
+  }
+  throw new Error("Página do IBGE indisponível");
 }
 
 function removerHtml(valor = "") {
@@ -73,6 +80,32 @@ async function dadosIbge(slug) {
     locais = await buscarJson(`${IBGE_BASE}/localidades/estados/23/municipios`);
   } catch {
     const urlIbge = `https://www.ibge.gov.br/cidades-e-estados/ce/${slugIbge(municipio.nome)}.html`;
+    try {
+      const texto = removerHtml(await buscarTexto(urlIbge));
+      return {
+        fonte: "IBGE",
+        municipio: municipio.nome,
+        ibge: { nome: municipio.nome, id: "" },
+        resumo: {
+          prefeito: extrairTextoIndicador(texto, "Prefeito"),
+          gentilico: extrairTextoIndicador(texto, "Gentílico"),
+          areaTerritorial: extrairIndicador(texto, "Área Territorial"),
+          populacaoCenso: extrairIndicador(texto, "População no último censo"),
+          densidadeDemografica: extrairIndicador(texto, "Densidade demográfica"),
+          populacaoEstimada: extrairIndicador(texto, "População estimada"),
+          escolarizacao: extrairIndicador(texto, "Escolarização 6 a 14 anos"),
+          idhm: extrairIndicador(texto, "IDHM Índice de desenvolvimento humano municipal"),
+          mortalidadeInfantil: extrairIndicador(texto, "Mortalidade infantil"),
+          receitas: extrairIndicador(texto, "Total de receitas brutas realizadas"),
+          despesas: extrairIndicador(texto, "Total de despesas brutas empenhadas"),
+          pibPerCapita: extrairIndicador(texto, "PIB per capita"),
+          url: urlIbge,
+        },
+        atualizadoEm: new Date().toISOString(),
+      };
+    } catch {
+      // Continua com uma resposta estável e o link oficial para nova tentativa.
+    }
     return {
       fonte: "IBGE",
       municipio: municipio.nome,
