@@ -23,6 +23,38 @@ async function buscarJson(url, opcoes = {}) {
   return resposta.json();
 }
 
+async function buscarTexto(url) {
+  const resposta = await fetch(url, {
+    headers: { Accept: "text/html", "User-Agent": "PontoCariri/1.0 (https://www.pontocariri.com.br)" },
+    next: { revalidate: 86400 },
+  });
+  if (!resposta.ok) throw new Error(`Página do IBGE respondeu ${resposta.status}`);
+  return resposta.text();
+}
+
+function removerHtml(valor = "") {
+  return valor.replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/<style[\s\S]*?<\/style>/gi, " ").replace(/<[^>]+>/g, " ").replace(/&nbsp;/gi, " ").replace(/&amp;/gi, "&").replace(/&quot;/gi, '"').replace(/&#39;|&apos;/gi, "'").replace(/\s+/g, " ").trim();
+}
+
+function slugIbge(nome = "") {
+  return nome.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+}
+
+function extrairIndicador(texto, rotulo) {
+  const partes = texto.split(new RegExp(rotulo, "ig"));
+  for (let i = 1; i < partes.length; i += 1) {
+    const valor = partes[i].slice(0, 220).match(/(?:R\$\s*)?\d[\d.]*[,]?\d*\s*(?:km²|hab\/km²|pessoas|%|R\$|óbitos por mil nascidos vivos)?\s*(?:\[\d{4}\])?/i);
+    if (valor) return valor[0].replace(/\s+/g, " ").trim();
+  }
+  return "";
+}
+
+function extrairTextoIndicador(texto, rotulo) {
+  const partes = texto.split(new RegExp(rotulo, "ig"));
+  const trecho = partes[1]?.slice(0, 160) || "";
+  return trecho.split(/(?:Área Territorial|População no último censo|Densidade demográfica|População estimada|Escolarização|IDHM|Mortalidade infantil|Total de receitas|Total de despesas|PIB per capita)/i)[0].replace(/\s+/g, " ").trim();
+}
+
 function nomeNormalizado(valor = "") {
   return valor.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().trim();
 }
@@ -40,10 +72,33 @@ async function dadosIbge(slug) {
   const local = locais.find((item) => nomeNormalizado(item.nome) === nomeNormalizado(municipio.nome));
   if (!local) throw new Error("Município não localizado na base do IBGE");
   const detalhes = await buscarJson(`${IBGE_BASE}/localidades/municipios/${local.id}`);
+  const urlIbge = `https://www.ibge.gov.br/cidades-e-estados/ce/${slugIbge(municipio.nome)}.html`;
+  let resumo = { url: urlIbge };
+  try {
+    const texto = removerHtml(await buscarTexto(urlIbge));
+    resumo = {
+      prefeito: extrairTextoIndicador(texto, "Prefeito"),
+      gentilico: extrairTextoIndicador(texto, "Gentílico"),
+      areaTerritorial: extrairIndicador(texto, "Área Territorial"),
+      populacaoCenso: extrairIndicador(texto, "População no último censo"),
+      densidadeDemografica: extrairIndicador(texto, "Densidade demográfica"),
+      populacaoEstimada: extrairIndicador(texto, "População estimada"),
+      escolarizacao: extrairIndicador(texto, "Escolarização 6 a 14 anos"),
+      idhm: extrairIndicador(texto, "IDHM Índice de desenvolvimento humano municipal"),
+      mortalidadeInfantil: extrairIndicador(texto, "Mortalidade infantil"),
+      receitas: extrairIndicador(texto, "Total de receitas brutas realizadas"),
+      despesas: extrairIndicador(texto, "Total de despesas brutas empenhadas"),
+      pibPerCapita: extrairIndicador(texto, "PIB per capita"),
+      url: urlIbge,
+    };
+  } catch {
+    // A identificação territorial continua disponível mesmo se o resumo estiver indisponível.
+  }
   return {
     fonte: "IBGE",
     municipio: municipio.nome,
     ibge: detalhes,
+    resumo,
     atualizadoEm: new Date().toISOString(),
   };
 }

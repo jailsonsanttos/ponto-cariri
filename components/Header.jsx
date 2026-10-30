@@ -9,7 +9,7 @@ const MENU_PADRAO = [
   { href: "/", label: "Início", filhos: [] },
   { href: "/informacoes", label: "Informações", filhos: [] },
   { href: "/municipios", label: "Municípios", filhos: [] },
-  { href: "/vagas", label: "VAGAS", filhos: [] },
+  { href: "/vagas", label: "Vagas", filhos: [] },
   { href: "/publicidade", label: "Publicidade", filhos: [] },
   { href: "/tempo", label: "Tempo", filhos: [] },
   { href: "/precos", label: "Preços", filhos: [] },

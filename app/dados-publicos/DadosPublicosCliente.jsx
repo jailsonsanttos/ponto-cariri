@@ -66,6 +66,7 @@ export default function DadosPublicosCliente({ municipios }) {
   }
 
   const local = ibge?.ibge;
+  const resumo = ibge?.resumo || {};
   const regiao = local?.microrregiao?.mesorregiao?.UF?.regiao;
 
   return (
@@ -88,12 +89,22 @@ export default function DadosPublicosCliente({ municipios }) {
         </div>
         {carregando && <p className="mt-6 text-sm text-cariri-cinza-texto">Consultando o IBGE...</p>}
         {local && !carregando && (
+          <>
           <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <div className="rounded-2xl bg-cariri-verde-claro/60 p-4"><p className="text-xs text-cariri-cinza-texto">Código IBGE</p><p className="mt-1 text-xl font-black text-cariri-preto">{local.id}</p></div>
             <div className="rounded-2xl bg-slate-50 p-4"><p className="text-xs text-cariri-cinza-texto">Microrregião</p><p className="mt-1 font-bold text-cariri-preto">{local.microrregiao?.nome || "—"}</p></div>
             <div className="rounded-2xl bg-slate-50 p-4"><p className="text-xs text-cariri-cinza-texto">Região intermediária</p><p className="mt-1 font-bold text-cariri-preto">{local["regiao-imediata"]?.["regiao-intermediaria"]?.nome || "—"}</p></div>
             <div className="rounded-2xl bg-slate-50 p-4"><p className="text-xs text-cariri-cinza-texto">Macrorregião</p><p className="mt-1 font-bold text-cariri-preto">{regiao?.nome || "—"}</p></div>
           </div>
+          <div className="mt-6 rounded-2xl border border-cariri-verde-claro bg-cariri-verde-claro/30 p-5">
+            <div className="flex flex-wrap items-end justify-between gap-3"><div><p className="text-xs font-bold uppercase tracking-[0.16em] text-cariri-verde">Resumo oficial</p><h3 className="mt-1 text-xl font-black text-cariri-preto">Indicadores de {ibge.municipio}</h3></div>{resumo.url && <a href={resumo.url} target="_blank" rel="noreferrer" className="text-xs font-bold text-cariri-verde hover:underline">Ver no IBGE →</a>}</div>
+            <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {[["Área territorial", resumo.areaTerritorial], ["População no último censo", resumo.populacaoCenso], ["Densidade demográfica", resumo.densidadeDemografica], ["População estimada", resumo.populacaoEstimada], ["Escolarização de 6 a 14 anos", resumo.escolarizacao], ["IDHM", resumo.idhm], ["Mortalidade infantil", resumo.mortalidadeInfantil], ["PIB per capita", resumo.pibPerCapita], ["Receitas brutas realizadas", resumo.receitas], ["Despesas brutas empenhadas", resumo.despesas]].map(([rotulo, valor]) => <div key={rotulo} className="rounded-2xl bg-white p-4 shadow-sm"><p className="text-xs text-cariri-cinza-texto">{rotulo}</p><p className="mt-1 text-base font-black text-cariri-preto">{valor || "Não informado"}</p></div>)}
+            </div>
+            {(resumo.prefeito || resumo.gentilico) && <div className="mt-4 grid gap-3 sm:grid-cols-2"><div className="rounded-2xl bg-white p-4"><p className="text-xs text-cariri-cinza-texto">Prefeito</p><p className="mt-1 font-bold text-cariri-preto">{resumo.prefeito || "Não informado"}</p></div><div className="rounded-2xl bg-white p-4"><p className="text-xs text-cariri-cinza-texto">Gentílico</p><p className="mt-1 font-bold text-cariri-preto">{resumo.gentilico || "Não informado"}</p></div></div>}
+            <p className="mt-4 text-xs text-cariri-cinza-texto">O resumo é obtido da página oficial Cidades e Estados do IBGE e pode ter anos de referência diferentes conforme o indicador.</p>
+          </div>
+          </>
         )}
         <p className="mt-5 text-xs text-cariri-cinza-texto">Fonte: <a className="font-semibold text-cariri-verde hover:underline" href="https://servicodados.ibge.gov.br/api/docs/localidades" target="_blank" rel="noreferrer">API de Localidades do IBGE</a>.</p>
       </section>
