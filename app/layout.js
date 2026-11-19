@@ -42,17 +42,23 @@ export const metadata = {
 
 function TemaCss({ aparencia }) {
   const a = { ...APARENCIA_PADRAO, ...aparencia };
+  const corPrincipal = a.corPrincipal === "#1B7A43" ? "#1D6B4A" : a.corPrincipal;
+  const corSecundaria = a.corSecundaria === "#124F2C" ? "#123D32" : a.corSecundaria;
+  const corFundoSuave = a.corFundoSuave === "#E7F4EC" ? "#E6F0E8" : a.corFundoSuave;
+  const corTexto = a.corTexto === "#12130F" ? "#17201D" : a.corTexto;
+  const corTextoSecundario = a.corTextoSecundario === "#4A4E48" ? "#53615A" : a.corTextoSecundario;
+  const corFundo = a.corFundo === "#FFFFFF" ? "#F5F1E8" : a.corFundo;
   const css = `
     :root {
-      --cariri-verde: ${a.corPrincipal};
-      --cariri-verde-escuro: ${a.corSecundaria};
-      --cariri-verde-claro: ${a.corFundoSuave};
-      --cariri-preto: ${a.corTexto};
-      --cariri-texto-secundario: ${a.corTextoSecundario || "#4A4E48"};
-      --cariri-link: ${a.corLink || a.corPrincipal};
+      --cariri-verde: ${corPrincipal};
+      --cariri-verde-escuro: ${corSecundaria};
+      --cariri-verde-claro: ${corFundoSuave};
+      --cariri-preto: ${corTexto};
+      --cariri-texto-secundario: ${corTextoSecundario || "#53615A"};
+      --cariri-link: ${a.corLink === "#1B7A43" ? corPrincipal : (a.corLink || corPrincipal)};
       --cariri-raio: ${a.raioBorda || 12}px;
     }
-    body { background-color: ${a.corFundo || "#fff"}; color: ${a.corTexto}; font-family: ${a.fonte === "serif" ? "Georgia, 'Times New Roman', serif" : a.fonte === "mono" ? "ui-monospace, SFMono-Regular, Menlo, monospace" : "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}; }
+    body { background-color: ${corFundo || "#F5F1E8"}; color: ${corTexto}; font-family: ${a.fonte === "serif" ? "Georgia, 'Times New Roman', serif" : a.fonte === "mono" ? "ui-monospace, SFMono-Regular, Menlo, monospace" : "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}; }
   `;
   return <style dangerouslySetInnerHTML={{ __html: css }} />;
 }

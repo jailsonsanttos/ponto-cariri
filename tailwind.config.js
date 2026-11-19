@@ -15,6 +15,8 @@ module.exports = {
           preto: "var(--cariri-preto, #12130F)",
           branco: "#FFFFFF",
           "cinza-texto": "var(--cariri-texto-secundario, #4A4E48)",
+          laranja: "var(--cariri-laranja, #D8783F)",
+          areia: "var(--cariri-areia, #F5F1E8)",
         },
       },
       fontFamily: {

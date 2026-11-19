@@ -1,61 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 
-// Card de notícia em formato "feed" (parecido com uma postagem de rede
-// social): imagem grande, categoria, título, data e um resumo maior.
-// Quando "destaque" é verdadeiro, aparece maior (usado no topo do feed).
-export default function NoticiaFeedItem({ noticia, destaque = false }) {
-  const dataFormatada = noticia.dataPublicacao
-    ? new Date(noticia.dataPublicacao + "T12:00:00").toLocaleDateString("pt-BR", {
-        day: "2-digit",
-        month: "long",
-        year: "numeric",
-      })
-    : "";
-
-  return (
-    <Link
-      href={`/informacoes/${noticia.slug}`}
-      className="block bg-white border border-cariri-verde-claro rounded-xl overflow-hidden hover:border-cariri-verde hover:shadow-md transition-all"
-    >
-      {noticia.imagemCapa ? (
-        <div className={`relative w-full ${destaque ? "h-64 sm:h-96" : "h-56 sm:h-72"}`}>
-          <Image
-            src={noticia.imagemCapa}
-            alt=""
-            fill
-            priority={destaque}
-            sizes="(max-width: 768px) 100vw, 700px"
-            className="object-cover"
-            style={{ objectPosition: noticia.imagemPosicao || "center center" }}
-          />
-        </div>
-      ) : (
-        <div className="w-full h-40 bg-cariri-verde-claro" />
-      )}
-      <div className="p-5">
-        <div className="flex items-center gap-2 text-xs text-cariri-cinza-texto">
-          {destaque && (
-            <span className="font-bold text-white bg-cariri-verde px-2 py-0.5 rounded-full text-[11px] uppercase tracking-wide">
-              Destaque
-            </span>
-          )}
-          <span className="font-semibold text-cariri-verde uppercase tracking-wide">
-            {noticia.categoria || "Geral"}
-          </span>
-          <span>·</span>
-          <span>{dataFormatada}</span>
-        </div>
-        <h2 className={`mt-2 font-bold text-cariri-preto leading-snug ${destaque ? "text-2xl sm:text-3xl" : "text-xl"}`}>
-          {noticia.titulo}
-        </h2>
-        <p className="mt-2 text-[15px] text-cariri-preto/80 leading-relaxed line-clamp-3">
-          {noticia.resumo}
-        </p>
-        <span className="mt-3 inline-block text-sm font-semibold text-cariri-verde">
-          Ler matéria completa →
-        </span>
-      </div>
-    </Link>
-  );
+export default function NoticiaFeedItem({ noticia }) {
+  const data = noticia.dataPublicacao ? new Date(`${noticia.dataPublicacao}T12:00:00`).toLocaleDateString("pt-BR", { day: "2-digit", month: "short" }).replace(".", "") : "";
+  return <Link href={`/informacoes/${noticia.slug}`} className="group flex gap-4 py-5 first:pt-5 sm:gap-6 sm:py-6"><div className="relative h-24 w-28 shrink-0 overflow-hidden rounded-2xl bg-cariri-verde-claro sm:h-32 sm:w-44">{noticia.imagemCapa ? <Image src={noticia.imagemCapa} alt={noticia.titulo} fill sizes="176px" className="object-cover transition duration-500 group-hover:scale-105" style={{ objectPosition: noticia.imagemPosicao || "center center" }} /> : <div className="flex h-full items-center justify-center text-2xl font-black text-cariri-verde">PC</div>}</div><div className="min-w-0"><div className="flex flex-wrap items-center gap-2 text-[10px] font-black uppercase tracking-[.14em] text-cariri-laranja"><span>{noticia.categoria || "Geral"}</span><span className="text-[#cfc7b8]">·</span><span className="text-cariri-cinza-texto">{data}</span></div><h2 className="mt-2 line-clamp-2 text-lg font-black leading-tight tracking-[-.02em] text-cariri-preto transition group-hover:text-cariri-verde sm:text-xl">{noticia.titulo}</h2>{noticia.resumo && <p className="mt-2 hidden line-clamp-2 text-sm leading-6 text-cariri-cinza-texto sm:block">{noticia.resumo}</p>}<span className="mt-3 inline-block text-xs font-extrabold text-cariri-verde">Ler matéria ↗</span></div></Link>;
 }

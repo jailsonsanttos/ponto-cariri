@@ -2,43 +2,6 @@ import Link from "next/link";
 import Image from "next/image";
 
 export default function NoticiaDestaque({ noticia }) {
-  const dataFormatada = noticia.dataPublicacao
-    ? new Date(`${noticia.dataPublicacao}T12:00:00`).toLocaleDateString("pt-BR", {
-        day: "2-digit",
-        month: "long",
-        year: "numeric",
-      })
-    : "";
-
-  return (
-    <Link href={`/informacoes/${noticia.slug}`} className="group relative block overflow-hidden rounded-3xl shadow-lg">
-      <div className="relative h-80 w-full bg-cariri-verde-claro sm:h-[460px]">
-        {noticia.imagemCapa ? (
-          <Image
-            src={noticia.imagemCapa}
-            alt={noticia.titulo}
-            fill
-            priority
-            sizes="(max-width: 1024px) 100vw, 1180px"
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
-            style={{ objectPosition: noticia.imagemPosicao || "center center" }}
-          />
-        ) : (
-          <div className="flex h-full items-center justify-center text-6xl font-black text-cariri-verde">PC</div>
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
-      </div>
-      <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-9">
-        <span className="inline-block rounded-full bg-white/95 px-3 py-1 text-xs font-black uppercase tracking-[0.14em] text-cariri-verde-escuro">
-          Destaque do dia
-        </span>
-        <h2 className="mt-3 max-w-3xl text-2xl font-black leading-tight text-white sm:text-4xl">
-          {noticia.titulo}
-        </h2>
-        <p className="mt-2 text-sm text-white/80">
-          {noticia.categoria || "Geral"} · {dataFormatada}
-        </p>
-      </div>
-    </Link>
-  );
+  const data = noticia.dataPublicacao ? new Date(`${noticia.dataPublicacao}T12:00:00`).toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" }) : "";
+  return <Link href={`/informacoes/${noticia.slug}`} className="group relative block min-h-[27rem] overflow-hidden rounded-[1.75rem] bg-cariri-verde-escuro shadow-[0_25px_55px_-28px_rgba(18,61,50,.7)] sm:min-h-[34rem]"><div className="absolute inset-0">{noticia.imagemCapa ? <Image src={noticia.imagemCapa} alt={noticia.titulo} fill priority sizes="(max-width: 1024px) 100vw, 1180px" className="object-cover transition duration-700 group-hover:scale-105" style={{ objectPosition: noticia.imagemPosicao || "center center" }} /> : <div className="flex h-full items-center justify-center text-8xl font-black text-cariri-verde-claro">PC</div>}<div className="absolute inset-0 bg-gradient-to-t from-[#0c241c] via-[#0c241c]/25 to-transparent" /></div><div className="absolute inset-x-0 bottom-0 p-6 sm:p-10"><span className="inline-flex rounded-full bg-cariri-laranja px-3 py-1.5 text-[10px] font-black uppercase tracking-[.16em] text-white">Destaque do dia</span><h2 className="mt-4 max-w-4xl text-3xl font-black leading-[1.04] tracking-[-.04em] text-white sm:text-5xl">{noticia.titulo}</h2><p className="mt-4 text-sm font-semibold text-white/70">{noticia.categoria || "Geral"} <span className="mx-2 text-white/30">/</span> {data}</p></div></Link>;
 }
