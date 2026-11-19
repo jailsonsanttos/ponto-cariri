@@ -42,12 +42,12 @@ export const metadata = {
 
 function TemaCss({ aparencia }) {
   const a = { ...APARENCIA_PADRAO, ...aparencia };
-  const corPrincipal = a.corPrincipal === "#1B7A43" ? "#1D6B4A" : a.corPrincipal;
-  const corSecundaria = a.corSecundaria === "#124F2C" ? "#123D32" : a.corSecundaria;
-  const corFundoSuave = a.corFundoSuave === "#E7F4EC" ? "#E6F0E8" : a.corFundoSuave;
-  const corTexto = a.corTexto === "#12130F" ? "#17201D" : a.corTexto;
-  const corTextoSecundario = a.corTextoSecundario === "#4A4E48" ? "#53615A" : a.corTextoSecundario;
-  const corFundo = a.corFundo === "#FFFFFF" ? "#F5F1E8" : a.corFundo;
+  const corPrincipal = ["#1B7A43", "#1D6B4A"].includes(a.corPrincipal) ? "#2F8062" : a.corPrincipal;
+  const corSecundaria = ["#124F2C", "#123D32"].includes(a.corSecundaria) ? "#174A3A" : a.corSecundaria;
+  const corFundoSuave = ["#E7F4EC", "#E6F0E8"].includes(a.corFundoSuave) ? "#E3EFE8" : a.corFundoSuave;
+  const corTexto = ["#12130F", "#17201D"].includes(a.corTexto) ? "#1E2925" : a.corTexto;
+  const corTextoSecundario = ["#4A4E48", "#53615A"].includes(a.corTextoSecundario) ? "#68736C" : a.corTextoSecundario;
+  const corFundo = ["#FFFFFF", "#F5F1E8"].includes(a.corFundo) ? "#F5F0E6" : a.corFundo;
   const css = `
     :root {
       --cariri-verde: ${corPrincipal};
@@ -55,10 +55,10 @@ function TemaCss({ aparencia }) {
       --cariri-verde-claro: ${corFundoSuave};
       --cariri-preto: ${corTexto};
       --cariri-texto-secundario: ${corTextoSecundario || "#53615A"};
-      --cariri-link: ${a.corLink === "#1B7A43" ? corPrincipal : (a.corLink || corPrincipal)};
+      --cariri-link: ${["#1B7A43", "#1D6B4A"].includes(a.corLink) ? corPrincipal : (a.corLink || corPrincipal)};
       --cariri-raio: ${a.raioBorda || 12}px;
     }
-    body { background-color: ${corFundo || "#F5F1E8"}; color: ${corTexto}; font-family: ${a.fonte === "serif" ? "Georgia, 'Times New Roman', serif" : a.fonte === "mono" ? "ui-monospace, SFMono-Regular, Menlo, monospace" : "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}; }
+    body { background-color: ${corFundo || "#F5F0E6"}; color: ${corTexto}; font-family: ${a.fonte === "serif" ? "Georgia, 'Times New Roman', serif" : a.fonte === "mono" ? "ui-monospace, SFMono-Regular, Menlo, monospace" : "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}; }
   `;
   return <style dangerouslySetInnerHTML={{ __html: css }} />;
 }

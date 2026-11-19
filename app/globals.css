@@ -4,12 +4,12 @@
 
 :root {
   --header-height: 0px;
-  --cariri-verde: #1d6b4a;
-  --cariri-verde-escuro: #123d32;
-  --cariri-verde-claro: #e6f0e8;
-  --cariri-preto: #17201d;
-  --cariri-areia: #f5f1e8;
-  --cariri-laranja: #d8783f;
+  --cariri-verde: #2f8062;
+  --cariri-verde-escuro: #174a3a;
+  --cariri-verde-claro: #e3efe8;
+  --cariri-preto: #1e2925;
+  --cariri-areia: #f5f0e6;
+  --cariri-laranja: #c96f45;
 }
 
 html { scroll-behavior: smooth; }
@@ -19,10 +19,10 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-::selection { background: #c7e2cf; color: #123d32; }
+::selection { background: #c9e1d2; color: #174a3a; }
 a, button, input, textarea, select { -webkit-tap-highlight-color: transparent; }
 a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
-  outline: 3px solid #d8783f;
+  outline: 3px solid #c96f45;
   outline-offset: 3px;
 }
 
@@ -52,5 +52,5 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .pc-eyebrow { @apply text-[11px] font-black uppercase tracking-[.2em]; }
   .pc-section-title { @apply text-2xl font-black tracking-[-.04em] text-cariri-preto sm:text-3xl; }
   .pc-section-link { @apply text-sm font-extrabold text-cariri-verde transition hover:text-cariri-laranja; }
-  .pc-paper { @apply rounded-[1.5rem] border border-[#e5e1d7] bg-white shadow-[0_12px_35px_-24px_rgba(18,61,50,.5)]; }
+  .pc-paper { @apply rounded-[1.5rem] border border-[#e8dfd2] bg-white shadow-[0_12px_35px_-24px_rgba(18,61,50,.5)]; }
 }
