@@ -53,16 +53,15 @@ export default function TempoFaixa({ municipios }) {
 
   return (
     <div
-      className="fixed inset-x-0 z-30 border-y border-white/15 bg-black shadow-[0_8px_20px_-14px_rgba(0,0,0,.9)]"
-      style={{ top: "var(--header-height, 0px)" }}
+      className="relative z-10 w-full border-y border-white/10 bg-[#0b100e] shadow-[0_8px_24px_-18px_rgba(0,0,0,.9)]"
       role="status"
       aria-label="Previsão do tempo nos municípios do Cariri"
     >
-      <div className="mx-auto flex min-h-11 max-w-content items-center overflow-hidden sm:min-h-12">
-        <span className="flex h-11 shrink-0 items-center gap-2 border-r border-white/20 px-3 text-[10px] font-black uppercase tracking-[0.12em] text-white sm:h-12 sm:px-4 sm:text-[11px] sm:tracking-[0.14em]"><span className="h-1.5 w-1.5 rounded-full bg-[#8ee7b9] shadow-[0_0_0_3px_rgba(142,231,185,.12)]" /><span className="sm:hidden">Agora</span><span className="hidden sm:inline">Tempo agora</span></span>
-        <div className="flex w-max whitespace-nowrap py-2 faixa-tempo-rolando sm:py-2.5">
+      <div className="mx-auto flex min-h-12 max-w-content items-center overflow-hidden sm:min-h-14">
+        <span className="flex h-12 shrink-0 items-center gap-2 border-r border-white/10 bg-white/[.03] px-3 text-[10px] font-black uppercase tracking-[0.12em] text-white sm:h-14 sm:px-5 sm:text-[11px] sm:tracking-[0.14em]"><span className="h-1.5 w-1.5 rounded-full bg-[#8ee7b9] shadow-[0_0_0_3px_rgba(142,231,185,.12)]" /><span className="sm:hidden">Agora</span><span className="hidden sm:inline">Tempo agora</span></span>
+        <div className="flex w-max whitespace-nowrap py-2.5 faixa-tempo-rolando sm:py-3">
         {listaDupla.map((item, i) => (
-          <span key={i} className="inline-flex items-center gap-1.5 border-r border-white/20 px-4 text-[13px] sm:gap-2 sm:px-5 sm:text-sm">
+          <span key={i} className="inline-flex items-center gap-1.5 border-r border-white/10 px-4 text-[13px] sm:gap-2 sm:px-5 sm:text-sm">
             <span className="font-semibold text-white">{item.nome}</span>
             <span className="font-bold text-white">{item.temperatura}°C</span>
             <span className="hidden text-white/70 sm:inline">· {item.descricao}</span>
