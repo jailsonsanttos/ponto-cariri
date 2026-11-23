@@ -1,91 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+function IconeCoracao() { return <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21s-7.2-4.35-9.4-8.54C.6 8.92 2.26 5 6.38 5c2.07 0 3.49 1.18 4.62 2.56C12.13 6.18 13.55 5 15.62 5 19.74 5 21.4 8.92 19.4 12.46 17.2 16.65 12 21 12 21Z" /></svg>; }
+function IconePix() { return <span className="text-[10px] font-black leading-none" aria-hidden="true">PIX</span>; }
 
 export default function DoacaoBotao({ chavePix, mensagem }) {
   const [aberto, setAberto] = useState(false);
   const [copiado, setCopiado] = useState(false);
-
-  async function copiarChave() {
-    try {
-      await navigator.clipboard.writeText(chavePix);
-      setCopiado(true);
-      setTimeout(() => setCopiado(false), 2000);
-    } catch (erro) {
-      setCopiado(false);
-    }
-  }
-
-  // Gera a imagem do QR Code a partir do "payload" Pix, usando um serviço
-  // gratuito de geração de QR Code (não requer nenhuma biblioteca instalada).
-  const urlQrCode = `/api/pix-qrcode?chave=${encodeURIComponent(chavePix)}`;
-
-  return (
-    <>
-      <button
-        onClick={() => setAberto(true)}
-        className="fixed bottom-5 right-5 z-50 bg-cariri-verde text-white text-sm font-semibold px-5 py-3 rounded-full shadow-lg hover:bg-cariri-verde-escuro transition-colors"
-      >
-        💚 Apoie o Ponto Cariri
-      </button>
-
-      {aberto && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-label="Fazer uma doação via Pix"
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50"
-          onClick={() => setAberto(false)}
-        >
-          <div
-            className="bg-white rounded-xl max-w-sm w-full p-6 relative"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              onClick={() => setAberto(false)}
-              aria-label="Fechar"
-              className="absolute top-3 right-3 text-cariri-cinza-texto hover:text-cariri-preto text-xl leading-none"
-            >
-              ×
-            </button>
-
-            <h2 className="text-lg font-bold text-cariri-preto">
-              Faça uma doação
-            </h2>
-            <p className="mt-2 text-sm text-cariri-cinza-texto leading-relaxed">
-              {mensagem}
-            </p>
-
-            <div className="mt-4 flex justify-center">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={urlQrCode}
-                alt="QR Code Pix para doação"
-                width={220}
-                height={220}
-                className="rounded-md border border-cariri-verde-claro"
-              />
-            </div>
-
-            <div className="mt-4">
-              <p className="text-xs font-medium text-cariri-cinza-texto uppercase tracking-wide">
-                Chave Pix
-              </p>
-              <div className="mt-1 flex items-center gap-2">
-                <code className="flex-1 text-sm bg-cariri-verde-claro rounded-md px-3 py-2 text-cariri-preto break-all">
-                  {chavePix}
-                </code>
-                <button
-                  onClick={copiarChave}
-                  className="text-sm font-semibold text-white bg-cariri-verde px-3 py-2 rounded-md hover:bg-cariri-verde-escuro transition-colors whitespace-nowrap"
-                >
-                  {copiado ? "Copiado!" : "Copiar"}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-    </>
-  );
+  useEffect(() => { if (!aberto) return undefined; const fechar = (e) => e.key === "Escape" && setAberto(false); document.addEventListener("keydown", fechar); return () => document.removeEventListener("keydown", fechar); }, [aberto]);
+  async function copiarChave() { try { await navigator.clipboard.writeText(chavePix); setCopiado(true); setTimeout(() => setCopiado(false), 2000); } catch { setCopiado(false); } }
+  const urlQrCode = `/api/pix-qrcode?chave=${encodeURIComponent(chavePix || "")}`;
+  return <>
+    <button onClick={() => setAberto(true)} aria-label="Apoie o Ponto Cariri" className="group fixed bottom-[calc(1rem+env(safe-area-inset-bottom))] right-4 z-50 flex min-h-12 items-center gap-2 rounded-full border border-white/20 bg-cariri-laranja px-4 py-3 text-sm font-black text-white shadow-[0_12px_28px_-10px_rgba(18,61,50,.75)] transition hover:-translate-y-1 hover:bg-[#b96038] focus-visible:outline-white sm:right-5 sm:px-5"><span className="flex h-7 w-7 items-center justify-center rounded-full bg-white/20 transition group-hover:scale-110"><IconeCoracao /></span><span className="hidden xs:inline sm:inline">Apoie o Ponto Cariri</span><span className="sm:hidden">Apoie</span></button>
+    {aberto && <div role="dialog" aria-modal="true" aria-label="Apoie o Ponto Cariri via Pix" className="fixed inset-0 z-[60] flex items-end justify-center bg-[#10251e]/65 p-3 backdrop-blur-sm sm:items-center sm:p-5" onClick={() => setAberto(false)}><div className="relative max-h-[calc(100dvh-1.5rem)] w-full max-w-md overflow-y-auto rounded-[1.75rem] bg-[#fffdf8] p-5 shadow-2xl sm:max-h-[calc(100dvh-2.5rem)] sm:p-7" onClick={(e) => e.stopPropagation()}><button onClick={() => setAberto(false)} aria-label="Fechar" className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-cariri-verde-claro text-xl text-cariri-verde">×</button><div className="pr-10"><span className="inline-flex items-center gap-2 rounded-full bg-cariri-verde-claro px-3 py-1.5 text-[10px] font-black uppercase tracking-[.14em] text-cariri-verde"><IconePix /> apoio direto</span><h2 className="mt-4 text-2xl font-black tracking-[-.03em] text-cariri-preto">Apoie o Ponto Cariri</h2><p className="mt-2 text-sm leading-6 text-cariri-cinza-texto">{mensagem || "Seu apoio ajuda o Ponto Cariri a continuar produzindo informação e serviços para a região."}</p></div><div className="mt-5 flex justify-center rounded-2xl bg-white p-3"><img src={urlQrCode} alt="QR Code Pix para apoiar o Ponto Cariri" width="220" height="220" className="h-auto w-full max-w-[220px] rounded-xl border border-cariri-verde-claro" /></div><div className="mt-5"><p className="pc-eyebrow text-cariri-cinza-texto">Chave Pix</p><div className="mt-2 flex items-stretch gap-2"><code className="min-w-0 flex-1 break-all rounded-xl bg-cariri-verde-claro px-3 py-3 text-xs text-cariri-preto">{chavePix || "Chave não cadastrada"}</code><button onClick={copiarChave} disabled={!chavePix} className="shrink-0 rounded-xl bg-cariri-verde px-3 py-2 text-xs font-black text-white transition hover:bg-cariri-verde-escuro disabled:cursor-not-allowed disabled:opacity-50">{copiado ? "Copiado" : "Copiar"}</button></div></div></div></div>}
+  </>;
 }

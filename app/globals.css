@@ -12,11 +12,14 @@
   --cariri-laranja: #c96f45;
 }
 
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overflow-x: hidden; }
 body {
   color: var(--cariri-preto);
   background: var(--cariri-areia);
   text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+  min-width: 320px;
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 ::selection { background: #c9e1d2; color: #174a3a; }
@@ -48,9 +51,14 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 @media (prefers-reduced-motion: reduce) { .faixa-tempo-rolando { animation: none; overflow-x: auto; } }
 
 @layer components {
-  .pc-shell { @apply mx-auto w-full max-w-content px-5 sm:px-6; }
+  .pc-shell { @apply mx-auto w-full max-w-content px-4 sm:px-6; }
   .pc-eyebrow { @apply text-[11px] font-black uppercase tracking-[.2em]; }
   .pc-section-title { @apply text-2xl font-black tracking-[-.04em] text-cariri-preto sm:text-3xl; }
   .pc-section-link { @apply text-sm font-extrabold text-cariri-verde transition hover:text-cariri-laranja; }
   .pc-paper { @apply rounded-[1.5rem] border border-[#e8dfd2] bg-white shadow-[0_12px_35px_-24px_rgba(18,61,50,.5)]; }
+}
+
+@media (max-width: 639px) {
+  button, a { touch-action: manipulation; }
+  .prose-noticia { font-size: 1rem; line-height: 1.8; }
 }

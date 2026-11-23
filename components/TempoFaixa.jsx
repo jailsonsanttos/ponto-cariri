@@ -53,19 +53,19 @@ export default function TempoFaixa({ municipios }) {
 
   return (
     <div
-      className="fixed inset-x-0 z-30 border-y border-white/20 bg-black shadow-lg"
+      className="fixed inset-x-0 z-30 border-y border-white/15 bg-black shadow-[0_8px_20px_-14px_rgba(0,0,0,.9)]"
       style={{ top: "var(--header-height, 0px)" }}
       role="status"
       aria-label="Previsão do tempo nos municípios do Cariri"
     >
-      <div className="mx-auto flex max-w-content items-center overflow-hidden">
-        <span className="hidden shrink-0 border-r border-white/20 px-4 py-2.5 text-[11px] font-black uppercase tracking-[0.14em] text-white sm:block">Tempo agora</span>
-        <div className="flex whitespace-nowrap py-2.5 faixa-tempo-rolando w-max">
+      <div className="mx-auto flex min-h-11 max-w-content items-center overflow-hidden sm:min-h-12">
+        <span className="flex h-11 shrink-0 items-center gap-2 border-r border-white/20 px-3 text-[10px] font-black uppercase tracking-[0.12em] text-white sm:h-12 sm:px-4 sm:text-[11px] sm:tracking-[0.14em]"><span className="h-1.5 w-1.5 rounded-full bg-[#8ee7b9] shadow-[0_0_0_3px_rgba(142,231,185,.12)]" /><span className="sm:hidden">Agora</span><span className="hidden sm:inline">Tempo agora</span></span>
+        <div className="flex w-max whitespace-nowrap py-2 faixa-tempo-rolando sm:py-2.5">
         {listaDupla.map((item, i) => (
-          <span key={i} className="inline-flex items-center gap-2 px-5 text-sm border-r border-white/20">
+          <span key={i} className="inline-flex items-center gap-1.5 border-r border-white/20 px-4 text-[13px] sm:gap-2 sm:px-5 sm:text-sm">
             <span className="font-semibold text-white">{item.nome}</span>
             <span className="font-bold text-white">{item.temperatura}°C</span>
-            <span className="text-white/70">· {item.descricao}</span>
+            <span className="hidden text-white/70 sm:inline">· {item.descricao}</span>
           </span>
         ))}
         </div>
