@@ -30,6 +30,7 @@ import {
 } from "@/lib/cms";
 import { listarVagas, salvarVaga, excluirVaga } from "@/lib/vagas";
 import { listarSolicitacoes, aprovarSolicitacao, recusarSolicitacao } from "@/lib/vagas-solicitacoes";
+import { listarSolicitacoesConcurseiros, aprovarSolicitacaoConcurseiros, recusarSolicitacaoConcurseiros } from "@/lib/concurseiros";
 
 export const dynamic = "force-dynamic";
 
@@ -60,6 +61,7 @@ export async function GET(request) {
   if (recurso === "eventos") return NextResponse.json(await listarEventos());
   if (recurso === "vagas") return NextResponse.json(await listarVagas());
   if (recurso === "solicitacoes-vagas") return NextResponse.json(await listarSolicitacoes(new URL(request.url).searchParams.get("status") || "pendente"));
+  if (recurso === "concurseiros") return NextResponse.json(await listarSolicitacoesConcurseiros());
 
   return NextResponse.json({ erro: "Recurso inválido." }, { status: 400 });
 }
@@ -138,6 +140,10 @@ export async function POST(request) {
   if (recurso === "solicitacoes-vagas") {
     if (acao === "aprovar") return NextResponse.json(await aprovarSolicitacao(id, dados?.observacao || ""));
     if (acao === "recusar") { await recusarSolicitacao(id, dados?.observacao || ""); return NextResponse.json({ ok: true }); }
+  }
+  if (recurso === "concurseiros") {
+    if (acao === "aprovar") return NextResponse.json(await aprovarSolicitacaoConcurseiros(id));
+    if (acao === "recusar") { await recusarSolicitacaoConcurseiros(id); return NextResponse.json({ ok: true }); }
   }
 
   return NextResponse.json({ erro: "Recurso inválido." }, { status: 400 });

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { listarMunicipios, listarNoticias, listarPropagandas } from "@/lib/db";
 import { listarPaginas, listarMidia, listarEventos, listarPrecos } from "@/lib/cms";
+import { listarSolicitacoesConcurseiros } from "@/lib/concurseiros";
 import { unstable_noStore as noStore } from "next/cache";
 
 export const dynamic = "force-dynamic";
@@ -8,7 +9,7 @@ export const dynamic = "force-dynamic";
 export default async function AdminDashboardPage() {
   noStore();
 
-  const [municipios, noticias, propagandas, paginas, midia, eventos, precos] = await Promise.all([
+  const [municipios, noticias, propagandas, paginas, midia, eventos, precos, concurseiros] = await Promise.all([
     listarMunicipios(),
     listarNoticias(),
     listarPropagandas(),
@@ -16,6 +17,7 @@ export default async function AdminDashboardPage() {
     listarMidia().catch(() => []),
     listarEventos().catch(() => []),
     listarPrecos().catch(() => []),
+    listarSolicitacoesConcurseiros().catch(() => []),
   ]);
 
   const cartoes = [
@@ -26,6 +28,7 @@ export default async function AdminDashboardPage() {
     { label: "Anúncios", total: propagandas.length, href: "/admin/propaganda" },
     { label: "Eventos", total: eventos.length, href: "/admin/eventos" },
     { label: "Preços cadastrados", total: precos.length, href: "/admin/precos" },
+    { label: "Solicitações Concurseiros", total: concurseiros.length, href: "/admin/concurseiros" },
   ];
 
   return (
