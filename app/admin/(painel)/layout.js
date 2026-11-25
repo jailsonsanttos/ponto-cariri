@@ -10,6 +10,7 @@ const itensMenu = [
   { href: "/admin/midia", label: "Biblioteca" },
   { href: "/admin/municipios", label: "Municípios" },
   { href: "/admin/vagas", label: "VAGAS" },
+  { href: "/admin/concurseiros", label: "Concurseiros" },
   { href: "/admin/paginas", label: "Páginas" },
   { href: "/admin/menu", label: "Menu" },
   { href: "/admin/inicio", label: "Página inicial" },
